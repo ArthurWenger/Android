@@ -119,5 +119,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		return super.onOptionsItemSelected( item );
 	}
 
+	/* @Override
+	protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
+		switch ( requestCode ) {
+			case SCORES_ACTIVITY:
+				switch ( resultCode ) {
+					case RESULT_OK:
+						break;
+					case RESULT_CANCELED: break;
+					default: break;
+				}
+				break;
+			default: break;
+		}
+	} */
+
+
 
 }
