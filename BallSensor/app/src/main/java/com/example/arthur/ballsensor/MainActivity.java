@@ -1,12 +1,15 @@
 package com.example.arthur.ballsensor;
 
 import android.app.Service;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ToggleButton;
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	private MySensorListener sensorListener;
 	private float xAcc, yAcc;
 	CustomDrawableView ballView;
+	private final int SCORES_ACTIVITY = 1;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -92,4 +96,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 		}
 	}
+
+	@Override
+	public boolean onCreateOptionsMenu( Menu menu ) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate( R.menu.main, menu );
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item ) {
+		switch ( item.getItemId() ) {
+			case R.id.action_scores:
+				Intent intent = new Intent( this, ScoresActivity.class );
+				startActivityForResult( intent, SCORES_ACTIVITY );
+				return true;
+			case R.id.action_quit:
+				finish();
+				System.exit( 0 );
+				return true;
+		}
+		return super.onOptionsItemSelected( item );
+	}
+
+
 }
