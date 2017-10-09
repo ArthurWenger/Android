@@ -31,6 +31,7 @@ public class CustomDrawableView extends View
 	private void init(){
 		paint.setColor(android.graphics.Color.RED);
 		paint.setStyle(Paint.Style.STROKE);
+		paint.setStyle(Paint.Style.FILL);
 		paint.setStrokeWidth(5);
 	}
 
@@ -41,11 +42,11 @@ public class CustomDrawableView extends View
 
 	public void moveBall( float x, float y){
 		float newX = xPos+x;
-		if(newX < width && newX>radius)
+		if(newX < width-radius && newX>radius)
 			xPos = xPos+x;
 
 		float newY = yPos+y;
-		if(newY < height && newY>radius)
+		if(newY < height-radius && newY>radius)
 			yPos = yPos + y;
 		invalidate();
 	}
