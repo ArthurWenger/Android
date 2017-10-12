@@ -1,15 +1,18 @@
 package com.example.arthur.ballsensor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-
 import java.util.ArrayList;
 
 public class ScoresActivity extends AppCompatActivity {
 	private ListView mListView;
 	private ScoresArrayAdapter adapter;
 	private ArrayList<Score> tasks;
+	private final int MAP_ACTIVITY = 2;
 
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
@@ -19,7 +22,7 @@ public class ScoresActivity extends AppCompatActivity {
 
 	private void initView(){
 		mListView = (ListView) findViewById( R.id.list );
-		registerForContextMenu( mListView );
+		//registerForContextMenu( mListView );
 
 		// a changer pour mettre en place la persistance
 		tasks = new ArrayList<Score>();
@@ -29,5 +32,15 @@ public class ScoresActivity extends AppCompatActivity {
 
 		adapter = new ScoresArrayAdapter( this, tasks );
 		mListView.setAdapter( adapter );
+
+		mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick( AdapterView<?> adapter, View view, int position, long id ) {
+				Score score = (Score)adapter.getItemAtPosition(position);
+				Intent intent = new Intent( getBaseContext(), MapActivity.class );
+
+				startActivityForResult( intent, MAP_ACTIVITY );
+			}
+		} );
 	}
 }

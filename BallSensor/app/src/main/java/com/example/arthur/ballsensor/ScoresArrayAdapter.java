@@ -48,12 +48,12 @@ public class ScoresArrayAdapter extends ArrayAdapter<Score> {
 		ImageView imageView = (ImageView)cellView.findViewById(R.id.image);
 		TextView scoreView = (TextView)cellView.findViewById(R.id.score);
 		Score t = getItem(position);
-		String s = t.getTitre();
+		String s = t.getName();
 		int v = t.getValue();
 		labelView.setText(s);
 		scoreView.setText( String.valueOf( v ) );
 		System.out.println(s);
-		switch(t.getPrio()) {
+		switch(t.getRank()) {
 			case 1:
 				imageView.setImageResource(R.drawable.top0 );
 				break;

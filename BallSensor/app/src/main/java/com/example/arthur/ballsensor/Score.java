@@ -2,40 +2,40 @@ package com.example.arthur.ballsensor;
 
 public class Score {
 
-	private int prio;
-	private String titre;
+	private int rank;
+	private String name;
 	private int value;
 
-	public Score(int prio, String titre, int value) {
-		this.titre = titre;
+	public Score( int rank, String name, int value) {
+		this.name = name;
 		this.value = value;
-		if(prio>4 || prio <0)
-			this.prio = 4;
+		if( rank >4 || rank <0)
+			this.rank = 4;
 		else
-			this.prio = prio;
+			this.rank = rank;
 	}
 
-	public Score(String titre, int value) {
-		this.titre = titre;
+	public Score( String name, int value) {
+		this.name = name;
 		this.value = value;
-		this.prio = 4;
+		this.rank = 4;
 	}
 
-	public int getPrio() {
-		return prio;
+	public int getRank() {
+		return rank;
 	}
 
-	public void setPrio( int prio ) {
-		this.prio = prio;
+	public void setRank( int rank ) {
+		this.rank = rank;
 	}
 
-	public String getTitre() {
-		return titre;
+	public String getName() {
+		return name;
 	}
 
 	public int getValue(){ return value; }
 
-	public void setTitre( String titre ) {
-		this.titre = titre;
+	public void setName( String name ) {
+		this.name = name;
 	}
 }
