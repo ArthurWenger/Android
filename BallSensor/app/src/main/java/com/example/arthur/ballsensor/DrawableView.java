@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class CustomDrawableView extends View
+public class DrawableView extends View
 {
 	//private Bitmap mWood;
 	//private Bitmap mBitmap;
@@ -15,20 +15,22 @@ public class CustomDrawableView extends View
 	private float width;
 	private float height;
 	private final int radius = 50;
+	private final int speedMultiplier = 2;
 	private Paint paint= new Paint();
 
-	public CustomDrawableView(Context context)
+	public DrawableView( Context context)
 	{
 		super(context);
 		init();
 	}
-	public CustomDrawableView(Context context, AttributeSet attrs)
+	public DrawableView( Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 		init();
 	}
 
 	private void init(){
+		paint.setAntiAlias( true );
 		paint.setColor(android.graphics.Color.RED);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStyle(Paint.Style.FILL);
@@ -41,13 +43,13 @@ public class CustomDrawableView extends View
 	}
 
 	public void moveBall( float x, float y){
-		float newX = xPos+x;
+		float newX = xPos - speedMultiplier*x;
 		if(newX < width-radius && newX>radius)
-			xPos = xPos+x;
+			xPos = newX;
 
-		float newY = yPos+y;
+		float newY = yPos + speedMultiplier*y;
 		if(newY < height-radius && newY>radius)
-			yPos = yPos + y;
+			yPos = newY;
 		invalidate();
 	}
 

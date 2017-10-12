@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	private boolean accelSupported;
 	private MySensorListener sensorListener;
 	private float xAcc, yAcc;
-	CustomDrawableView ballView;
+	DrawableView ballView;
 	private final int SCORES_ACTIVITY = 1;
 
 	@Override
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		mBPlus.setOnClickListener( this );
 		mBMoins = (Button) findViewById( R.id.bMoins );
 		mBMoins.setOnClickListener( this );
-		ballView = (CustomDrawableView) findViewById(R.id.ballsView);
+		ballView = (DrawableView) findViewById(R.id.ballsView);
 	}
 
 	@Override

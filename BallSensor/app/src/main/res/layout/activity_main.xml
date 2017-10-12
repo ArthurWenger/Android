@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.arthur.ballsensor.MainActivity">
 
-    <com.example.arthur.ballsensor.CustomDrawableView
+    <com.example.arthur.ballsensor.DrawableView
         android:id="@+id/ballsView"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"/>
@@ -16,33 +16,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
         android:text="ToggleButton"
         android:textOff="ON"
         android:textOn="OFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.028"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"/>
+        />
 
     <Button
         android:id="@+id/bPlus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="+"
-        android:layout_marginRight="0dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
-        app:layout_constraintLeft_toRightOf="@+id/bMoins"
-        android:layout_marginLeft="8dp"
         app:layout_constraintTop_toTopOf="@+id/bMoins"
         android:layout_marginTop="8dp"
-        app:layout_constraintHorizontal_bias="0.166"
         app:layout_constraintVertical_bias="1.0"/>
 
     <Button
@@ -53,8 +45,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
         app:layout_constraintTop_toTopOf="@+id/tOn"
-        android:layout_marginTop="0dp"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintLeft_toRightOf="@+id/tOn"
-        android:layout_marginLeft="89dp"/>
+        android:layout_marginTop="8dp"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintRight_toLeftOf="@+id/bPlus"
+        android:layout_marginRight="11dp"/>
 </android.support.constraint.ConstraintLayout>
