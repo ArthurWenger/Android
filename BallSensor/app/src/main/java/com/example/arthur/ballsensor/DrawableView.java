@@ -16,6 +16,10 @@ public class DrawableView extends View
 	private float height;
 	private final int radius = 50;
 	private final int speedMultiplier = 2;
+	public float xPosition, xAcceleration, xVelocity = 0.0f;
+	public float yPosition, yAcceleration, yVelocity = 0.0f;
+	public float frameTime = 0.666f;
+
 	private Paint paint= new Paint();
 
 	public DrawableView( Context context)
@@ -37,12 +41,11 @@ public class DrawableView extends View
 		paint.setStrokeWidth(5);
 	}
 
-	protected void onDraw(Canvas canvas)
-	{
+	protected void onDraw(Canvas canvas){
 		canvas.drawCircle( xPos, yPos, radius, paint );
 	}
 
-	public void moveBall( float x, float y){
+	/* public void moveBall( float x, float y){
 		float newX = xPos - speedMultiplier*x;
 		if(newX < width-radius && newX>radius)
 			xPos = newX;
@@ -50,6 +53,34 @@ public class DrawableView extends View
 		float newY = yPos + speedMultiplier*y;
 		if(newY < height-radius && newY>radius)
 			yPos = newY;
+		invalidate();
+	} */
+
+	public void setAcceleration(float xA, float yA){
+		xAcceleration = xA;
+		yAcceleration = yA;
+		updateBall();
+	}
+
+	private void updateBall(){
+		xVelocity += (xAcceleration * frameTime);
+		yVelocity += (yAcceleration * frameTime);
+
+		// Calc distance travelled in that time
+		float xS = (xVelocity / 2) * frameTime;
+		float yS = (yVelocity / 2) * frameTime;
+
+		// Add to position negative due to sensor
+		// readings being opposite to what we want!
+		float newX = xPosition - xS;
+		float newY = yPosition - yS;
+
+		if(newX < width-radius && newX>radius)
+			xPosition = newX;
+
+		if(newY < height-radius && newY>radius)
+			yPosition = newY;
+
 		invalidate();
 	}
 

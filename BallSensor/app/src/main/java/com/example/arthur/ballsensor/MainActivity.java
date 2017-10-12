@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				case Sensor.TYPE_ACCELEROMETER:
 					xAcc = event.values[0];
 					yAcc = event.values[1];
-					ballView.moveBall(xAcc,yAcc);
+					ballView.setAcceleration(xAcc,yAcc);
 					break;
 				case Sensor.TYPE_GYROSCOPE:
 					//mTvRes.setText( "x="+ event.values[0]+"\ny="+event.values[1]+"\nz="+event.values[2]);

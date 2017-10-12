@@ -5,6 +5,9 @@ public class Score {
 	private int rank;
 	private String name;
 	private int value;
+	// a implementer
+	private double lat;
+	private double lng;
 
 	public Score( int rank, String name, int value) {
 		this.name = name;
