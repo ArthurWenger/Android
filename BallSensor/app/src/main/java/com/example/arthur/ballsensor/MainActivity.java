@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		manager = (SensorManager) getSystemService( Service.SENSOR_SERVICE );
 		mAccelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sensorListener = new MySensorListener();

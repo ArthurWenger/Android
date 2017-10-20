@@ -48,15 +48,12 @@ public class DrawableView extends SurfaceView implements Runnable {
 	private Thread gameThread;
 	private SurfaceHolder holder;
 
-	private float screenWidth;
-	private float screenHeight;
-
 	private final static int MAX_FPS = 40; //desired fps
 	private final static int FRAME_PERIOD = 1000 / MAX_FPS; // the frame period
 
 
     // diameter of the balls in meters
-    private final float sBallDiameter = 0.004f;
+    private final float sBallDiameter = 0.002f;
 
     private float dpiX;
     private float dpiY;

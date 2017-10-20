@@ -1,7 +1,5 @@
 package com.example.arthur.ballsensor;
 
-import android.util.Log;
-
 /**
  * Created by Arthur on 20/10/2017.
  */ /*
@@ -35,7 +33,6 @@ class ParticleSystem {
 	 */
 	private void updatePositions( float sx, float sy, float dT ) {
 		final int count = balls.length;
-		Log.i("DT",""+dT);
 		for ( int i = 0; i < count; i++ ) {
 			// ici dT = 0.025 car FPS = 40 donc dT = 1/40 = 0.025
 			// dTC = 1 car dT = lastDeltaT donc dT/lastDeltaT = 1
