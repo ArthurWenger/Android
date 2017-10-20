@@ -78,12 +78,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	public void onResume() {
 		super.onResume();
-		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+		/*
+         * It is not necessary to get accelerometer events at a very high
+         * rate, by using a slower rate (SENSOR_DELAY_UI), we get an
+         * automatic low-pass filter, which "extracts" the gravity component
+         * of the acceleration. As an added benefit, we use less power and
+         * CPU resources.
+         */
+		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+		ballView.resume();
 	}
 	@Override
 	public void onPause() {
 		if (accelSupported)
 			manager.unregisterListener(sensorListener, mAccelerometer);
+		ballView.pause();
 		super.onPause();
 	}
 
@@ -101,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
              * to with the screen in its native orientation).
              */
             float sX, sY;
-			long sTime, cpuTime;
 
 			switch (mDisplay.getRotation()) {
 				case Surface.ROTATION_0:
@@ -125,10 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					sY = 0;
 					break;
 			}
-
-			sTime = event.timestamp;
-			cpuTime = System.nanoTime();
-			ballView.updateSensor( sX, sY, sTime, cpuTime );
+			ballView.updateSensor( sX, sY);
 		}
 
 		@Override

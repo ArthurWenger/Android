@@ -1,5 +1,7 @@
 package com.example.arthur.ballsensor;
 
+import android.util.Log;
+
 /**
  * Created by Arthur on 20/10/2017.
  */ /*
@@ -9,8 +11,6 @@ class ParticleSystem {
 	static final int NUM_PARTICLES = 10;
 	// coefficient de friction avec l'air et le support des balles
 	private static final float sFriction = 0.1f;
-	private long lastT =0;
-	private float lastDeltaT =0;
 	// diamètre des balles en metres
 	private final float ballDiameter;
 	private final float ballDiameter2;
@@ -33,20 +33,14 @@ class ParticleSystem {
 	 * Mise à jour de la position de chaque balle dans le système en utilisation
 	 * l'integrateur Vertlet.
 	 */
-	private void updatePositions( float sx, float sy, long timestamp ) {
-		final long t = timestamp;
-		if ( lastT != 0 ) {
-			final float dT = (float) ( t - lastT ) * ( 1.0f / 1000000000.0f );
-			if ( lastDeltaT != 0 ) {
-				final float dTC = dT / lastDeltaT;
-				final int count = balls.length;
-				for ( int i = 0; i < count; i++ ) {
-					balls[ i ].computePhysics( sx, sy, dT, dTC );
-				}
-			}
-			lastDeltaT = dT;
+	private void updatePositions( float sx, float sy, float dT ) {
+		final int count = balls.length;
+		Log.i("DT",""+dT);
+		for ( int i = 0; i < count; i++ ) {
+			// ici dT = 0.025 car FPS = 40 donc dT = 1/40 = 0.025
+			// dTC = 1 car dT = lastDeltaT donc dT/lastDeltaT = 1
+			balls[ i ].computePhysics( sx, sy, dT, 1 );
 		}
-		lastT = t;
 	}
 
 	/*
@@ -54,19 +48,19 @@ class ParticleSystem {
 	 * mettre à jour la position de toutes les balles puis on detecte
 	 * les collisions.
 	 */
-	public void update( float sx, float sy, long now, float mHorizontalBound, float mVerticalBound ) {
+	public void update( float sx, float sy, float dT, float mHorizontalBound, float mVerticalBound ) {
 		// update the system's positions
-		updatePositions( sx, sy, now );
+		updatePositions( sx, sy, dT );
 
 		// We do no more than a limited number of iterations
 		final int NUM_MAX_ITERATIONS = 10;
 
-            /*
-             * Resolve collisions, each particle is tested against every
-             * other particle for collision. If a collision is detected the
-             * particle is moved away using a virtual spring of infinite
-             * stiffness.
-             */
+        /*
+         * Resolve collisions, each particle is tested against every
+         * other particle for collision. If a collision is detected the
+         * particle is moved away using a virtual spring of infinite
+         * stiffness.
+         */
 		boolean more = true;
 		final int count = balls.length;
 		for ( int k = 0; k < NUM_MAX_ITERATIONS && more; k++ ) {
@@ -103,10 +97,10 @@ class ParticleSystem {
 						more = true;
 					}
 				}
-                    /*
-                     * Finally make sure the particle doesn't intersects
-                     * with the walls.
-                     */
+                /*
+                 * Finally make sure the particle doesn't intersects
+                 * with the walls.
+                 */
 				curr.resolveCollisionWithBounds(mHorizontalBound, mVerticalBound);
 			}
 		}

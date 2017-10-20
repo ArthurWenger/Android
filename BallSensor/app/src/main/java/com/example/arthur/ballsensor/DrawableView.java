@@ -27,7 +27,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.view.View;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
 /**
  * This is an example of using the accelerometer to integrate the device's
@@ -41,7 +42,18 @@ import android.view.View;
  * @see Sensor
  */
 
-public class DrawableView extends View {
+public class DrawableView extends SurfaceView implements Runnable {
+
+	private boolean isRunning = false;
+	private Thread gameThread;
+	private SurfaceHolder holder;
+
+	private float screenWidth;
+	private float screenHeight;
+
+	private final static int MAX_FPS = 40; //desired fps
+	private final static int FRAME_PERIOD = 1000 / MAX_FPS; // the frame period
+
 
     // diameter of the balls in meters
     private final float sBallDiameter = 0.004f;
@@ -56,8 +68,6 @@ public class DrawableView extends View {
     private float originY;
     private float sensorX;
     private float sensorY;
-    private long sensorTimeStamp;
-    private long cpuTimeStamp;
     private float horizontalBound;
     private float verticalBound;
     private final ParticleSystem particleSystem = new ParticleSystem(sBallDiameter);
@@ -82,18 +92,34 @@ public class DrawableView extends View {
         Options opts = new Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         woodBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wood, opts);
+
+	    holder = getHolder();
+	    holder.addCallback(new SurfaceHolder.Callback() {
+		    @Override
+		    public void surfaceCreated(SurfaceHolder holder) {
+		    }
+
+		    @Override
+		    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+			    originX = (width - ballBitmap.getWidth()) * 0.5f;
+			    originY = (height - ballBitmap.getHeight()) * 0.5f;
+			    horizontalBound = ((width / metersToPixelsX - sBallDiameter) * 0.5f);
+			    verticalBound = ((height / metersToPixelsY - sBallDiameter) * 0.5f);
+		    }
+
+		    @Override
+		    public void surfaceDestroyed(SurfaceHolder holder) {
+		    }
+	    });
     }
 
-    public void updateSensor( float sX, float sY, long sTime, long cpuTime){
+    public void updateSensor( float sX, float sY){
         sensorX =sX;
         sensorY =sY;
-        sensorTimeStamp = sTime;
-        cpuTimeStamp = cpuTime;
-	    invalidate();
     }
 
 
-    @Override
+   /* @Override
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             // compute the origin of the screen relative to the origin of
             // the bitmap
@@ -101,21 +127,12 @@ public class DrawableView extends View {
             originY = (h - ballBitmap.getHeight()) * 0.5f;
             horizontalBound = ((w / metersToPixelsX - sBallDiameter) * 0.5f);
             verticalBound = ((h / metersToPixelsY - sBallDiameter) * 0.5f);
-        }
+        } */
 
-        @Override
-        protected void onDraw(Canvas canvas) {
 
+        protected void render(Canvas canvas) {
 	        // draw the background
             canvas.drawBitmap( woodBitmap, 0, 0, null);
-
-            /*
-             * compute the new position of our object, based on accelerometer
-             * data and present time.
-             */
-            final long now = sensorTimeStamp + (System.nanoTime() - cpuTimeStamp );
-
-	        particleSystem.update( sensorX, sensorY, now, horizontalBound, verticalBound );
 
             final int count = particleSystem.getParticleCount();
             for (int i = 0; i < count; i++) {
@@ -128,7 +145,73 @@ public class DrawableView extends View {
                 final float y = originY - particleSystem.getPosY(i) * metersToPixelsY;
                 canvas.drawBitmap( ballBitmap, x, y, null);
             }
-
-            // and make sure to redraw asap
         }
-    }
+
+        private void step(){
+			/*
+             * compute the new position of our object, based on accelerometer
+             * data and present time.
+             */
+	        particleSystem.update( sensorX, sensorY, FRAME_PERIOD/1000.0f, horizontalBound, verticalBound );
+        }
+
+
+	/**
+	 * Start or resume the game.
+	 */
+	public void resume() {
+		isRunning = true;
+		gameThread = new Thread(this);
+		gameThread.start();
+	}
+
+	/**
+	 * Pause the game loop
+	 */
+	public void pause() {
+		isRunning = false;
+		boolean retry = true;
+		while (retry) {
+			try {
+				gameThread.join();
+				retry = false;
+			} catch (InterruptedException e) {
+				// try again shutting down the thread
+			}
+		}
+	}
+
+	@Override
+	public void run() {
+		while(isRunning) {
+			// We need to make sure that the surface is ready
+			if (! holder.getSurface().isValid()) {
+				continue;
+			}
+			long started = System.currentTimeMillis();
+
+			// update
+			step();
+			// draw
+			Canvas canvas = holder.lockCanvas();
+				if (canvas != null) {
+				render(canvas);
+				holder.unlockCanvasAndPost(canvas);
+			}
+
+			float deltaTime = (System.currentTimeMillis() - started);
+			int sleepTime = (int) (FRAME_PERIOD - deltaTime);
+			if (sleepTime > 0) {
+				try {
+					Thread.sleep(sleepTime);
+				}
+				catch (InterruptedException e) {
+				}
+			}
+			while (sleepTime < 0) {
+				step();
+				sleepTime += FRAME_PERIOD;
+			}
+		}
+	}
+}
