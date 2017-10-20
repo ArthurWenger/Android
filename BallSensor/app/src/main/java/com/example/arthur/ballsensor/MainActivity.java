@@ -7,10 +7,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ToggleButton;
 
@@ -23,9 +27,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	private Sensor mAccelerometer;
 	private boolean accelSupported;
 	private MySensorListener sensorListener;
-	private float xAcc, yAcc;
-	DrawableView ballView;
+	private DrawableView ballView;
 	private final int SCORES_ACTIVITY = 1;
+
+	private PowerManager mPowerManager;
+	private WindowManager mWindowManager;
+	private Display mDisplay;
+	//private WakeLock mWakeLock;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -34,6 +42,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		manager = (SensorManager) getSystemService( Service.SENSOR_SERVICE );
 		mAccelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sensorListener = new MySensorListener();
+		// Get an instance of the PowerManager
+		mPowerManager = (PowerManager) getSystemService(POWER_SERVICE);
+
+		// Get an instance of the WindowManager
+		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		mDisplay = mWindowManager.getDefaultDisplay();
+
+		// Create a bright wake lock
+		//mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass()
+		//		                                                                            .getName());
+
 		initView();
 	}
 
@@ -71,24 +90,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	private class MySensorListener implements SensorEventListener {
 		@Override
 		public void onSensorChanged( SensorEvent event ) {
-			switch(event.sensor.getType()){
-				case Sensor.TYPE_ACCELEROMETER:
-					xAcc = event.values[0];
-					yAcc = event.values[1];
-					ballView.setAcceleration(xAcc,yAcc);
+			if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
+				return;
+            /*
+             * record the accelerometer data, the event's timestamp as well as
+             * the current time. The latter is needed so we can calculate the
+             * "present" time during rendering. In this application, we need to
+             * take into account how the screen is rotated with respect to the
+             * sensors (which always return data in a coordinate space aligned
+             * to with the screen in its native orientation).
+             */
+            float sX, sY;
+			long sTime, cpuTime;
+
+			switch (mDisplay.getRotation()) {
+				case Surface.ROTATION_0:
+					sX = event.values[0];
+					sY = event.values[1];
 					break;
-				case Sensor.TYPE_GYROSCOPE:
-					//mTvRes.setText( "x="+ event.values[0]+"\ny="+event.values[1]+"\nz="+event.values[2]);
+				case Surface.ROTATION_90:
+					sX = -event.values[1];
+					sY = event.values[0];
 					break;
-				case Sensor.TYPE_MAGNETIC_FIELD:
-					//mTvRes.setText( "x="+ event.values[0]+"\ny="+event.values[1]+"\nz="+event.values[2]);
+				case Surface.ROTATION_180:
+					sX = -event.values[0];
+					sY = -event.values[1];
 					break;
-				case Sensor.TYPE_PROXIMITY:
-					//mTvRes.setText("dist="+ event.values[0]);
+				case Surface.ROTATION_270:
+					sX = event.values[1];
+					sY = -event.values[0];
 					break;
 				default:
+					sX = 0;
+					sY = 0;
 					break;
 			}
+
+			sTime = event.timestamp;
+			cpuTime = System.nanoTime();
+			ballView.updateSensor( sX, sY, sTime, cpuTime );
 		}
 
 		@Override

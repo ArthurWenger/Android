@@ -30,7 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import static com.example.arthur.ballsensor.R.id.map;
 
-public class MapActivity extends AppCompatActivity
+public class MapActivityOld2 extends AppCompatActivity
 		implements OnMapReadyCallback,
 				           GoogleApiClient.ConnectionCallbacks,
 				           GoogleApiClient.OnConnectionFailedListener,
@@ -192,7 +192,7 @@ public class MapActivity extends AppCompatActivity
 							@Override
 							public void onClick(DialogInterface dialogInterface, int i) {
 								//Prompt the user once explanation has been shown
-								ActivityCompat.requestPermissions(MapActivity.this,
+								ActivityCompat.requestPermissions(MapActivityOld2.this,
 										new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 										MY_PERMISSIONS_REQUEST_LOCATION );
 							}

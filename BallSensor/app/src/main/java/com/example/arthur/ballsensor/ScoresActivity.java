@@ -37,7 +37,7 @@ public class ScoresActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick( AdapterView<?> adapter, View view, int position, long id ) {
 				Score score = (Score)adapter.getItemAtPosition(position);
-				Intent intent = new Intent( getBaseContext(), MapActivity.class );
+				Intent intent = new Intent( getBaseContext(), MapsActivity.class );
 
 				startActivityForResult( intent, MAP_ACTIVITY );
 			}
