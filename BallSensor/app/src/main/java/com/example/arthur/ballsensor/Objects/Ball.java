@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor;
+package com.example.arthur.ballsensor.Objects;
 
 /**
  * Created by Arthur on 20/10/2017.
@@ -7,7 +7,7 @@ package com.example.arthur.ballsensor;
      * acceleration. for added realism each particle has its own friction
      * coefficient.
      */
-class Particle {
+class Ball {
 	private float posX;
 	private float posY;
 	private float accelX;
@@ -16,7 +16,7 @@ class Particle {
 	private float lastPosY;
 	private float oneMinusFriction;
 
-	Particle(float sFriction) {
+	Ball( float sFriction) {
 		// make each particle a bit different by randomizing its
 		// coefficient of friction
 		final float r = ( (float) Math.random() - 0.5f ) * 0.2f;

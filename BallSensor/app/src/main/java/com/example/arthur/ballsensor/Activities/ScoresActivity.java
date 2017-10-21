@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor;
+package com.example.arthur.ballsensor.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.example.arthur.ballsensor.R;
+import com.example.arthur.ballsensor.Objects.Score;
+import com.example.arthur.ballsensor.ScoresArrayAdapter;
+
 import java.util.ArrayList;
 
 public class ScoresActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor;
+package com.example.arthur.ballsensor.Activities;
 
 import android.app.Service;
 import android.content.Intent;
@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ToggleButton;
+
+import com.example.arthur.ballsensor.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.arthur.ballsensor.MainActivity">
+    tools:context="com.example.arthur.ballsensor.Activities.MainActivity">
 
-    <com.example.arthur.ballsensor.DrawableView
+    <com.example.arthur.ballsensor.Activities.DrawableView
         android:id="@+id/ballsView"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"/>

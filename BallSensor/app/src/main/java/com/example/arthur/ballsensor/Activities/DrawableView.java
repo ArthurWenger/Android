@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.example.arthur.ballsensor;
+package com.example.arthur.ballsensor.Activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -29,6 +28,9 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.example.arthur.ballsensor.Objects.BallSystem;
+import com.example.arthur.ballsensor.R;
 
 /**
  * This is an example of using the accelerometer to integrate the device's
@@ -60,14 +62,14 @@ public class DrawableView extends SurfaceView implements Runnable {
     private float metersToPixelsX;
     private float metersToPixelsY;
     private Bitmap ballBitmap;
-    private Bitmap woodBitmap;
+    private Bitmap bgBitmap;
     private float originX;
     private float originY;
     private float sensorX;
     private float sensorY;
     private float horizontalBound;
     private float verticalBound;
-    private final ParticleSystem particleSystem = new ParticleSystem(sBallDiameter);
+    private final BallSystem ballSystem = new BallSystem(sBallDiameter);
 
     public DrawableView( Context context, AttributeSet attr)
     {
@@ -80,15 +82,15 @@ public class DrawableView extends SurfaceView implements Runnable {
         metersToPixelsX = dpiX / 0.0254f;
         metersToPixelsY = dpiY / 0.0254f;
 
-        // rescale the ball so it's about 0.5 cm on screen
-        Bitmap ball = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
-        final int dstWidth = (int) (sBallDiameter * metersToPixelsX + 0.5f);
-        final int dstHeight = (int) (sBallDiameter * metersToPixelsY + 0.5f);
-        ballBitmap = Bitmap.createScaledBitmap(ball, dstWidth, dstHeight, true);
+	    // rescale the ball so it's about 0.5 cm on screen
+	    Bitmap ball = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
+	    final int dstWidth = (int) (sBallDiameter * metersToPixelsX + 0.5f);
+	    final int dstHeight = (int) (sBallDiameter * metersToPixelsY + 0.5f);
+	    ballBitmap = Bitmap.createScaledBitmap(ball, dstWidth, dstHeight, true);
 
-        Options opts = new Options();
+        BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
-        woodBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wood, opts);
+        bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_wood, opts);
 
 	    holder = getHolder();
 	    holder.addCallback(new SurfaceHolder.Callback() {
@@ -129,17 +131,17 @@ public class DrawableView extends SurfaceView implements Runnable {
 
         protected void render(Canvas canvas) {
 	        // draw the background
-            canvas.drawBitmap( woodBitmap, 0, 0, null);
+            canvas.drawBitmap( bgBitmap, 0, 0, null);
 
-            final int count = particleSystem.getParticleCount();
+            final int count = ballSystem.getParticleCount();
             for (int i = 0; i < count; i++) {
                 /*
                  * We transform the canvas so that the coordinate system matches
                  * the sensors coordinate system with the origin in the center
                  * of the screen and the unit is the meter.
                  */
-                final float x = originX + particleSystem.getPosX(i) * metersToPixelsX;
-                final float y = originY - particleSystem.getPosY(i) * metersToPixelsY;
+                final float x = originX + ballSystem.getPosX(i) * metersToPixelsX;
+                final float y = originY - ballSystem.getPosY(i) * metersToPixelsY;
                 canvas.drawBitmap( ballBitmap, x, y, null);
             }
         }
@@ -149,7 +151,7 @@ public class DrawableView extends SurfaceView implements Runnable {
              * compute the new position of our object, based on accelerometer
              * data and present time.
              */
-	        particleSystem.update( sensorX, sensorY, FRAME_PERIOD/1000.0f, horizontalBound, verticalBound );
+	        ballSystem.update( sensorX, sensorY, FRAME_PERIOD/1000.0f, horizontalBound, verticalBound );
         }
 
 

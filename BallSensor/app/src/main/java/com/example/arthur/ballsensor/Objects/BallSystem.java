@@ -1,11 +1,11 @@
-package com.example.arthur.ballsensor;
+package com.example.arthur.ballsensor.Objects;
 
 /**
  * Created by Arthur on 20/10/2017.
  */ /*
      * A particle system is just a collection of particles
      */
-class ParticleSystem {
+public class BallSystem {
 	static final int NUM_PARTICLES = 10;
 	// coefficient de friction avec l'air et le support des balles
 	private static final float sFriction = 0.1f;
@@ -13,9 +13,9 @@ class ParticleSystem {
 	private final float ballDiameter;
 	private final float ballDiameter2;
 
-	private Particle balls[] = new Particle[ NUM_PARTICLES ];
+	private Ball balls[] = new Ball[ NUM_PARTICLES ];
 
-	ParticleSystem(float ballDiameter) {
+	public BallSystem( float ballDiameter ) {
             /*
              * Initially our particles have no speed or acceleration
              */
@@ -23,7 +23,7 @@ class ParticleSystem {
 			ballDiameter2 = ballDiameter * ballDiameter;
 
 		for ( int i = 0; i < balls.length; i++ ) {
-			balls[ i ] = new Particle(sFriction);
+			balls[ i ] = new Ball(sFriction);
 		}
 	}
 
@@ -60,12 +60,14 @@ class ParticleSystem {
          */
 		boolean more = true;
 		final int count = balls.length;
+		// il est possible que le deplacement d'une balle après une collision entraine une nouvelle collision
+		// on doit donc vérifier les collisions en chaine
 		for ( int k = 0; k < NUM_MAX_ITERATIONS && more; k++ ) {
 			more = false;
 			for ( int i = 0; i < count; i++ ) {
-				Particle curr = balls[ i ];
+				Ball curr = balls[ i ];
 				for ( int j = i + 1; j < count; j++ ) {
-					Particle ball = balls[ j ];
+					Ball ball = balls[ j ];
 					float cx = curr.getPosX();
 					float cy = curr.getPosY();
 					float bx = ball.getPosX();
@@ -85,7 +87,9 @@ class ParticleSystem {
 						dd = dx * dx + dy * dy;
 						// simulate the spring
 						final float d = (float) Math.sqrt( dd );
-						final float c = ( 0.5f * ( ballDiameter - d ) ) / d;
+						// spring damping (how much the spring releases energy)
+						final float c = 0.5f * ( ballDiameter - d )  / d;
+						//Log.i("C",""+c);
 
 						curr.setPosX( cx - dx * c);
 						curr.setPosY( cy - dy * c);

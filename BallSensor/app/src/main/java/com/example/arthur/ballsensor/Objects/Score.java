@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor;
+package com.example.arthur.ballsensor.Objects;
 
 public class Score {
 

@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.arthur.ballsensor.Objects.Score;
+
 import java.util.ArrayList;
 
 public class ScoresArrayAdapter extends ArrayAdapter<Score> {
