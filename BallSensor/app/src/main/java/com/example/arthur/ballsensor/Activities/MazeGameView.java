@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.arthur.ballsensor.Interfaces.MazeGenerator;
+import com.example.arthur.ballsensor.Interfaces.MazeGeneratorDelegate;
 import com.example.arthur.ballsensor.Objects.DepthFirstSearchMazeGenerator;
 import com.example.arthur.ballsensor.Objects.Enemy;
 import com.example.arthur.ballsensor.Objects.Hero;
