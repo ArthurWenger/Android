@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.Activities;
+package com.example.arthur.ballsensor.Interfaces;
 
 import android.graphics.PointF;
 
