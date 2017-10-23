@@ -142,7 +142,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	public void onMapReady( GoogleMap googleMap ) {
 		try {
 			mMap = googleMap;
-			mMap.setMapType( GoogleMap.MAP_TYPE_HYBRID );
+			//mMap.setMapType( GoogleMap.MAP_TYPE_HYBRID );
 			mMap.setMyLocationEnabled( true );
 			mMap.getUiSettings().setZoomControlsEnabled( true );
 			mMap.getUiSettings().setZoomGesturesEnabled( true );
