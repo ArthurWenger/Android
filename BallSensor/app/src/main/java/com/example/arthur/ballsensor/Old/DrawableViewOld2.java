@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.arthur.ballsensor.Activities;
+package com.example.arthur.ballsensor.Old;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,7 +29,7 @@ import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.arthur.ballsensor.Objects.BallSystem;
+import com.example.arthur.ballsensor.Objects.Maze;
 import com.example.arthur.ballsensor.R;
 
 /**
@@ -44,7 +44,7 @@ import com.example.arthur.ballsensor.R;
  * @see Sensor
  */
 
-public class DrawableView extends SurfaceView implements Runnable {
+public class DrawableViewOld2 extends SurfaceView implements Runnable {
 
 	private boolean isRunning = false;
 	private Thread gameThread;
@@ -69,9 +69,29 @@ public class DrawableView extends SurfaceView implements Runnable {
     private float sensorY;
     private float horizontalBound;
     private float verticalBound;
-    private final BallSystem ballSystem = new BallSystem(sBallDiameter);
+    private final BallSystemOld ballSystemOld = new BallSystemOld(sBallDiameter);
+	private Maze maze;
+	// 0 == floor, 1 == wall, 2 == different looking wall
+	int[][] mazeGrid = {
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 1, 2, 1, 0, 0, 1, 2, 1, 0},
+			{0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
+			{1, 1, 2, 1, 0, 1, 1, 2, 1, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 1, 2, 1, 0, 0, 1, 2, 1, 0},
+			{0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
+			{1, 1, 2, 1, 0, 1, 1, 2, 1, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	};
 
-    public DrawableView( Context context, AttributeSet attr)
+	Bitmap[] bitmaps = {
+			BitmapFactory.decodeResource(getResources(), R.drawable.floor),
+			BitmapFactory.decodeResource(getResources(), R.drawable.wall),
+			BitmapFactory.decodeResource(getResources(), R.drawable.goal)
+	};
+
+    public DrawableViewOld2( Context context, AttributeSet attr)
     {
         super(context, attr);
 
@@ -92,6 +112,11 @@ public class DrawableView extends SurfaceView implements Runnable {
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_wood, opts);
 
+
+
+
+
+
 	    holder = getHolder();
 	    holder.addCallback(new SurfaceHolder.Callback() {
 		    @Override
@@ -104,6 +129,7 @@ public class DrawableView extends SurfaceView implements Runnable {
 			    originY = (height - ballBitmap.getHeight()) * 0.5f;
 			    horizontalBound = ((width / metersToPixelsX - sBallDiameter) * 0.5f);
 			    verticalBound = ((height / metersToPixelsY - sBallDiameter) * 0.5f);
+			    maze = new Maze(bitmaps, mazeGrid, 5, 5, width, height);
 		    }
 
 		    @Override
@@ -132,16 +158,17 @@ public class DrawableView extends SurfaceView implements Runnable {
         protected void render(Canvas canvas) {
 	        // draw the background
             canvas.drawBitmap( bgBitmap, 0, 0, null);
+	        maze.drawMaze(canvas, 50, 50);
 
-            final int count = ballSystem.getParticleCount();
+            final int count = ballSystemOld.getParticleCount();
             for (int i = 0; i < count; i++) {
                 /*
                  * We transform the canvas so that the coordinate system matches
                  * the sensors coordinate system with the origin in the center
                  * of the screen and the unit is the meter.
                  */
-                final float x = originX + ballSystem.getPosX(i) * metersToPixelsX;
-                final float y = originY - ballSystem.getPosY(i) * metersToPixelsY;
+                final float x = originX + ballSystemOld.getPosX(i) * metersToPixelsX;
+                final float y = originY - ballSystemOld.getPosY(i) * metersToPixelsY;
                 canvas.drawBitmap( ballBitmap, x, y, null);
             }
         }
@@ -151,7 +178,7 @@ public class DrawableView extends SurfaceView implements Runnable {
              * compute the new position of our object, based on accelerometer
              * data and present time.
              */
-	        ballSystem.update( sensorX, sensorY, FRAME_PERIOD/1000.0f, horizontalBound, verticalBound );
+	        ballSystemOld.update( sensorX, sensorY, FRAME_PERIOD/1000.0f, horizontalBound, verticalBound );
         }
 
 

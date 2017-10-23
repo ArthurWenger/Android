@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.Activities;
+package com.example.arthur.ballsensor.Old;
 
 import android.Manifest;
 import android.content.DialogInterface;

@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.Activities;
+package com.example.arthur.ballsensor.Old;
 
 import android.content.Context;
 import android.graphics.Canvas;

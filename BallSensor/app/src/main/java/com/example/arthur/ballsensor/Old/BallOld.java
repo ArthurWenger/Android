@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.Objects;
+package com.example.arthur.ballsensor.Old;
 
 /**
  * Created by Arthur on 20/10/2017.
@@ -7,7 +7,7 @@ package com.example.arthur.ballsensor.Objects;
      * acceleration. for added realism each particle has its own friction
      * coefficient.
      */
-class Ball {
+class BallOld {
 	private float posX;
 	private float posY;
 	private float accelX;
@@ -15,8 +15,9 @@ class Ball {
 	private float lastPosX;
 	private float lastPosY;
 	private float oneMinusFriction;
+	private float slowFactor = 0.8f;
 
-	Ball( float sFriction) {
+	BallOld( float sFriction) {
 		// make each particle a bit different by randomizing its
 		// coefficient of friction
 		final float r = ( (float) Math.random() - 0.5f ) * 0.2f;
@@ -38,8 +39,8 @@ class Ball {
 		//final float ax = gx * invm;
 		//final float ay = gy * invm;
 
-		final float ax = -sx;
-		final float ay = -sy;
+		final float ax = -sx*slowFactor;
+		final float ay = -sy*slowFactor;
 
         /*
         * Time-corrected Verlet integration The position Verlet
@@ -52,10 +53,8 @@ class Ball {
         * (x(t) - x(t-Æt)) * (Æt/Æt_prev) + a(t)Ætö2
         */
 		final float dTdT = dT * dT;
-		final float x = posX + oneMinusFriction * dTC * ( posX - lastPosX ) + accelX
-				                                                                          * dTdT;
-		final float y = posY + oneMinusFriction * dTC * ( posY - lastPosY ) + accelY
-				                                                                          * dTdT;
+		final float x = posX + oneMinusFriction * dTC * ( posX - lastPosX ) + accelX * dTdT;
+		final float y = posY + oneMinusFriction * dTC * ( posY - lastPosY ) + accelY * dTdT;
 		lastPosX = posX;
 		lastPosY = posY;
 		posX = x;

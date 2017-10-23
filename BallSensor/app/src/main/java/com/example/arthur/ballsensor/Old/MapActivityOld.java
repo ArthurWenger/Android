@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.Activities;
+package com.example.arthur.ballsensor.Old;
 
 import android.content.pm.PackageManager;
 import android.location.Location;

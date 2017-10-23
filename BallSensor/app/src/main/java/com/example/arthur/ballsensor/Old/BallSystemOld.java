@@ -1,21 +1,21 @@
-package com.example.arthur.ballsensor.Objects;
+package com.example.arthur.ballsensor.Old;
 
 /**
  * Created by Arthur on 20/10/2017.
  */ /*
      * A particle system is just a collection of particles
      */
-public class BallSystem {
-	static final int NUM_PARTICLES = 10;
+public class BallSystemOld {
+	static final int NUM_BALLS = 5;
 	// coefficient de friction avec l'air et le support des balles
 	private static final float sFriction = 0.1f;
 	// diamètre des balles en metres
 	private final float ballDiameter;
 	private final float ballDiameter2;
 
-	private Ball balls[] = new Ball[ NUM_PARTICLES ];
+	private BallOld balls[] = new BallOld[ NUM_BALLS ];
 
-	public BallSystem( float ballDiameter ) {
+	public BallSystemOld( float ballDiameter ) {
             /*
              * Initially our particles have no speed or acceleration
              */
@@ -23,7 +23,7 @@ public class BallSystem {
 			ballDiameter2 = ballDiameter * ballDiameter;
 
 		for ( int i = 0; i < balls.length; i++ ) {
-			balls[ i ] = new Ball(sFriction);
+			balls[ i ] = new BallOld(sFriction);
 		}
 	}
 
@@ -65,9 +65,9 @@ public class BallSystem {
 		for ( int k = 0; k < NUM_MAX_ITERATIONS && more; k++ ) {
 			more = false;
 			for ( int i = 0; i < count; i++ ) {
-				Ball curr = balls[ i ];
+				BallOld curr = balls[ i ];
 				for ( int j = i + 1; j < count; j++ ) {
-					Ball ball = balls[ j ];
+					BallOld ball = balls[ j ];
 					float cx = curr.getPosX();
 					float cy = curr.getPosY();
 					float bx = ball.getPosX();
