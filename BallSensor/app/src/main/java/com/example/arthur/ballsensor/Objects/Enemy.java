@@ -4,7 +4,6 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.Rect;
 
 import com.example.arthur.ballsensor.Interfaces.AnimatedSprite;
 
@@ -12,30 +11,30 @@ import java.util.Set;
 
 public class Enemy extends AnimatedSprite {
 
-	private Hero hero;
 	private Bitmap ghostSpriteSheet;
-	private final int ghostSpriteWidth = 128;
-	private final int ghostSpriteHeight = 128;
+	private final int spriteHalfWidth;
+	private final int spriteHalfHeight;
 	private Paint ghostPaint = new Paint();
 
-	public Enemy(PointF location, float size, AssetManager assets, Hero hero) {
-		super(location, size*0.6f);
+	public Enemy(PointF location, float size, AssetManager assets) {
+		super(location, size*0.8f);
 		velocity.set( 2f,0 );
-		this.hero = hero;
-		ghostSpriteSheet = bitmapFromAssetNamed("ghost.png", assets);
+		ghostSpriteSheet = bitmapFromAssetNamed("ghost2.png", assets);
+		spriteHalfWidth = ghostSpriteSheet.getWidth()/2;
+		spriteHalfHeight = ghostSpriteSheet.getHeight()/2;
 	}
 	
 	public void draw(android.graphics.Canvas canvas) {
 		//canvas.drawCircle(getCenter().x, getCenter().y, radius, new Paint());
-		Rect src = new Rect(0,0,ghostSpriteWidth,ghostSpriteHeight);
-		canvas.drawBitmap(ghostSpriteSheet, src, unrotatedGhostRect(), ghostPaint);
+		PointF c = getCenter();
+		canvas.drawBitmap(ghostSpriteSheet, c.x-spriteHalfWidth, c.y-spriteHalfHeight, ghostPaint);
 	}
 	
-	public void update(Set<LineSegment2D> nearbyWalls, float wallThickness) {		
+	public void update(Set<LineSegment2D> nearbyWalls, float wallThickness, Hero hero) {
 		setCenter(Math2D.add(getCenter(),velocity));
 		for (LineSegment2D wall : nearbyWalls) {
 			if(detectAndResolveWallCollision(wall, wallThickness)) {
-				setDirection();
+				setDirection(hero);
 			}
 		}
 	}
@@ -52,13 +51,22 @@ public class Enemy extends AnimatedSprite {
 		return false; 
 	}
 
-	public boolean crossRoad(){
+	// TODO: detect intersection
+	private boolean crossRoad(){
 		return true;
 	}
 
+	// TODO: compute free direction
+	private void availableDirection(){
+		//Rect src = unrotatedGhostRect();
+		// top
+		//src.offset( ghostSpriteWidth,0 );
+		//if(src)
+
+	}
 
 	
-	public void setDirection() {
+	private void setDirection( Hero hero ) {
 		PointF distVector = Math2D.subtract( hero.getCenter(), getCenter() );
 		float absX = Math.abs( distVector.x );
 		float absY = Math.abs( distVector.y );
@@ -72,14 +80,4 @@ public class Enemy extends AnimatedSprite {
 		//velocity.set(2.0f,0f);
 		//velocity = Math2D.rotate(velocity,(float)(Math.random()*2.0*Math.PI));
 	}
-
-	private Rect unrotatedGhostRect() {
-
-		float sizeOffset = speed()*0.4f;
-		float ghostHalfWidth = radius - sizeOffset;
-		float ghostHalfHeight = radius + sizeOffset;
-		PointF center = getCenter();
-		return new Rect((int)(center.x-ghostHalfWidth),(int)(center.y-ghostHalfHeight), (int)(center.x+ghostHalfWidth), (int)(center.y+ghostHalfHeight));
-	}
-
 }
