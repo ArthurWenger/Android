@@ -33,6 +33,10 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".Activities.GameActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps">
         </activity>
