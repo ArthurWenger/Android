@@ -185,8 +185,10 @@ public class MazeGameView extends View {
 	}
 
 	public void updateAccel( float sX, float sY ) {
-		PointF sensorAccel = new PointF( sX, sY );
-		hero.updateAccel(sensorAccel);
+		if(hero!=null) {
+			PointF sensorAccel = new PointF( sX, sY );
+			hero.updateAccel( sensorAccel );
+		}
 	}
 
 	/** Private **/
@@ -275,7 +277,7 @@ public class MazeGameView extends View {
 				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
 				enemies = new HashSet<Enemy>();
 				for(PointF location : enemyLocations) {
-					enemies.add(new Enemy(location,gameSize,getContext().getAssets()));
+					enemies.add(new Enemy(location,gameSize,getContext().getAssets(), hero));
 				}
 				updateTimerTask = new UpdateTimerTask();
 				updateTimer.schedule(updateTimerTask, 0, 33);
