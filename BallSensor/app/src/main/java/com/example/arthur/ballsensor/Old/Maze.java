@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.Objects;
+package com.example.arthur.ballsensor.Old;
 
 /**
  * Created by Arthur on 21/10/2017.
@@ -17,7 +17,7 @@ public class Maze {
 	private float screenWidth, screenHeight;
 
 	/**
-	 * Initialize a new maze.
+	 * Initialisation du labyrinthe
 	 * @param wallBitmap The desired bitmaps for the floors and walls
 	 * @param isWall The wall data array. Each true value in the array represents a wall and each false represents a gap
 	 * @param xCellCountOnScreen How many cells are visible on the screen on the x axis
@@ -58,7 +58,7 @@ public class Maze {
 	public void drawMaze(Canvas canvas, float viewX, float viewY){
 		int tileX = 0;
 		int tileY = 0;
-		float xCoord = -viewX;
+		float xCoord;
 		float yCoord = -viewY;
 
 		while(tileY < tileType.length && yCoord <= screenHeight){
@@ -88,5 +88,10 @@ public class Maze {
 			tileY++;
 			yCoord += drawRect.height();
 		}
+	}
+
+	public void setBounds(int width, int height){
+		this.screenWidth = width;
+		this.screenHeight = height;
 	}
 }

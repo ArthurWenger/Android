@@ -29,9 +29,6 @@ import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.arthur.ballsensor.Objects.Maze;
-import com.example.arthur.ballsensor.R;
-
 /**
  * This is an example of using the accelerometer to integrate the device's
  * acceleration to a position using the Verlet method. This is illustrated with
@@ -86,9 +83,9 @@ public class DrawableViewOld2 extends SurfaceView implements Runnable {
 	};
 
 	Bitmap[] bitmaps = {
-			BitmapFactory.decodeResource(getResources(), R.drawable.floor),
-			BitmapFactory.decodeResource(getResources(), R.drawable.wall),
-			BitmapFactory.decodeResource(getResources(), R.drawable.goal)
+			//BitmapFactory.decodeResource(getResources(), R.drawable.floor),
+			//BitmapFactory.decodeResource(getResources(), R.drawable.wall),
+			//BitmapFactory.decodeResource(getResources(), R.drawable.goal)
 	};
 
     public DrawableViewOld2( Context context, AttributeSet attr)
@@ -103,14 +100,14 @@ public class DrawableViewOld2 extends SurfaceView implements Runnable {
         metersToPixelsY = dpiY / 0.0254f;
 
 	    // rescale the ball so it's about 0.5 cm on screen
-	    Bitmap ball = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
+	    //Bitmap ball = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
 	    final int dstWidth = (int) (sBallDiameter * metersToPixelsX + 0.5f);
 	    final int dstHeight = (int) (sBallDiameter * metersToPixelsY + 0.5f);
-	    ballBitmap = Bitmap.createScaledBitmap(ball, dstWidth, dstHeight, true);
+	    //ballBitmap = Bitmap.createScaledBitmap(ball, dstWidth, dstHeight, true);
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
-        bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_wood, opts);
+        //bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_wood, opts);
 
 
 
