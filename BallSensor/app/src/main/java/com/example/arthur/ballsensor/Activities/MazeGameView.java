@@ -144,17 +144,19 @@ public class MazeGameView extends View {
 				canvas.drawLine(wall.a.x+x1Offset, wall.a.y+y1Offset, wall.b.x+x2Offset, wall.b.y+y2Offset, wallPaint);
 			}
 		}
-		//TODO: corriger le probleme potentiel de processus concurrent
 
-		Iterator<PointF> i = coins.iterator();
-		while (i.hasNext()){
-			 PointF coin = i.next();
-			canvas.drawCircle(coin.x,coin.y,coinRadius,coinPaint);
+		synchronized ( coins ) {
+			for ( PointF coin : coins ) {
+				canvas.drawCircle( coin.x, coin.y, coinRadius, coinPaint );
+			}
 		}
 
-		for(PointF extra : extras ) {
-			canvas.drawCircle(extra.x,extra.y, extraRadius, extraPaint );
+		synchronized ( extras ) {
+			for ( PointF extra : extras ) {
+				canvas.drawCircle( extra.x, extra.y, extraRadius, extraPaint );
+			}
 		}
+
 		for(Enemy enemy : enemies) {
 			enemy.draw(canvas);
 		}
@@ -218,18 +220,22 @@ public class MazeGameView extends View {
 		@Override
 		public void run() {
 			hero.update();
-			for(Iterator<PointF> coinIterator = coins.iterator(); coinIterator.hasNext(); ) {
-				if(hero.detectCoinCollision(coinIterator.next(), coinRadius)) {
-					coinIterator.remove();
-					++score;
-					break;
+			synchronized ( coins ) {
+				for ( Iterator<PointF> coinIterator = coins.iterator(); coinIterator.hasNext(); ) {
+					if ( hero.detectCoinCollision( coinIterator.next(), coinRadius ) ) {
+						coinIterator.remove();
+						++score;
+						break;
+					}
 				}
 			}
 
-			for( Iterator<PointF> extraIterator = extras.iterator(); extraIterator.hasNext(); ) {
-				if(hero.detectAndResolveExtraCollision(extraIterator.next(), extraRadius )) {
-					extraIterator.remove();
-					break;
+			synchronized ( extras ) {
+				for ( Iterator<PointF> extraIterator = extras.iterator(); extraIterator.hasNext(); ) {
+					if ( hero.detectAndResolveExtraCollision( extraIterator.next(), extraRadius ) ) {
+						extraIterator.remove();
+						break;
+					}
 				}
 			}
 
