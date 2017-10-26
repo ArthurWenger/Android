@@ -152,6 +152,4 @@ public class GameActivity extends AppCompatActivity implements GameOverListener 
 		}
 	}
 
-
-
 }

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.arthur.ballsensor.Objects.DBHelper;
+import com.example.arthur.ballsensor.Objects.DBManager;
 import com.example.arthur.ballsensor.Objects.Score;
 import com.example.arthur.ballsensor.R;
 import com.example.arthur.ballsensor.ScoresArrayAdapter;
@@ -19,12 +19,12 @@ public class ScoresActivity extends AppCompatActivity {
 	private ScoresArrayAdapter adapter;
 	private ArrayList<Score> tasks;
 	private final int MAP_ACTIVITY = 2;
-	DBHelper mydb;
+	DBManager mydb;
 
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_scores );
-		mydb = new DBHelper(this);
+		mydb = new DBManager(this);
 		// pour supprimer la base:
 		// this.deleteDatabase(DATABASE_NAME);
 		initView();
