@@ -45,6 +45,7 @@ public class Enemy extends AnimatedSprite {
 		float hRadius = hero.getRadius();
 		if(Math2D.circleIntersection( hC, hRadius, getCenter(), radius )) {
 			hero.getHit( this );
+			return true;
 		}
 		/* if(vulnerableRect.intersectsCircle(getCenter(),radius)) {
 			hero.getHit(this);
