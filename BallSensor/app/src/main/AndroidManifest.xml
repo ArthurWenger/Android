@@ -33,7 +33,8 @@
         </activity>
         <activity
             android:name=".Activities.GameActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".Activities.MapsActivity"
