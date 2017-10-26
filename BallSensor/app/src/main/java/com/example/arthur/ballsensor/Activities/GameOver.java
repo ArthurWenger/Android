@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.arthur.ballsensor.R;
 
-public class GameOver extends AppCompatActivity implements View.OnClickListener {
+public class GameOver extends AppCompatActivity {
 
 	private ImageView mBPlay;
 	private ImageView mBHighscore;
@@ -27,22 +27,23 @@ public class GameOver extends AppCompatActivity implements View.OnClickListener 
 
 	private void initView() {
 		mBPlay = (ImageView) findViewById( R.id.b_play );
-		mBPlay.setOnClickListener( this );
 		mBHighscore = (ImageView) findViewById( R.id.b_highscore );
-		mBHighscore.setOnClickListener( this );
 		mTvScore = (TextView) findViewById( R.id.tvScore );
 		mTvScore.setText( "Score: "+score );
 	}
 
-	@Override
-	public void onClick( View v ) {
-		switch ( v.getId() ) {
-			case R.id.b_play:
-				setResult( RESULT_OK );
-				finish();
-				break;
-			case R.id.b_highscore:
-				break;
-		}
+	public void play( View view ) {
+		setResult( RESULT_OK );
+		finish();
+	}
+
+	public void highscores( View view ) {
+		Intent intent = new Intent( this, ScoresActivity.class );
+		startActivity( intent );
+	}
+
+	public void quit(View view){
+		setResult( RESULT_CANCELED );
+		finish();
 	}
 }
