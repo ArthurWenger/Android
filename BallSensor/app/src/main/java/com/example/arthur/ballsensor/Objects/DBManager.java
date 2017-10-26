@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
-public class DBHelper extends SQLiteOpenHelper {
+public class DBManager extends SQLiteOpenHelper {
 
 	public static final String DATABASE_NAME = "ScoresDB.db";
 	public static final String SCORES_TABLE_NAME = "scores";
@@ -17,7 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String SCORES_COLUMN_LATITUDE = "lat";
 	public static final String SCORES_COLUMN_LONGITUDE = "lng";
 
-	public DBHelper(Context context) {
+	public DBManager( Context context) {
 		super(context, DATABASE_NAME , null, 1);
 	}
 
