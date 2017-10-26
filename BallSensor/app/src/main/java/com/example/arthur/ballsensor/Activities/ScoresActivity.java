@@ -7,8 +7,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.arthur.ballsensor.R;
+import com.example.arthur.ballsensor.Objects.DBHelper;
 import com.example.arthur.ballsensor.Objects.Score;
+import com.example.arthur.ballsensor.R;
 import com.example.arthur.ballsensor.ScoresArrayAdapter;
 
 import java.util.ArrayList;
@@ -18,10 +19,14 @@ public class ScoresActivity extends AppCompatActivity {
 	private ScoresArrayAdapter adapter;
 	private ArrayList<Score> tasks;
 	private final int MAP_ACTIVITY = 2;
+	DBHelper mydb;
 
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_scores );
+		mydb = new DBHelper(this);
+		// pour supprimer la base:
+		// this.deleteDatabase(DATABASE_NAME);
 		initView();
 	}
 
@@ -30,12 +35,14 @@ public class ScoresActivity extends AppCompatActivity {
 		//registerForContextMenu( mListView );
 
 		// a changer pour mettre en place la persistance
-		tasks = new ArrayList<Score>();
+		//tasks = new ArrayList<Score>();
 		//Random rand = new Random(  );
-		for ( int i = 1; i <= 5; i++ )
-			tasks.add( new Score( i, "user " + i , 50000-10000*i) );
+		/* for ( int i = 1; i <= 5; i++ )
+			tasks.add( new Score( i, "user " + i , 50000-10000*i) ); */
 
-		adapter = new ScoresArrayAdapter( this, tasks );
+		ArrayList array_list = mydb.getAllScores();
+
+		adapter = new ScoresArrayAdapter( this, array_list );
 		mListView.setAdapter( adapter );
 
 		mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {

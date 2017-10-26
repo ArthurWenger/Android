@@ -14,12 +14,10 @@ import java.util.ArrayList;
 
 public class ScoresArrayAdapter extends ArrayAdapter<Score> {
 
-	private final Context context;
 	private final ArrayList<Score> values;
 
 	public ScoresArrayAdapter( Context context, ArrayList<Score> values) {
 		super(context, R.layout.cell_layout, values);
-		this.context = context;
 		this.values = values;
 	}
 
@@ -42,20 +40,19 @@ public class ScoresArrayAdapter extends ArrayAdapter<Score> {
 	{
 		View cellView = convertView;
 		if (cellView == null) {
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE);
 			cellView = inflater.inflate(R.layout.cell_layout, parent, false);
 		}
 
-		TextView labelView = (TextView)cellView.findViewById(R.id.label);
+		TextView rankView = (TextView)cellView.findViewById(R.id.rank );
 		ImageView imageView = (ImageView)cellView.findViewById(R.id.image);
 		TextView scoreView = (TextView)cellView.findViewById(R.id.score);
-		Score t = getItem(position);
-		String s = t.getName();
-		int v = t.getValue();
-		labelView.setText(s);
-		scoreView.setText( String.valueOf( v ) );
-		System.out.println(s);
-		switch(t.getRank()) {
+		Score score = getItem(position);
+		int rank = score.getRank();
+		int value = score.getValue();
+		rankView.setText( String.valueOf(rank) );
+		scoreView.setText( String.valueOf( value ) );
+		switch(rank) {
 			case 1:
 				imageView.setImageResource(R.drawable.top0 );
 				break;
@@ -65,13 +62,10 @@ public class ScoresArrayAdapter extends ArrayAdapter<Score> {
 			case 3:
 				imageView.setImageResource(R.drawable.top2 );
 				break;
-			case 4:
+			default:
 				imageView.setImageResource(R.drawable.top3 );
 				break;
-			default:
-				break;
 		}
-
 		return cellView;
 	} // fin de la méthode getView
 }

@@ -7,7 +7,7 @@
                android:layout_width="wrap_content"
                android:layout_height="fill_parent"
                android:src="@drawable/top3" />
-    <TextView android:id="@+id/label"
+    <TextView android:id="@+id/rank"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:textSize="20dp"
@@ -18,5 +18,5 @@
               android:layout_height="wrap_content"
               android:textSize="20dp"
               android:layout_marginLeft="20dp"
-              android:layout_weight="1"/>
+              android:layout_weight="3"/>
 </LinearLayout>

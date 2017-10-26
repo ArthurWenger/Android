@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.arthur.ballsensor.Objects.DBHelper;
 import com.example.arthur.ballsensor.R;
 
 public class GameOver extends AppCompatActivity {
@@ -15,12 +16,18 @@ public class GameOver extends AppCompatActivity {
 	private ImageView mBHighscore;
 	private TextView mTvScore;
 	private int score;
+	private DBHelper mydb;
+
+	private double lat = 0;
+	private double lng = 0;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
+		mydb = new DBHelper(this);
 		Intent intent = getIntent();
 		score = intent.getExtras().getInt( "score" );
+		mydb.insertScore( score, lat, lng );
 		setContentView( R.layout.activity_game_over );
 		initView();
 	}
