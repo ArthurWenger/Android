@@ -8,7 +8,7 @@
     tools:context="com.example.arthur.ballsensor.Activities.GameActivity">
 
     <com.example.arthur.ballsensor.Activities.MazeGameView
-        android:id="@+id/ballsView"
+        android:id="@+id/mazeView"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"/>
 </android.support.constraint.ConstraintLayout>
