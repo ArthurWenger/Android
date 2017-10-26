@@ -3,14 +3,16 @@ package com.example.arthur.ballsensor.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.arthur.ballsensor.Objects.DBManager;
+import com.example.arthur.ballsensor.Objects.SingleShotLocationProvider;
 import com.example.arthur.ballsensor.R;
 
-public class GameOver extends AppCompatActivity {
+public class GameOver extends AppCompatActivity implements SingleShotLocationProvider.LocationCallback {
 
 	private ImageView mBPlay;
 	private ImageView mBHighscore;
@@ -18,16 +20,14 @@ public class GameOver extends AppCompatActivity {
 	private int score;
 	private DBManager mydb;
 
-	private double lat = 0;
-	private double lng = 0;
-
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
+		// le premier this est pour le contexte et le deuxieme est pour le callback onNewLocationAvailable
+		SingleShotLocationProvider.requestSingleUpdate(this, this);
 		mydb = new DBManager(this);
 		Intent intent = getIntent();
 		score = intent.getExtras().getInt( "score" );
-		mydb.insertScore( score, lat, lng );
 		setContentView( R.layout.activity_game_over );
 		initView();
 	}
@@ -52,5 +52,12 @@ public class GameOver extends AppCompatActivity {
 	public void quit(View view){
 		setResult( RESULT_CANCELED );
 		finish();
+	}
+
+	@Override
+	public void onNewLocationAvailable( Double[] location ) {
+		//Log.d("Location", "my location is :" + location[0].toString()+" "+location[1].toString());
+		Log.d("Location", "my location is :" + location[0].toString()+" "+location[1].toString());
+		mydb.insertScore( score, location[0], location[1] );
 	}
 }
