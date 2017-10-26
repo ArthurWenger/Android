@@ -4,8 +4,7 @@
     <string name="title_activity_scores">Scores</string>
     <string name="title_activity_maps">Map</string>
     <string name="security_error">Localisation access denied</string>
-    <string name="play">play</string>
-    <string name="help">help</string>
-    <string name="settingsLabel">settings</string>
+    <string name="play">Play</string>
     <string name="title_activity_game_over">GameOver</string>
+    <string name="highscores">Highscores</string>
 </resources>
