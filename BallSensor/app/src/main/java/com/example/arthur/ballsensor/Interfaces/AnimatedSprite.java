@@ -46,7 +46,7 @@ public abstract class AnimatedSprite {
 	
 	protected Bitmap bitmapFromAssetNamed(String assetFileName, AssetManager assets) {
 		Bitmap spriteSheet = null;
-		InputStream spriteSheetStream = null;
+		InputStream spriteSheetStream;
 		try {
 			spriteSheetStream = assets.open(assetFileName);
 			spriteSheet = BitmapFactory.decodeStream(spriteSheetStream);
@@ -72,5 +72,9 @@ public abstract class AnimatedSprite {
 	protected void setCenter(PointF p) {
 		prevCenter.set(center);
 		center.set(p);
+	}
+
+	public float getRadius(){
+		return radius;
 	}
 }
