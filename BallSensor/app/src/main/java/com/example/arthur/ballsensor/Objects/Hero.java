@@ -36,7 +36,7 @@ public class Hero extends AnimatedSprite {
 	//private final float brakeForceMagnitude = 0.1f;
 	//private final float angularBrakeForceMagnitude = 0.006f;
 
-	private int lives = 3;
+	private int lives = 2;
 	private boolean invulnerable = false;
 
 	private ArrayList<PointF> temporaryAccelerations = new ArrayList<PointF>();
@@ -50,8 +50,9 @@ public class Hero extends AnimatedSprite {
 		return Math2D.circleIntersection(getCenter(), radius, coinCenter, coinRadius);
 	}
 
-	public boolean detectAndResolveExtraCollision( PointF extraCenter, float extraRadius) {
-		if(Math2D.circleIntersection(getCenter(), radius, extraCenter, extraRadius)) {
+	public boolean detectAndResolveHeartCollision( PointF heartCenter, float heartRadius) {
+		if(Math2D.circleIntersection(getCenter(), radius, heartCenter, heartRadius)) {
+			lives = Math.min( 5, lives+1);
 			return true;
 		}
 		return false;		

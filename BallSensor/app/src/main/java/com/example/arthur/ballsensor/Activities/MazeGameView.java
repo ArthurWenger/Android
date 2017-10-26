@@ -1,6 +1,7 @@
 package com.example.arthur.ballsensor.Activities;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
@@ -16,6 +17,7 @@ import com.example.arthur.ballsensor.Interfaces.MazeGenerator;
 import com.example.arthur.ballsensor.Interfaces.MazeGeneratorDelegate;
 import com.example.arthur.ballsensor.Objects.DepthFirstSearchMazeGenerator;
 import com.example.arthur.ballsensor.Objects.Enemy;
+import com.example.arthur.ballsensor.Objects.Heart;
 import com.example.arthur.ballsensor.Objects.Hero;
 import com.example.arthur.ballsensor.Objects.LineSegment2D;
 import com.example.arthur.ballsensor.Objects.Math2D;
@@ -48,10 +50,10 @@ public class MazeGameView extends View {
 	private float wiggleRoom = gameSize+wallThickness/2-difficulty;
 	private Set<LineSegment2D> walls;
 	private Set<PointF> coins;
-	private Set<PointF> extras;
+	private HashSet<Heart> hearts;
 	private Set<Enemy> enemies;
 	private float coinRadius = gameSize/2.0f;
-	private float extraRadius = gameSize/1.5f;
+	private float heartRadius = gameSize/1.5f;
 	private PointF initialTapPoint;
 	private PointF currentTapPoint;
 	private Timer updateTimer = new Timer();
@@ -151,9 +153,10 @@ public class MazeGameView extends View {
 			}
 		}
 
-		synchronized ( extras ) {
-			for ( PointF extra : extras ) {
-				canvas.drawCircle( extra.x, extra.y, extraRadius, extraPaint );
+		synchronized ( hearts ) {
+			for ( Heart heart : hearts ) {
+				heart.draw(canvas);
+				//canvas.drawCircle( heart.x, heart.y, heartRadius, extraPaint );
 			}
 		}
 
@@ -230,10 +233,11 @@ public class MazeGameView extends View {
 				}
 			}
 
-			synchronized ( extras ) {
-				for ( Iterator<PointF> extraIterator = extras.iterator(); extraIterator.hasNext(); ) {
-					if ( hero.detectAndResolveExtraCollision( extraIterator.next(), extraRadius ) ) {
-						extraIterator.remove();
+			synchronized ( hearts ) {
+				for ( Iterator<Heart> heartIterator = hearts.iterator(); heartIterator.hasNext(); ) {
+					Heart heart = heartIterator.next();
+					if ( hero.detectAndResolveHeartCollision( heart.getCenter(), heartRadius ) ) {
+						heartIterator.remove();
 						break;
 					}
 				}
@@ -289,7 +293,6 @@ public class MazeGameView extends View {
 	}
 
 	private void generateMaze(float screenWidth, float screenHeight) {
-
 		float cellSize = gameSize * 2 + wiggleRoom * 2;
 
 		DepthFirstSearchMazeGenerator mazeGenerator = new DepthFirstSearchMazeGenerator();
@@ -302,11 +305,17 @@ public class MazeGameView extends View {
 				finishLocation.set(generator.getFinishLocation());
 				walls = generator.getWalls();
 				coins = generator.getRandomRoomLocations((int) (Math.random()*10.0+40.0), true);
-				extras = generator.getRandomRoomLocations((int) (4.0), true);
+				AssetManager assets = getContext().getAssets();
+
+				Set<PointF> heartLocations = generator.getRandomRoomLocations((int) (4.0), true);
+				hearts = new HashSet<Heart>();
+				for(PointF location : heartLocations) {
+					hearts.add(new Heart(location,gameSize,assets));
+				}
 				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
 				enemies = new HashSet<Enemy>();
 				for(PointF location : enemyLocations) {
-					enemies.add(new Enemy(location,gameSize,getContext().getAssets()));
+					enemies.add(new Enemy(location,gameSize,assets));
 				}
 				updateTimerTask = new UpdateTimerTask();
 				updateTimer.schedule(updateTimerTask, 0, 33);
