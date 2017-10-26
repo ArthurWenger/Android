@@ -61,7 +61,7 @@
         android:layout_alignLeft="@+id/tvScore"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/tvScore"
-        android:onClick="play"
+        android:onClick="highscores"
         android:src="@drawable/b_highscore"
         app:layout_constraintTop_toTopOf="@+id/b_play"
         android:layout_marginTop="0dp"

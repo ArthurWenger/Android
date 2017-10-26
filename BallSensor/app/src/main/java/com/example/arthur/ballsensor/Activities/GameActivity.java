@@ -143,8 +143,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener 
 						mazeView.newGame();
 						break;
 					case RESULT_CANCELED:
-						Intent intent = new Intent( this, ScoresActivity.class );
-						startActivity( intent );
+						finish();
 						break;
 					default: break;
 				}
