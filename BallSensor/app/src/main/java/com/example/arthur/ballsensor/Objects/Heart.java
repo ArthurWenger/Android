@@ -18,7 +18,7 @@ public class Heart extends AnimatedSprite {
 
 	public Heart( PointF location, float size, AssetManager assets ) {
 		super( location, size*0.7f );
-		heartSpriteSheet = bitmapFromAssetNamed( "Simple_Red_Heart3.png", assets );
+		heartSpriteSheet = bitmapFromAssetNamed( "heart.png", assets );
 		spriteHalfWidth = heartSpriteSheet.getWidth() / 2;
 		spriteHalfHeight = heartSpriteSheet.getHeight()/2;
 	}
