@@ -25,14 +25,14 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	// Method to start activity for Help button
-	public void showHelpScreen(View view){
-		Intent helpIntent = new Intent(this, HelpActivity.class);
+	public void showScoresScreen( View view){
+		Intent helpIntent = new Intent(this, ScoresActivity.class);
 		startActivity(helpIntent);
 	}
 	//Method to start activity for Settings button
-	public void showSettingsScreen(View view){
-		Intent settingIntent = new Intent(this,SettingsActivity.class);
-		startActivity(settingIntent);
+	public void exitApp( View view){
+		finish();
+		System.exit(0);
 	}
 
 	// Method to start activity for Play button

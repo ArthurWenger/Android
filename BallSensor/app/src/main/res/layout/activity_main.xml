@@ -25,8 +25,8 @@
         <Button
             android:layout_width="175dp"
             android:layout_height="65dp"
-            android:onClick="showHelpScreen"
-            android:text="@string/help"
+            android:onClick="showScoresScreen"
+            android:text="@string/highscores"
             android:id="@+id/button4"
             android:layout_marginBottom="21dp"
             android:layout_above="@+id/button3"
@@ -36,8 +36,8 @@
         <Button
             android:layout_width="175dp"
             android:layout_height="65dp"
-            android:text="@string/settingsLabel"
-            android:onClick="showSettingsScreen"
+            android:text="@string/quit"
+            android:onClick="exitApp"
             android:layout_marginLeft="33dp"
             android:layout_marginStart="33dp"
             android:layout_marginBottom="47dp"
