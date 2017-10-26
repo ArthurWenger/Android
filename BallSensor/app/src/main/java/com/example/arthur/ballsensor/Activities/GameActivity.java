@@ -13,27 +13,25 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ToggleButton;
 
+import com.example.arthur.ballsensor.Interfaces.GameOverListener;
 import com.example.arthur.ballsensor.R;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements GameOverListener {
 
-	private ToggleButton mTOn;
-	private Button mBPlus;
-	private Button mBMoins;
 	private SensorManager manager;
 	private Sensor mAccelerometer;
 	private boolean accelSupported;
 	private MySensorListener sensorListener;
-	private MazeGameView ballView;
+	private MazeGameView mazeView;
 	private final int SCORES_ACTIVITY = 1;
 
 	private PowerManager mPowerManager;
 	private WindowManager mWindowManager;
 	private Display mDisplay;
 	//private WakeLock mWakeLock;
+
+	private static final int GAMEOVER_ACTIVITY = 1;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -58,23 +56,17 @@ public class GameActivity extends AppCompatActivity {
 	}
 
 	private void initView() {
-		/*mTOn = (ToggleButton) findViewById( R.id.tOn );
-		mBPlus = (Button) findViewById( R.id.bPlus );
-		mBPlus.setOnClickListener( this );
-		mBMoins = (Button) findViewById( R.id.bMoins );
-		mBMoins.setOnClickListener( this ); */
-		ballView = (MazeGameView) findViewById(R.id.ballsView);
+		mazeView = (MazeGameView) findViewById(R.id.mazeView );
+		mazeView.setGameOverListener(this);
 	}
 
-	/*@Override
-	public void onClick( View v ) {
-		switch ( v.getId() ) {
-			case R.id.bPlus:
-				break;
-			case R.id.bMoins:
-				break;
-		}
-	} */
+	@Override
+	public void notifyOfGameOver(int finalScore) {
+		Intent gameOverIntent = new Intent(this, GameOver.class);
+		gameOverIntent.putExtra( "score",finalScore );
+		startActivityForResult( gameOverIntent, GAMEOVER_ACTIVITY );
+		//overridePendingTransition(R.anim.enter, R.anim.exit);
+	}
 
 	@Override
 	public void onResume() {
@@ -93,8 +85,8 @@ public class GameActivity extends AppCompatActivity {
 	public void onPause() {
 		if (accelSupported)
 			manager.unregisterListener(sensorListener, mAccelerometer);
-		//ballView.pause();
-		super.onPause();
+			//ballView.pause();
+			super.onPause();
 	}
 
 	private class MySensorListener implements SensorEventListener {
@@ -111,7 +103,7 @@ public class GameActivity extends AppCompatActivity {
              * to with the screen in its native orientation).
              */
 
-			ballView.updateAccel( -event.values[0], event.values[1]);
+			mazeView.updateAccel( -event.values[0], event.values[1]);
 		}
 
 		@Override
@@ -132,7 +124,7 @@ public class GameActivity extends AppCompatActivity {
 		switch ( item.getItemId() ) {
 			case R.id.action_scores:
 				Intent intent = new Intent( this, ScoresActivity.class );
-				startActivityForResult( intent, SCORES_ACTIVITY );
+				startActivity( intent );
 				return true;
 			case R.id.action_quit:
 				finish();
@@ -142,20 +134,24 @@ public class GameActivity extends AppCompatActivity {
 		return super.onOptionsItemSelected( item );
 	}
 
-	/* @Override
+	@Override
 	protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
 		switch ( requestCode ) {
-			case SCORES_ACTIVITY:
+			case GAMEOVER_ACTIVITY:
 				switch ( resultCode ) {
 					case RESULT_OK:
+						mazeView.newGame();
 						break;
-					case RESULT_CANCELED: break;
+					case RESULT_CANCELED:
+						Intent intent = new Intent( this, ScoresActivity.class );
+						startActivity( intent );
+						break;
 					default: break;
 				}
 				break;
 			default: break;
 		}
-	} */
+	}
 
 
 

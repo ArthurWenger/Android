@@ -61,7 +61,6 @@ public class MazeGameView extends View {
 	private float cameraMinDistance = 1.001f;
 	private final float maxInput1Length = 100.0f;
 	private GameOverListener gameOverListener;
-	private boolean gameStopped = false;
 
 	public MazeGameView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -190,11 +189,26 @@ public class MazeGameView extends View {
 		}
 	}
 
-	public void updateAccel( float sX, float sY ) {
+	protected void updateAccel( float sX, float sY ) {
 		if(hero!=null) {
 			PointF sensorAccel = new PointF( sX, sY );
 			hero.updateAccel( sensorAccel );
 		}
+	}
+
+	protected void newGame() {
+		score = 0;
+		walls = null;
+		coins = null;
+		enemies = null;
+		initialTapPoint = null;
+		currentTapPoint = null;
+		purgeTimer();
+		generateMaze( getWidth(), getHeight() );
+	}
+
+	protected void setGameOverListener(GameOverListener mEventListener) {
+		this.gameOverListener = mEventListener;
 	}
 
 	/** Private **/
@@ -223,7 +237,7 @@ public class MazeGameView extends View {
 				Enemy enemy = enemyIterator.next();
 				if(enemy.detectAndResolveCollisionWithHero(hero) && hero.getLives() == 0 && gameOverListener != null) {
 					//enemyIterator.remove();
-					stopLevel();
+					purgeTimer();
 					gameOverListener.notifyOfGameOver(score);
 					return;
 				}
@@ -308,10 +322,12 @@ public class MazeGameView extends View {
 		generateMaze( getWidth(), getHeight() );
 	}
 
-	private void stopLevel(){
-		updateTimerTask.cancel();
+	private void purgeTimer(){
+		if(updateTimerTask!=null) {
+			updateTimerTask.cancel();
+			updateTimerTask = null;
+		}
 		updateTimer.purge();
-		updateTimerTask = null;
 	}
 
 	private RectF cameraRect() {
@@ -355,9 +371,5 @@ public class MazeGameView extends View {
 			return new LineSegment2D(initialTapPoint.x+inputVector1.x, initialTapPoint.y+inputVector1.y, currentTapPoint.x, currentTapPoint.y);
 		}
 		return null;
-	}
-
-	public void setGameOverListener(GameOverListener mEventListener) {
-		this.gameOverListener = mEventListener;
 	}
 }

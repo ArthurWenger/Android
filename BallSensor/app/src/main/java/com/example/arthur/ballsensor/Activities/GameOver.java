@@ -38,6 +38,8 @@ public class GameOver extends AppCompatActivity implements View.OnClickListener 
 	public void onClick( View v ) {
 		switch ( v.getId() ) {
 			case R.id.b_play:
+				setResult( RESULT_OK );
+				finish();
 				break;
 			case R.id.b_highscore:
 				break;
