@@ -18,7 +18,7 @@ public class ScoresActivity extends AppCompatActivity {
 	private ListView mListView;
 	private ScoresArrayAdapter adapter;
 	private ArrayList<Score> tasks;
-	private final int MAP_ACTIVITY = 2;
+	//private final int MAP_ACTIVITY = 2;
 	DBManager mydb;
 
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -49,9 +49,12 @@ public class ScoresActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick( AdapterView<?> adapter, View view, int position, long id ) {
 				Score score = (Score)adapter.getItemAtPosition(position);
+				double lat = score.getLatitude();
+				double lng = score.getLongitude();
 				Intent intent = new Intent( getBaseContext(), MapsActivity.class );
-
-				startActivityForResult( intent, MAP_ACTIVITY );
+				intent.putExtra( "latitude",lat );
+				intent.putExtra( "longitude",lng );
+				startActivity( intent );
 			}
 		} );
 	}
