@@ -7,4 +7,5 @@
     <string name="play">play</string>
     <string name="help">help</string>
     <string name="settingsLabel">settings</string>
+    <string name="title_activity_game_over">GameOver</string>
 </resources>

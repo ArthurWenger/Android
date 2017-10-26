@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvGameOver"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="60dp"
+        android:text="Game Over"
+        android:textAlignment="center"
+        android:textColor="@color/yellow"
+        android:textSize="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/b_play"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
+        android:layout_alignLeft="@+id/tvScore"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/tvScore"
+        android:onClick="play"
+        android:src="@drawable/b_play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvScore"
+        app:layout_constraintVertical_bias="0.354"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintLeft_toLeftOf="@+id/tvScore"/>
+
+    <TextView
+        android:id="@+id/tvScore"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="87dp"
+        android:text="Score: "
+        android:textAlignment="center"
+        android:textColor="@color/yellow"
+        android:textSize="40dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvGameOver"/>
+
+    <ImageView
+        android:id="@+id/b_highscore"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
+        android:layout_alignLeft="@+id/tvScore"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/tvScore"
+        android:onClick="play"
+        android:src="@drawable/b_highscore"
+        app:layout_constraintTop_toTopOf="@+id/b_play"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/b_play"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/tvHS"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/tvHS"/>
+
+    <TextView
+        android:id="@+id/tvReplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Replay"
+        android:textAlignment="center"
+        android:textColor="@color/yellow"
+        android:textSize="30dp"
+        app:layout_constraintTop_toBottomOf="@+id/b_play"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/b_play"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/b_play"/>
+
+    <TextView
+        android:id="@+id/tvHS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Highscores"
+        android:textAlignment="center"
+        android:textColor="@color/yellow"
+        android:textSize="30dp"
+        app:layout_constraintTop_toBottomOf="@+id/b_highscore"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/tvScore"/>
+</android.support.constraint.ConstraintLayout>
