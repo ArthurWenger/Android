@@ -38,7 +38,7 @@ public class MazeGameView extends View {
 	private Paint uiTextPaint;
 	private Paint uiTextStrokePaint;
 	private Paint coinPaint;
-	private Paint bombPaint;
+	private Paint extraPaint;
 	private PointF startLocation = new PointF();
 	private PointF finishLocation = new PointF();
 	private Hero hero;
@@ -47,13 +47,12 @@ public class MazeGameView extends View {
 	private float wiggleRoom = gameSize+wallThickness/2-difficulty;
 	private Set<LineSegment2D> walls;
 	private Set<PointF> coins;
-	private Set<PointF> bombs;
+	private Set<PointF> extras;
 	private Set<Enemy> enemies;
 	private float coinRadius = gameSize/2.0f;
-	private float bombRadius = gameSize/1.5f;
+	private float extraRadius = gameSize/1.5f;
 	private PointF initialTapPoint;
 	private PointF currentTapPoint;
-	private PointF sensorAccel;
 	private Timer updateTimer = new Timer();
 	private UpdateTimerTask updateTimerTask;
 	private PointF cameraPos = new PointF();
@@ -90,8 +89,8 @@ public class MazeGameView extends View {
 		uiTextStrokePaint.setColor(Color.BLACK);
 		coinPaint = new Paint();
 		coinPaint.setARGB(255,180,190,0);
-		bombPaint = new Paint();
-		bombPaint.setColor(Color.RED);
+		extraPaint = new Paint();
+		extraPaint.setColor(Color.BLUE);
 	}
 
 	@Override
@@ -143,11 +142,12 @@ public class MazeGameView extends View {
 				canvas.drawLine(wall.a.x+x1Offset, wall.a.y+y1Offset, wall.b.x+x2Offset, wall.b.y+y2Offset, wallPaint);
 			}
 		}
+		//TODO: corriger le probleme potentiel de processus concurrent
 		for(PointF coin : coins) {
 			canvas.drawCircle(coin.x,coin.y,coinRadius,coinPaint);
 		}
-		for(PointF bomb : bombs) {
-			canvas.drawCircle(bomb.x,bomb.y,bombRadius,bombPaint);
+		for(PointF extra : extras ) {
+			canvas.drawCircle(extra.x,extra.y, extraRadius, extraPaint );
 		}
 		for(Enemy enemy : enemies) {
 			enemy.draw(canvas);
@@ -171,9 +171,8 @@ public class MazeGameView extends View {
 		}
 		canvas.drawText("Score: "+Integer.toString(score),10,20,uiTextPaint);
 		canvas.drawText("Score: "+Integer.toString(score),10,20,uiTextStrokePaint);
-		canvas.drawText("Fire: "+Integer.toString((int)(hero.getBombsAvailable()*100.0f)),260,20,uiTextPaint);
-		canvas.drawText("Fire: "+Integer.toString((int)(hero.getBombsAvailable()*100.0f)),260,20,uiTextStrokePaint);
-
+		canvas.drawText("Lives: "+Integer.toString(hero.getLives()),260,20,uiTextPaint);
+		canvas.drawText("Lives: "+Integer.toString(hero.getLives()),260,20,uiTextStrokePaint);
 	}
 
 	@Override
@@ -197,7 +196,7 @@ public class MazeGameView extends View {
 
 		@Override
 		public void run() {
-			hero.update3();
+			hero.update();
 			for(Iterator<PointF> coinIterator = coins.iterator(); coinIterator.hasNext(); ) {
 				if(hero.detectCoinCollision(coinIterator.next(), coinRadius)) {
 					coinIterator.remove();
@@ -206,9 +205,9 @@ public class MazeGameView extends View {
 				}
 			}
 
-			for(Iterator<PointF> bombIterator = bombs.iterator(); bombIterator.hasNext(); ) {
-				if(hero.detectAndResolveBombCollision(bombIterator.next(), bombRadius)) {
-					bombIterator.remove();
+			for( Iterator<PointF> extraIterator = extras.iterator(); extraIterator.hasNext(); ) {
+				if(hero.detectAndResolveExtraCollision(extraIterator.next(), extraRadius )) {
+					extraIterator.remove();
 					break;
 				}
 			}
@@ -219,14 +218,14 @@ public class MazeGameView extends View {
 					enemyIterator.remove();
 				}
 				else {
-					enemy.update(walls, wallThickness);
+					enemy.update(walls, wallThickness, hero);
 				}
 			}
 
-			if(hero.detectFinishCollision(finishLocation)) {
+			/*if(hero.detectFinishCollision(finishLocation)) {
 				winLevel();
-			}
-			else {
+			} */
+			//else {
 				for(LineSegment2D wall : walls) {
 					hero.detectAndResolveWallCollision(wall, wallThickness);
 				}
@@ -256,7 +255,7 @@ public class MazeGameView extends View {
 
 				postInvalidate();
 			}
-		}
+		//}
 	}
 
 	private void generateMaze(float screenWidth, float screenHeight) {
@@ -272,12 +271,12 @@ public class MazeGameView extends View {
 				cameraPos.set(startLocation);
 				finishLocation.set(generator.getFinishLocation());
 				walls = generator.getWalls();
-				coins = generator.getRandomRoomLocations((int) (Math.random()*5.0+8.0), true);
-				bombs = generator.getRandomRoomLocations((int) (Math.random()*3.0+1.0), true);
+				coins = generator.getRandomRoomLocations((int) (Math.random()*10.0+40.0), true);
+				extras = generator.getRandomRoomLocations((int) (4.0), true);
 				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
 				enemies = new HashSet<Enemy>();
 				for(PointF location : enemyLocations) {
-					enemies.add(new Enemy(location,gameSize,getContext().getAssets(), hero));
+					enemies.add(new Enemy(location,gameSize,getContext().getAssets()));
 				}
 				updateTimerTask = new UpdateTimerTask();
 				updateTimer.schedule(updateTimerTask, 0, 33);
