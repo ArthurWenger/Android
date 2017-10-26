@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.RectF;
 
 import com.example.arthur.ballsensor.Interfaces.AnimatedSprite;
 
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 public class Hero extends AnimatedSprite {
 
 	Bitmap pacmanSpriteSheet;
-	//Bitmap flameSpriteSheet;
 	private int drawCounter = 0;
 	private final int moveAnimationNumFrames = 7;
 	private final int idleAnimationNumFrames = 2;
@@ -22,10 +20,6 @@ public class Hero extends AnimatedSprite {
 	private final int idleAnimationDrawsPerFrame = 14;
 	private final int pacmanSpriteWidth = 72;
 	private final int pacmanSpriteHeight = 72;
-	//private final int fireAnimationNumFrames = 16;
-	//private final int fireAnimationDrawsPerFrame = 1;
-	//private final int fireSpriteWidth = 28;
-	//private final int fireSpriteHeight = 51;
 
 	//private final float dragConstant = 0.125f;
 	private final float dragConstant = 0.1f;
@@ -33,14 +27,17 @@ public class Hero extends AnimatedSprite {
 
 	private Paint heroPaint = new Paint();
 	private PointF acceleration = new PointF(0f,0f);
-	private final float accelerationScale = 0.012f;
+	//private final float accelerationScale = 0.012f;
 	private final float maxAccelerationLength = 1f;
 	private final float maxVelocityLength = 10f;
 	private final float angularAccelerationScale = 0.05f;
 	private final float minSpeed = 0.05f;
-	private final float minAngularSpeed = 0.005f;
-	private final float brakeForceMagnitude = 0.1f;
-	private final float angularBrakeForceMagnitude = 0.006f;
+	//private final float minAngularSpeed = 0.005f;
+	//private final float brakeForceMagnitude = 0.1f;
+	//private final float angularBrakeForceMagnitude = 0.006f;
+
+	private int lives = 3;
+	private boolean invulnerable = false;
 
 	private ArrayList<PointF> temporaryAccelerations = new ArrayList<PointF>();
 
@@ -53,8 +50,8 @@ public class Hero extends AnimatedSprite {
 		return Math2D.circleIntersection(getCenter(), radius, coinCenter, coinRadius);
 	}
 
-	public boolean detectAndResolveExtraCollision( PointF bombCenter, float bombRadius) {
-		if(Math2D.circleIntersection(getCenter(), radius, bombCenter, bombRadius)) {
+	public boolean detectAndResolveExtraCollision( PointF extraCenter, float extraRadius) {
+		if(Math2D.circleIntersection(getCenter(), radius, extraCenter, extraRadius)) {
 			return true;
 		}
 		return false;		
@@ -68,33 +65,58 @@ public class Hero extends AnimatedSprite {
 		PointF currentCenter = getCenter();
 		canvas.save();
 		canvas.rotate(rotationInDegrees(), currentCenter.x, currentCenter.y);
+			int animationFrameIndex;
+			if ( Math.abs( velocity.x ) > minSpeed || Math.abs( velocity.y ) > minSpeed ) {
+				animationFrameIndex = ( drawCounter / moveAnimationDrawsPerFrame ) % moveAnimationNumFrames;
+			} else {
+				animationFrameIndex = ( drawCounter / idleAnimationDrawsPerFrame ) % idleAnimationNumFrames;
+			}
 
-		int animationFrameIndex;
-		if(Math.abs(velocity.x) > minSpeed || Math.abs(velocity.y) > minSpeed) {
-			animationFrameIndex = (drawCounter/moveAnimationDrawsPerFrame) % moveAnimationNumFrames;
+			int srcLeft = pacmanSpriteWidth * animationFrameIndex;
+			Rect src = new Rect( srcLeft, 0, srcLeft + pacmanSpriteWidth, pacmanSpriteHeight );
+			Rect test = unrotatedHeroRect();
+		if(!invulnerable || drawCounter%8 <=4) {
+			canvas.drawBitmap( pacmanSpriteSheet, src, test, heroPaint );
 		}
-		else {
-			animationFrameIndex = (drawCounter/idleAnimationDrawsPerFrame) % idleAnimationNumFrames;
-		}
-
-		int srcLeft = pacmanSpriteWidth * animationFrameIndex;
-		Rect src = new Rect(srcLeft,0,srcLeft+pacmanSpriteWidth,pacmanSpriteHeight);
-		Rect test = unrotatedHeroRect();
-		canvas.drawBitmap(pacmanSpriteSheet, src, test, heroPaint);
-		
 		canvas.restore();
 		++drawCounter;
 	}
 
-	public RotatedRect vulnerableRect() {
+	private void startInvulnerableState(){
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				invulnerable = true;
+				try {
+					Thread.sleep(3000);
+				} catch ( InterruptedException e ) {
+					e.printStackTrace();
+				}
+				invulnerable = false;
+			}
+		}).start();
+	}
+
+	/* public RotatedRect vulnerableRect() {
 		RectF unrotatedHeroRectF = new RectF(unrotatedHeroRect());
 		return new RotatedRect(unrotatedHeroRectF, new PointF(unrotatedHeroRectF.centerX(),unrotatedHeroRectF.centerY()), (rotationInDegrees()) * ((float)Math.PI/180.0f));
-	}
+	} */
 	
 	public void getHit(AnimatedSprite other) {
-		if(!other.getCenter().equals(this.getCenter())) {
-			temporaryAccelerations.add(Math2D.scale(Math2D.normalize(Math2D.subtract(getCenter(),other.getCenter())), speed()+2.2f));
+		if(!invulnerable) {
+			invulnerable = true;
+			startInvulnerableState();
+			lives = Math.max( 0, lives - 1 );
+			if ( !other.getCenter().equals( this.getCenter() ) ) {
+				temporaryAccelerations.add( Math2D.scale( Math2D.normalize( Math2D.subtract( getCenter(), other.getCenter() ) ), speed() + 2.2f ) );
+			}
 		}
+	}
+
+	public int getLives(){
+		return lives;
 	}
 	
 	private Rect unrotatedHeroRect() {
@@ -133,10 +155,10 @@ public class Hero extends AnimatedSprite {
 
 		velocity = Math2D.add(velocity, acceleration);
 
-		for(PointF accel : temporaryAccelerations) {
+		/*for(PointF accel : temporaryAccelerations) {
 			velocity = Math2D.add(velocity, accel);
 		}
-		temporaryAccelerations.removeAll(temporaryAccelerations);
+		temporaryAccelerations.removeAll(temporaryAccelerations);*/
 
 		if(speed() > 0.0f) {
 			float dragMagnitude = speed()*dragConstant;

@@ -40,14 +40,15 @@ public class Enemy extends AnimatedSprite {
 	}
 	
 	public boolean detectAndResolveCollisionWithHero(Hero hero) {
-		RotatedRect vulnerableRect = hero.vulnerableRect();
-		if(vulnerableRect.intersectsCircle(getCenter(),radius)) {
-			hero.getHit(this);
+		//RotatedRect vulnerableRect = hero.vulnerableRect();
+		PointF hC = hero.getCenter();
+		float hRadius = hero.getRadius();
+		if(Math2D.circleIntersection( hC, hRadius, getCenter(), radius )) {
+			hero.getHit( this );
 		}
-		/*RotatedRect dangerousRect = hero.dangerousRect();
-		if(dangerousRect != null && dangerousRect.intersectsCircle(getCenter(),radius)) {
-			return true;
-		}*/
+		/* if(vulnerableRect.intersectsCircle(getCenter(),radius)) {
+			hero.getHit(this);
+		} */
 		return false; 
 	}
 
