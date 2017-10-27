@@ -38,8 +38,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		setContentView( R.layout.activity_maps );
 		Bundle extras = this.getIntent().getExtras();
 		assert extras != null;
-		scoreLatitude = extras.getDouble( "lat", 0 );
-		scoreLongitude = extras.getDouble( "lng", 0 );
+		scoreLatitude = extras.getDouble( "latitude", 0 );
+		scoreLongitude = extras.getDouble( "longitude", 0 );
 		scores_array = (ArrayList<Score>) extras.get( "scores_array" );
 		Log.i("lat", ""+scoreLatitude);
 		Log.i("long", ""+scoreLongitude);
