@@ -50,7 +50,7 @@ public class SingleShotLocationProvider {
 
 	private static class MyLocationListener implements LocationListener {
 		LocationCallback callback;
-		public MyLocationListener(final LocationCallback callback){
+		private MyLocationListener(final LocationCallback callback){
 			this.callback = callback;
 		}
 		@Override
