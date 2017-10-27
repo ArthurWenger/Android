@@ -43,11 +43,11 @@ public class ScoresActivity extends AppCompatActivity {
 		/* for ( int i = 1; i <= 5; i++ )
 			tasks.add( new Score( i, "user " + i , 50000-10000*i) ); */
 
-		ArrayList array_list = mydb.getAllScores();
-		if(array_list.size()==0){
+		final ArrayList<Score> scores_array = mydb.getAllScores();
+		if(scores_array.size()==0){
 			mTvNothing.setVisibility(TextView.VISIBLE);
 		} else {
-			adapter = new ScoresArrayAdapter( this, array_list );
+			adapter = new ScoresArrayAdapter( this, scores_array );
 			mListView.setAdapter( adapter );
 			mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
 				@Override
@@ -58,6 +58,7 @@ public class ScoresActivity extends AppCompatActivity {
 					Intent intent = new Intent( getBaseContext(), MapsActivity.class );
 					intent.putExtra( "latitude", lat );
 					intent.putExtra( "longitude", lng );
+					intent.putExtra( "scores_array", scores_array );
 					startActivity( intent );
 				}
 			} );

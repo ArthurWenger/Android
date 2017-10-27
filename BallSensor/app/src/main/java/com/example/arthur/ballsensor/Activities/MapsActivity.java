@@ -1,10 +1,11 @@
 package com.example.arthur.ballsensor.Activities;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
+import com.example.arthur.ballsensor.Objects.Score;
 import com.example.arthur.ballsensor.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -17,6 +18,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 	private GoogleMap mMap;
@@ -27,14 +30,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	Location mLastLocation;
 	private double scoreLatitude;
 	private double scoreLongitude;
+	private ArrayList<Score> scores_array;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_maps );
-		Intent intent = this.getIntent();
-		scoreLatitude = intent.getDoubleExtra( "lat", 0 );
-		scoreLongitude = intent.getDoubleExtra( "lng", 0 );
+		Bundle extras = this.getIntent().getExtras();
+		assert extras != null;
+		scoreLatitude = extras.getDouble( "lat", 0 );
+		scoreLongitude = extras.getDouble( "lng", 0 );
+		scores_array = (ArrayList<Score>) extras.get( "scores_array" );
+		Log.i("lat", ""+scoreLatitude);
+		Log.i("long", ""+scoreLongitude);
 
 
 		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -150,9 +158,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 			mMap.getUiSettings().setZoomControlsEnabled( true );
 			mMap.getUiSettings().setZoomGesturesEnabled( true );
 
-			LatLng latLng = new LatLng( scoreLatitude, scoreLongitude );
-			mMap.addMarker( new MarkerOptions().position( latLng ).title( "Marker in Sydney" ) );
-			mMap.animateCamera( CameraUpdateFactory.newLatLngZoom( latLng, 11 ) );
+			//LatLng latLng = new LatLng( scoreLatitude, scoreLongitude );
+			for(Score score: scores_array){
+				LatLng latLng = new LatLng( score.getLatitude(), score.getLongitude() );
+				mMap.addMarker( new MarkerOptions().position( latLng ).title( "score: "+score.getValue() ) );
+			}
+			LatLng centerLatLng = new LatLng( scoreLatitude, scoreLongitude );
+			mMap.animateCamera( CameraUpdateFactory.newLatLngZoom( centerLatLng, 11 ) );
+			//mMap.moveCamera( CameraUpdateFactory.newLatLng( latLng ) );
 			// Add a marker in Sydney and move the camera
 			//LatLng sydney = new LatLng( -34, 151 );
 			//mMap.addMarker( new MarkerOptions().position( sydney ).title( "Marker in Sydney" ) );
