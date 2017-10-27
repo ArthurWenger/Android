@@ -96,6 +96,7 @@ public class MazeGameView extends View {
 		extraPaint = new Paint();
 		extraPaint.setColor(Color.BLUE);
 	}
+	//TODO: ajouter une méthode pause quand le jeu est quitté avec un retour en arrière
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {

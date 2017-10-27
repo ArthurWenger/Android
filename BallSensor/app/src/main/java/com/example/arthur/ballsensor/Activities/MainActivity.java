@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 		//GameConditions.resetCurrentScore();
 	}
 
+	//TODO: ajouter la musique au projet
 	private static final String TAG = "MainActivity";
 	public void toggleMusic(View view){
 		if(player.isPlaying()){ player.stop(); }
