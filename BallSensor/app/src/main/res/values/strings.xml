@@ -7,4 +7,5 @@
     <string name="play">Play</string>
     <string name="title_activity_game_over">GameOver</string>
     <string name="highscores">Highscores</string>
+    <string name="no_scores_available">No scores available yet</string>
 </resources>
