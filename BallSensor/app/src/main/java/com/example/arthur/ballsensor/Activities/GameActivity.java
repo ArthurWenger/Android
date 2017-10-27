@@ -77,7 +77,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		gameOverIntent.putExtra( "score",finalScore );
 		gameOverIntent.putExtra( "location", location );
 		startActivityForResult( gameOverIntent, GAMEOVER_ACTIVITY );
-		//overridePendingTransition(R.anim.enter, R.anim.exit);
+		overridePendingTransition(R.anim.enter, R.anim.exit);
 	}
 
 	@Override
