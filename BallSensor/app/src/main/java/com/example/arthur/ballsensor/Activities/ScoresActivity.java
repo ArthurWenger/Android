@@ -26,7 +26,7 @@ public class ScoresActivity extends AppCompatActivity {
 		setContentView( R.layout.activity_scores );
 		mydb = new DBManager(this);
 		// pour supprimer la base:
-		// this.deleteDatabase(DATABASE_NAME);
+		//this.deleteDatabase("ScoresDB.db");
 		initView();
 	}
 
