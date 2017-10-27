@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.arthur.ballsensor.Objects.DBManager;
 import com.example.arthur.ballsensor.Objects.Score;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 
 public class ScoresActivity extends AppCompatActivity {
 	private ListView mListView;
+	private TextView mTvNothing;
 	private ScoresArrayAdapter adapter;
 	private ArrayList<Score> tasks;
 	//private final int MAP_ACTIVITY = 2;
@@ -31,6 +33,7 @@ public class ScoresActivity extends AppCompatActivity {
 	}
 
 	private void initView(){
+		mTvNothing = (TextView) findViewById( R.id.tvNothing );
 		mListView = (ListView) findViewById( R.id.list );
 		//registerForContextMenu( mListView );
 
@@ -41,21 +44,23 @@ public class ScoresActivity extends AppCompatActivity {
 			tasks.add( new Score( i, "user " + i , 50000-10000*i) ); */
 
 		ArrayList array_list = mydb.getAllScores();
-
-		adapter = new ScoresArrayAdapter( this, array_list );
-		mListView.setAdapter( adapter );
-
-		mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick( AdapterView<?> adapter, View view, int position, long id ) {
-				Score score = (Score)adapter.getItemAtPosition(position);
-				double lat = score.getLatitude();
-				double lng = score.getLongitude();
-				Intent intent = new Intent( getBaseContext(), MapsActivity.class );
-				intent.putExtra( "latitude",lat );
-				intent.putExtra( "longitude",lng );
-				startActivity( intent );
-			}
-		} );
+		if(array_list.size()==0){
+			mTvNothing.setVisibility(TextView.VISIBLE);
+		} else {
+			adapter = new ScoresArrayAdapter( this, array_list );
+			mListView.setAdapter( adapter );
+			mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick( AdapterView<?> adapter, View view, int position, long id ) {
+					Score score = (Score) adapter.getItemAtPosition( position );
+					double lat = score.getLatitude();
+					double lng = score.getLongitude();
+					Intent intent = new Intent( getBaseContext(), MapsActivity.class );
+					intent.putExtra( "latitude", lat );
+					intent.putExtra( "longitude", lng );
+					startActivity( intent );
+				}
+			} );
+		}
 	}
 }
