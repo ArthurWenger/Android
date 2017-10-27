@@ -11,10 +11,10 @@ import java.util.Set;
 
 public class Enemy extends AnimatedSprite {
 
-	private Bitmap ghostSpriteSheet;
+	private final Bitmap ghostSpriteSheet;
 	private final int spriteHalfWidth;
 	private final int spriteHalfHeight;
-	private Paint ghostPaint = new Paint();
+	private final Paint ghostPaint = new Paint();
 
 	public Enemy(PointF location, float size, AssetManager assets) {
 		super(location, size*0.8f);
