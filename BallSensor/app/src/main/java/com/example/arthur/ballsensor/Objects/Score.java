@@ -38,6 +38,14 @@ public class Score {
 
 	public int getValue(){ return value; }
 
+	public double getLongitude() {
+		return lng;
+	}
+
+	public double getLatitude() {
+		return lat;
+	}
+
 	/*public String getName() {
 		return name;
 	}*/
