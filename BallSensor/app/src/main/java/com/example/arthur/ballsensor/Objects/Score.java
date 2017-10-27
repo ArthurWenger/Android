@@ -1,6 +1,8 @@
 package com.example.arthur.ballsensor.Objects;
 
-public class Score {
+import java.io.Serializable;
+
+public class Score implements Serializable {
 
 	private int rank;
 	//private String name;
@@ -9,7 +11,8 @@ public class Score {
 	private double lat;
 	private double lng;
 
-	public Score( int rank, int value, double lat, double lng) {
+	public Score( int rank, int value, double lat, double lng)
+	{
 		this.rank = rank;
 		this.value = value;
 		this.lat = lat;
