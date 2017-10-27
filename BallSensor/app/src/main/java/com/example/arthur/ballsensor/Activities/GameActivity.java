@@ -2,22 +2,27 @@ package com.example.arthur.ballsensor.Activities;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.arthur.ballsensor.Interfaces.GameOverListener;
+import com.example.arthur.ballsensor.Objects.SingleShotLocationProvider;
 import com.example.arthur.ballsensor.R;
 
-public class GameActivity extends AppCompatActivity implements GameOverListener {
+public class GameActivity extends AppCompatActivity implements GameOverListener, SingleShotLocationProvider.LocationCallback {
 
 	private SensorManager manager;
 	private Sensor mAccelerometer;
@@ -30,13 +35,18 @@ public class GameActivity extends AppCompatActivity implements GameOverListener 
 	private WindowManager mWindowManager;
 	private Display mDisplay;
 	//private WakeLock mWakeLock;
+	Double[] location =null;
 
 	private static final int GAMEOVER_ACTIVITY = 1;
+	private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_game );
+		// on demande la position du joueur pour pouvoir inscrire son score dans la base de données par la suite
+		// le premier this est pour le contexte et le deuxieme est pour le callback onNewLocationAvailable
+		SingleShotLocationProvider.requestSingleUpdate(this, this);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		manager = (SensorManager) getSystemService( Service.SENSOR_SERVICE );
 		mAccelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -46,6 +56,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener 
 
 		// Get an instance of the WindowManager
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		assert mWindowManager != null;
 		mDisplay = mWindowManager.getDefaultDisplay();
 
 		// Create a bright wake lock
@@ -64,6 +75,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener 
 	public void notifyOfGameOver(int finalScore) {
 		Intent gameOverIntent = new Intent(this, GameOver.class);
 		gameOverIntent.putExtra( "score",finalScore );
+		gameOverIntent.putExtra( "location", location );
 		startActivityForResult( gameOverIntent, GAMEOVER_ACTIVITY );
 		//overridePendingTransition(R.anim.enter, R.anim.exit);
 	}
@@ -149,6 +161,41 @@ public class GameActivity extends AppCompatActivity implements GameOverListener 
 				}
 				break;
 			default: break;
+		}
+	}
+
+	@Override
+	public void onNewLocationAvailable( Double[] location ) {
+		Log.d("Location", "my location is :" + location[0].toString()+" "+location[1].toString());
+		this.location = location;
+		Log.d("Location2", "my location2 is :" + this.location[0].toString()+" "+this.location[1].toString());
+	}
+
+	@Override
+	public void onRequestNeeded() {
+		Log.d("Location", "requestNeeded callback reached");
+		ActivityCompat.requestPermissions( this,
+				new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION },
+				MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+		Log.d("Location", "onRequestPermissionResult callback reached");
+		switch (requestCode) {
+			case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+				// If request is cancelled, the result arrays are empty.
+				if (grantResults.length > 0
+						    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+					SingleShotLocationProvider.requestSingleUpdate(this, this);
+
+				} else {
+					// permission denied, boo! Disable the
+					// functionality that depends on this permission.
+					Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+				}
+			}
 		}
 	}
 
