@@ -18,13 +18,14 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.example.arthur.ballsensor.gameOver.GameOverActivity;
-import com.example.arthur.ballsensor.gameOver.GameOverListener;
-import com.example.arthur.ballsensor.maps.SingleShotLocationProvider;
+import com.example.arthur.ballsensor.gameover.GameOverActivity;
+import com.example.arthur.ballsensor.gameover.GameOverListener;
+import com.example.arthur.ballsensor.location.LocationCallback;
+import com.example.arthur.ballsensor.location.SingleShotLocationProvider;
 import com.example.arthur.ballsensor.R;
 import com.example.arthur.ballsensor.scoresList.ScoresActivity;
 
-public class GameActivity extends AppCompatActivity implements GameOverListener, SingleShotLocationProvider.LocationCallback {
+public class GameActivity extends AppCompatActivity implements GameOverListener, LocationCallback {
 
 	private SensorManager manager;
 	private Sensor mAccelerometer;
@@ -174,7 +175,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	}
 
 	@Override
-	public void onRequestNeeded() {
+	public void onPermissionNeeded() {
 		Log.d("Location", "requestNeeded callback reached");
 		ActivityCompat.requestPermissions( this,
 				new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION },

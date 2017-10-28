@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.gameOver;
+package com.example.arthur.ballsensor.gameover;
 
 import android.content.Intent;
 import android.os.Bundle;

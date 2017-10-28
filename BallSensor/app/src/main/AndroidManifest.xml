@@ -44,7 +44,7 @@
             android:label="@string/title_activity_maps">
         </activity>
         <activity
-            android:name=".gameOver.GameOverActivity"
+            android:name=".gameover.GameOverActivity"
             android:label="@string/title_activity_game_over"
             android:theme="@style/AppTheme.Transparent.NoActionBar">
         </activity>

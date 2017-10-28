@@ -12,13 +12,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.arthur.ballsensor.gameOver.GameOverListener;
+import com.example.arthur.ballsensor.gameover.GameOverListener;
 import com.example.arthur.ballsensor.maze.MazeGenerator;
 import com.example.arthur.ballsensor.maze.MazeGeneratorDelegate;
 import com.example.arthur.ballsensor.maze.DepthFirstSearchMazeGenerator;
-import com.example.arthur.ballsensor.game.Enemy;
-import com.example.arthur.ballsensor.game.Heart;
-import com.example.arthur.ballsensor.game.Hero;
 import com.example.arthur.ballsensor.geometry.LineSegment2D;
 import com.example.arthur.ballsensor.geometry.Math2D;
 

@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.maps;
+package com.example.arthur.ballsensor.location;
 
 import android.Manifest;
 import android.content.Context;
@@ -13,12 +13,6 @@ import android.util.Log;
 
 public class SingleShotLocationProvider {
 
-	public interface LocationCallback {
-		void onNewLocationAvailable( Double[] location );
-
-		void onRequestNeeded();
-	}
-
 	// calls back to calling thread, note this is for low grain: if you want higher precision, swap the
 	// contents of the else and if. Also be sure to check gps permission/settings are allowed.
 	// call usually takes <10ms
@@ -32,7 +26,7 @@ public class SingleShotLocationProvider {
 			criteria.setAccuracy( Criteria.ACCURACY_COARSE );
 			if ( ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
 					     && ActivityCompat.checkSelfPermission( context, Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-				callback.onRequestNeeded();
+				callback.onPermissionNeeded();
 				return;
 			}
 			locationManager.requestSingleUpdate( criteria, new MyLocationListener( callback ), null );

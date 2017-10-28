@@ -1,10 +1,7 @@
-package com.example.arthur.ballsensor.objects;
+package com.example.arthur.ballsensor.geometry;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
-
-import com.example.arthur.ballsensor.geometry.LineSegment2D;
-import com.example.arthur.ballsensor.geometry.Math2D;
 
 public class RotatedRect {
 	
