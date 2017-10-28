@@ -1,6 +1,6 @@
 package com.example.arthur.ballsensor.location;
 
-public interface LocationCallback {
+public interface LocationListener {
 	void onNewLocationAvailable( Double[] location );
 
 	void onPermissionNeeded();

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -16,7 +15,7 @@ public class SingleShotLocationProvider {
 	// calls back to calling thread, note this is for low grain: if you want higher precision, swap the
 	// contents of the else and if. Also be sure to check gps permission/settings are allowed.
 	// call usually takes <10ms
-	public static void requestSingleUpdate( final Context context, final LocationCallback callback ) {
+	public static void requestSingleUpdate( final Context context, final LocationListener callback ) {
 		final LocationManager locationManager = (LocationManager) context.getSystemService( Context.LOCATION_SERVICE );
 		assert locationManager != null;
 		boolean isNetworkEnabled = locationManager.isProviderEnabled( LocationManager.NETWORK_PROVIDER );
@@ -42,9 +41,9 @@ public class SingleShotLocationProvider {
 		}
 	}
 
-	private static class MyLocationListener implements LocationListener {
-		LocationCallback callback;
-		private MyLocationListener(final LocationCallback callback){
+	private static class MyLocationListener implements android.location.LocationListener {
+		LocationListener callback;
+		private MyLocationListener(final LocationListener callback){
 			this.callback = callback;
 		}
 		@Override

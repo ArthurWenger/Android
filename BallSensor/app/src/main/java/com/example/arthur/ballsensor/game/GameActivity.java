@@ -20,12 +20,12 @@ import android.widget.Toast;
 
 import com.example.arthur.ballsensor.gameover.GameOverActivity;
 import com.example.arthur.ballsensor.gameover.GameOverListener;
-import com.example.arthur.ballsensor.location.LocationCallback;
+import com.example.arthur.ballsensor.location.LocationListener;
 import com.example.arthur.ballsensor.location.SingleShotLocationProvider;
 import com.example.arthur.ballsensor.R;
 import com.example.arthur.ballsensor.scoresList.ScoresActivity;
 
-public class GameActivity extends AppCompatActivity implements GameOverListener, LocationCallback {
+public class GameActivity extends AppCompatActivity implements GameOverListener, LocationListener {
 
 	private SensorManager manager;
 	private Sensor mAccelerometer;
