@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.arthur.ballsensor.Activities.GameActivity">
+    tools:context="com.example.arthur.ballsensor.game.GameActivity">
 
-    <com.example.arthur.ballsensor.Activities.MazeGameView
+    <com.example.arthur.ballsensor.game.MazeGameView
         android:id="@+id/mazeView"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"/>

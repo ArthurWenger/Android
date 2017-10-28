@@ -22,29 +22,29 @@
             android:value="@string/google_maps_key"/>
 
         <activity
-            android:name=".Activities.MainActivity">
+            android:name=".menu.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.ScoresActivity"
+            android:name=".scoresList.ScoresActivity"
             android:label="@string/title_activity_scores"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".Activities.GameActivity"
+            android:name=".game.GameActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".Activities.MapsActivity"
+            android:name=".maps.MapsActivity"
             android:label="@string/title_activity_maps">
         </activity>
         <activity
-            android:name=".Activities.GameOver"
+            android:name=".gameOver.GameOverActivity"
             android:label="@string/title_activity_game_over"
             android:theme="@style/AppTheme.Transparent.NoActionBar">
         </activity>
