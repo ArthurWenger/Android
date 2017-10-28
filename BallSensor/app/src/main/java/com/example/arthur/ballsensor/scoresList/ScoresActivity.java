@@ -52,11 +52,8 @@ public class ScoresActivity extends AppCompatActivity {
 				@Override
 				public void onItemClick( AdapterView<?> adapter, View view, int position, long id ) {
 					Score score = (Score) adapter.getItemAtPosition( position );
-					double lat = score.getLatitude();
-					double lng = score.getLongitude();
 					Intent intent = new Intent( getBaseContext(), MapsActivity.class );
-					intent.putExtra( "latitude", lat );
-					intent.putExtra( "longitude", lng );
+					intent.putExtra( "centerScore", score );
 					intent.putExtra( "scores_array", scores_array );
 					startActivity( intent );
 				}
