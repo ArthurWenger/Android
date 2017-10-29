@@ -60,6 +60,7 @@ public class Hero extends AnimatedSprite {
 
 	public boolean detectAndResolveHeartCollision( PointF heartCenter, float heartRadius) {
 		if(Math2D.circleIntersection(getCenter(), radius, heartCenter, heartRadius)) {
+			playHeartSound();
 			lives = Math.min( 5, lives+1);
 			return true;
 		}
@@ -194,7 +195,10 @@ public class Hero extends AnimatedSprite {
 		audioPlayer.startPlayer("pacman_hit.ogg", 1f, false);
 	}
 	private void playChompSound(){
-		audioPlayer.startPlayer("pacman_chomp.ogg", 1f, false);
+		audioPlayer.startPlayer("pacman_chomp.ogg", 0.5f, false);
+	}
+	private void playHeartSound(){
+		audioPlayer.startPlayer("pacman_coin.ogg", 3f, false);
 	}
 
 		/* public void update(PointF inputVector1, PointF inputVector2) {
