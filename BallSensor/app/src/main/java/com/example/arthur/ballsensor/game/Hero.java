@@ -7,6 +7,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 
 import com.example.arthur.ballsensor.geometry.Math2D;
+import com.example.arthur.ballsensor.sound.AudioPlayer;
 
 import java.util.ArrayList;
 
@@ -35,19 +36,26 @@ public class Hero extends AnimatedSprite {
 	//private final float minAngularSpeed = 0.005f;
 	//private final float brakeForceMagnitude = 0.1f;
 	//private final float angularBrakeForceMagnitude = 0.006f;
+	private HeroListener heroListener;
+	private AudioPlayer audioPlayer;
 
 	private int lives = 2;
 	private boolean invulnerable = false;
 
 	private ArrayList<PointF> temporaryAccelerations = new ArrayList<PointF>();
 
-	public Hero(PointF location, float size, AssetManager assets) {
+	public Hero(final PointF location, final float size, final AssetManager assets) {
 		super(location, size);
+		audioPlayer = new AudioPlayer( assets );
 		pacmanSpriteSheet = bitmapFromAssetNamed( "pacman.png", assets);
 	}
 
 	public boolean detectCoinCollision(PointF coinCenter, float coinRadius) {
-		return Math2D.circleIntersection(getCenter(), radius, coinCenter, coinRadius);
+		if(Math2D.circleIntersection(getCenter(), radius, coinCenter, coinRadius)){
+			playChompSound();
+			return true;
+		}
+		return false;
 	}
 
 	public boolean detectAndResolveHeartCollision( PointF heartCenter, float heartRadius) {
@@ -104,14 +112,24 @@ public class Hero extends AnimatedSprite {
 		RectF unrotatedHeroRectF = new RectF(unrotatedHeroRect());
 		return new RotatedRect(unrotatedHeroRectF, new PointF(unrotatedHeroRectF.centerX(),unrotatedHeroRectF.centerY()), (rotationInDegrees()) * ((float)Math.PI/180.0f));
 	} */
+	public void setHeroListener(final HeroListener callback){
+		this.heroListener = callback;
+	}
+
 	
 	public void getHit(AnimatedSprite other) {
 		if(!invulnerable) {
-			invulnerable = true;
-			startInvulnerableState();
+			playHitSound();
 			lives = Math.max( 0, lives - 1 );
-			if ( !other.getCenter().equals( this.getCenter() ) ) {
-				temporaryAccelerations.add( Math2D.scale( Math2D.normalize( Math2D.subtract( getCenter(), other.getCenter() ) ), speed() + 2.2f ) );
+			if(lives>0){
+				invulnerable = true;
+				startInvulnerableState();
+				if ( !other.getCenter().equals( this.getCenter() ) ) {
+					temporaryAccelerations.add( Math2D.scale( Math2D.normalize( Math2D.subtract( getCenter(), other.getCenter() ) ), speed() + 2.2f ) );
+				}
+			} else if (heroListener !=null){
+				playDeathSound();
+				heroListener.notifyHeroDeath();
 			}
 		}
 	}
@@ -167,6 +185,16 @@ public class Hero extends AnimatedSprite {
 			velocity = Math2D.add(velocity, drag);
 		}
 		setCenter(Math2D.add(getCenter(),velocity));
+	}
+
+	private void playDeathSound(){
+		audioPlayer.startPlayer("pacman_death.ogg", 1f, false);
+	}
+	private void playHitSound(){
+		audioPlayer.startPlayer("pacman_hit.ogg", 1f, false);
+	}
+	private void playChompSound(){
+		audioPlayer.startPlayer("pacman_chomp.ogg", 1f, false);
 	}
 
 		/* public void update(PointF inputVector1, PointF inputVector2) {

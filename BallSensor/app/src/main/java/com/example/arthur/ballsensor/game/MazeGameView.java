@@ -13,11 +13,11 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.arthur.ballsensor.gameover.GameOverListener;
-import com.example.arthur.ballsensor.maze.MazeGenerator;
-import com.example.arthur.ballsensor.maze.MazeGeneratorDelegate;
-import com.example.arthur.ballsensor.maze.DepthFirstSearchMazeGenerator;
 import com.example.arthur.ballsensor.geometry.LineSegment2D;
 import com.example.arthur.ballsensor.geometry.Math2D;
+import com.example.arthur.ballsensor.maze.DepthFirstSearchMazeGenerator;
+import com.example.arthur.ballsensor.maze.MazeGenerator;
+import com.example.arthur.ballsensor.maze.MazeGeneratorDelegate;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +27,7 @@ import java.util.TimerTask;
 
 ;
 
-public class MazeGameView extends View {
+public class MazeGameView extends View implements HeroListener {
 
 	private final float gameSize = 30;
 	private int score = 0;
@@ -214,6 +214,14 @@ public class MazeGameView extends View {
 		this.gameOverListener = mEventListener;
 	}
 
+	@Override
+	public void notifyHeroDeath() {
+		purgeTimer();
+		if(gameOverListener!=null) {
+			gameOverListener.notifyOfGameOver( score );
+		}
+	}
+
 	/** Private **/
 
 	private class UpdateTimerTask extends TimerTask {
@@ -243,11 +251,8 @@ public class MazeGameView extends View {
 
 			for(Iterator<Enemy> enemyIterator = enemies.iterator(); enemyIterator.hasNext(); ) {
 				Enemy enemy = enemyIterator.next();
-				if(enemy.detectAndResolveCollisionWithHero(hero) && hero.getLives() == 0 && gameOverListener != null) {
+				if(enemy.detectAndResolveCollisionWithHero(hero)) {
 					//enemyIterator.remove();
-					purgeTimer();
-					gameOverListener.notifyOfGameOver(score);
-					return;
 				}
 				else {
 					enemy.update(walls, wallThickness, hero);
@@ -298,7 +303,7 @@ public class MazeGameView extends View {
 			@Override
 			public void mazeGenerationDidFinish(MazeGenerator generator) {
 				startLocation.set(generator.getStartLocation());
-				hero = new Hero(startLocation, gameSize, getContext().getAssets());
+				hero = new Hero(startLocation, gameSize, getContext().getAssets() );
 				cameraPos.set(startLocation);
 				finishLocation.set(generator.getFinishLocation());
 				walls = generator.getWalls();
@@ -319,7 +324,7 @@ public class MazeGameView extends View {
 				updateTimer.schedule(updateTimerTask, 0, 33);
 			}
 		});
-
+		hero.setHeroListener( this );
 		Log.d("Canvas", "Generation du labyrinthe terminé.");
 	}
 

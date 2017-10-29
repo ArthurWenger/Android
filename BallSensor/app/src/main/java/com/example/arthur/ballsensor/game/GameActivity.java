@@ -18,11 +18,11 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.arthur.ballsensor.R;
 import com.example.arthur.ballsensor.gameover.GameOverActivity;
 import com.example.arthur.ballsensor.gameover.GameOverListener;
 import com.example.arthur.ballsensor.location.LocationListener;
 import com.example.arthur.ballsensor.location.SingleShotLocationProvider;
-import com.example.arthur.ballsensor.R;
 import com.example.arthur.ballsensor.scoresList.ScoresActivity;
 
 public class GameActivity extends AppCompatActivity implements GameOverListener, LocationListener {
@@ -32,7 +32,6 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	private boolean accelSupported;
 	private MySensorListener sensorListener;
 	private MazeGameView mazeView;
-	private final int SCORES_ACTIVITY = 1;
 
 	private PowerManager mPowerManager;
 	private WindowManager mWindowManager;
@@ -40,6 +39,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	//private WakeLock mWakeLock;
 	Double[] location =null;
 
+	private final int SCORES_ACTIVITY = 1;
 	private static final int GAMEOVER_ACTIVITY = 1;
 	private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
 
