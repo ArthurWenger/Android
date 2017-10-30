@@ -12,7 +12,7 @@ import com.example.arthur.ballsensor.geometry.Math2D;
 import java.io.IOException;
 import java.io.InputStream;
 
-/** Classe abstraite permettant de représenter les objets du jeu  **/
+/** Classe abstraite permettant de représenter les objets du jeu **/
 public abstract class AnimatedSprite {
 
 	private PointF center = new PointF();

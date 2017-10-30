@@ -10,6 +10,7 @@ import com.example.arthur.ballsensor.geometry.Math2D;
 
 import java.util.Set;
 
+/** Classe modélisant un ennemi (fantome) dans le jeu  **/
 public class Enemy extends AnimatedSprite {
 
 	private final Bitmap ghostSpriteSheet;

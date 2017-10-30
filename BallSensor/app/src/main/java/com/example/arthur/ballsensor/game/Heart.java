@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
+/** Classe modélisant un "coeur" dans le jeu  **/
 public class Heart extends AnimatedSprite {
 
 	private final Bitmap heartSpriteSheet;
@@ -18,7 +19,7 @@ public class Heart extends AnimatedSprite {
 		super( location, size*0.7f );
 		heartSpriteSheet = bitmapFromAssetNamed( "heart.png", assets );
 		spriteHalfWidth = heartSpriteSheet.getWidth() / 2;
-		spriteHalfHeight = heartSpriteSheet.getHeight()/2;
+		spriteHalfHeight = heartSpriteSheet.getHeight() / 2;
 	}
 
 	@Override

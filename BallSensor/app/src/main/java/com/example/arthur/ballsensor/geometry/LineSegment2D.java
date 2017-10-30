@@ -2,15 +2,17 @@ package com.example.arthur.ballsensor.geometry;
 
 import android.graphics.PointF;
 
+/** Classe modélisant une ligne / un mur dans le labyrinthe **/
 public class LineSegment2D {
 	public PointF a = null;
 	public PointF b = null;
-	
+
+	// Une ligne est définie par deux points
 	public LineSegment2D( float x1, float y1, float x2, float y2) {
 		a = new PointF(x1,y1);
 		b = new PointF(x2,y2);
 	}
-	
+
 	public LineSegment2D( PointF a, PointF b) {
 		if(a != null) {
 			this.a = new PointF(a.x,a.y);
@@ -19,7 +21,7 @@ public class LineSegment2D {
 			this.b = new PointF(b.x,b.y);
 		}
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		LineSegment2D other = (LineSegment2D)o;
@@ -29,7 +31,9 @@ public class LineSegment2D {
 				(int)(other.b.y) == (int)(b.y);
 	}
 
-	// http://doswa.com/2009/07/13/circle-segment-intersectioncollision.html
+	/* Distance minimum séparant un cercle et une ligne.
+	 *  Cette méthode sert à détecter les collisions entre un cercle et un mur du labyrinthe.
+	 *  Pour plus de précisions: http://doswa.com/2009/07/13/circle-segment-intersectioncollision.html */
 	public PointF closestPointToCircle(PointF c, float r) {
 		PointF seg_v = Math2D.subtract(b, a);
 		if(seg_v.length() <= 0.0f) {
@@ -53,6 +57,7 @@ public class LineSegment2D {
 		return closest;			
 	}
 
+	// Prise en compte de l'épaisseur de la ligne dans le calcul de la distance
 	public PointF circleIntersectionResolutionOffset(PointF c, float r, float lineThickness) {
 		PointF closest = closestPointToCircle(c, r);
 		PointF dist_v = Math2D.subtract(c, closest);
@@ -64,7 +69,8 @@ public class LineSegment2D {
 		}
 		return null;
 	}
-	
+
+	// Detection d'une colision entre une ligne et un cercle
 	public boolean intersectsCircle(PointF c, float r) {
 		return circleIntersectionResolutionOffset(c, r, 0) != null;
 	}

@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/** Vue permettant d'afficher et de coordonner les objets du jeu (labyrinthe / hero / ennemis...) **/
 public class MazeGameView extends View implements HeroListener {
 
 	private final float gameSize = 30;

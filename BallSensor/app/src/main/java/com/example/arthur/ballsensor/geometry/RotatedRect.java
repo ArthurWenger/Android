@@ -3,6 +3,7 @@ package com.example.arthur.ballsensor.geometry;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+/** Classe représentant un rectangle ayant subit une rotation (anciennement utilisée car la hitbox du héro était un rectangle) **/
 public class RotatedRect {
 	
 	private PointF a = new PointF();

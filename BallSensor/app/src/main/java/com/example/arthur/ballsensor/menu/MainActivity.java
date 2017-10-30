@@ -3,7 +3,6 @@ package com.example.arthur.ballsensor.menu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.example.arthur.ballsensor.R;
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	public void onResume() {
-		Log.i("info", "MainActivity onResume");
 		super.onResume();
 		backgroundMusic.startPlayer( "pacman_song.ogg", 1f, true);
 	}

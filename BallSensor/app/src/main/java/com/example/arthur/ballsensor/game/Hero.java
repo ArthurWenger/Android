@@ -11,9 +11,10 @@ import com.example.arthur.ballsensor.sound.AudioPlayer;
 
 import java.util.ArrayList;
 
+/** Classe modélisant le héro (pacman) dans le jeu **/
 public class Hero extends AnimatedSprite {
 
-	Bitmap pacmanSpriteSheet;
+	private Bitmap pacmanSpriteSheet;
 	private int drawCounter = 0;
 	private final int moveAnimationNumFrames = 7;
 	private final int idleAnimationNumFrames = 2;
@@ -106,6 +107,7 @@ public class Hero extends AnimatedSprite {
 		RectF unrotatedHeroRectF = new RectF(unrotatedHeroRect());
 		return new RotatedRect(unrotatedHeroRectF, new PointF(unrotatedHeroRectF.centerX(),unrotatedHeroRectF.centerY()), (rotationInDegrees()) * ((float)Math.PI/180.0f));
 	} */
+
 	public void setHeroListener(final HeroListener callback){
 		this.heroListener = callback;
 	}
