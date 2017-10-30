@@ -25,8 +25,8 @@ public class DBManager extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase db) {
-		/** Si la base de données existe déjà, la requête suivante ne fait rien **/
+	public void onCreate(SQLiteDatabase db) {//Au lancement de l'activité, on récupère une base de données
+		/** Si la base de données existe déjà, la requête suivante ne fait rien. Sinon, elle créé la table approprié **/
 		db.execSQL(
 				"create table scores ("+
 						SCORES_COLUMN_ID+" integer primary key autoincrement, " +
@@ -37,14 +37,14 @@ public class DBManager extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS "+SCORES_TABLE_NAME);
-		onCreate(db);
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {//Quand on change de version de base de données
+		db.execSQL("DROP TABLE IF EXISTS "+SCORES_TABLE_NAME);//On détruit l'ancienne table
+		onCreate(db);//Et on relance l'activité.
 	}
 
 	/** Insertion d'un score dans la base de données **/
 	public boolean insertScore (int value, double latitude, double longitude) {
-		SQLiteDatabase db = this.getWritableDatabase();
+		SQLiteDatabase db = this.getWritableDatabase();//On récupère une base de données dans laquelle on peut écrire.
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(SCORES_COLUMN_VALUE, value);
 		contentValues.put(SCORES_COLUMN_LATITUDE, latitude);
