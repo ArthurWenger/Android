@@ -8,11 +8,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -32,11 +30,6 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	private boolean accelSupported;
 	private MySensorListener sensorListener;
 	private MazeGameView mazeView;
-
-	private PowerManager mPowerManager;
-	private WindowManager mWindowManager;
-	private Display mDisplay;
-	//private WakeLock mWakeLock;
 	Double[] location =null;
 
 	private final int SCORES_ACTIVITY = 1;
@@ -54,17 +47,6 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		manager = (SensorManager) getSystemService( Service.SENSOR_SERVICE );
 		mAccelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sensorListener = new MySensorListener();
-		// Get an instance of the PowerManager
-		mPowerManager = (PowerManager) getSystemService(POWER_SERVICE);
-
-		// Get an instance of the WindowManager
-		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-		assert mWindowManager != null;
-		mDisplay = mWindowManager.getDefaultDisplay();
-
-		// Create a bright wake lock
-		//mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass()
-		//		                                                                            .getName());
 
 		initView();
 	}
@@ -201,5 +183,13 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 			}
 		}
 	}
+
+	@Override
+	public void onDestroy() {
+		mazeView.stopTimer();
+		super.onDestroy();
+	}
+
+
 
 }

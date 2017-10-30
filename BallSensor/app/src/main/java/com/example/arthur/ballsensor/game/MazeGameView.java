@@ -206,7 +206,7 @@ public class MazeGameView extends View implements HeroListener {
 		enemies = null;
 		initialTapPoint = null;
 		currentTapPoint = null;
-		purgeTimer();
+		stopTimer();
 		generateMaze( getWidth(), getHeight() );
 	}
 
@@ -216,7 +216,7 @@ public class MazeGameView extends View implements HeroListener {
 
 	@Override
 	public void notifyHeroDeath() {
-		purgeTimer();
+		stopTimer();
 		if(gameOverListener!=null) {
 			gameOverListener.notifyOfGameOver( score );
 		}
@@ -340,7 +340,7 @@ public class MazeGameView extends View implements HeroListener {
 		generateMaze( getWidth(), getHeight() );
 	}
 
-	private void purgeTimer(){
+	public void stopTimer(){
 		if(updateTimerTask!=null) {
 			updateTimerTask.cancel();
 			updateTimerTask = null;
