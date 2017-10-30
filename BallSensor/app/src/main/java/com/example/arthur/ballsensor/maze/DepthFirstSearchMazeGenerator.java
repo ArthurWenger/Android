@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DepthFirstSearchMazeGenerator implements MazeGenerator {
-	
-	// http://en.wikipedia.org/wiki/Maze_generation_algorithm
+
+	// Algorithme de génération du labyrinthe basé sur: http://en.wikipedia.org/wiki/Maze_generation_algorithm
 	@Override
 	public void generate(float mazeWidth, float mazeHeight, float cellWidth,
 			float cellHeight, MazeGeneratorDelegate delegate) {
@@ -57,7 +57,7 @@ public class DepthFirstSearchMazeGenerator implements MazeGenerator {
 				unvisitedNeighbors.remove(randNeighborIndex);
 				previousUnvisitedNeighbors.addAll(unvisitedNeighbors);
 				
-				//remove walls between current cell and random neighbor
+				// on supprime les murs entre la case actuelle et un proche voisin aléatoire
 				openWall(randomNeighbor, currentCell);
 				cellStack.add(randomNeighbor);
 			}

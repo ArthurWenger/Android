@@ -12,9 +12,9 @@ import android.util.Log;
 
 public class SingleShotLocationProvider {
 
-	// calls back to calling thread, note this is for low grain: if you want higher precision, swap the
-	// contents of the else and if. Also be sure to check gps permission/settings are allowed.
-	// call usually takes <10ms
+	/** Classe permettant de récupérer une seule fois la position de l'appareil
+	 *  L'interface "LocationListener" permet de notifier les écouteurs que la recuperation
+	 *  de la position est terminée ou qu'une demande de permission est recquise **/
 	public static void requestSingleUpdate( final Context context, final LocationListener callback ) {
 		final LocationManager locationManager = (LocationManager) context.getSystemService( Context.LOCATION_SERVICE );
 		assert locationManager != null;

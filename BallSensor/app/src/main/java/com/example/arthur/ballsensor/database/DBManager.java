@@ -60,7 +60,7 @@ public class DBManager extends SQLiteOpenHelper {
 				                              " order by "+SCORES_COLUMN_VALUE+
 				                              " desc", null );
 		// au cas ou la table changerait on recupere les index des attributs
-		//int idIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_ID);
+		// int idIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_ID);
 		int valueIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_VALUE);
 		int latIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_LATITUDE);
 		int lngIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_LONGITUDE);

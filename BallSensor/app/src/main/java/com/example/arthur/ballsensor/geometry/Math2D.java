@@ -31,7 +31,7 @@ public class Math2D {
 		return top.intersectsCircle(center, radius) || left.intersectsCircle(center, radius) || right.intersectsCircle(center, radius) || bottom.intersectsCircle(center, radius);
 	}
 	
-	//Vector math methods
+	// Opérations sur les vecteurs
 	public static PointF add(PointF a, PointF b) {
 		return new PointF(a.x+b.x,a.y+b.y);
 	}
@@ -80,7 +80,7 @@ public class Math2D {
 		}
 		return (float)angle;
 	}
-	public static PointF rotate(PointF v, float angle) throws IllegalArgumentException { //Angle is in radians				
+	public static PointF rotate(PointF v, float angle) throws IllegalArgumentException { // l'angle est en radians
 		return new PointF((float)(v.x*Math.cos(angle) - v.y*Math.sin(angle)), (float)(v.x*Math.sin(angle) + v.y*Math.cos(angle)));
 	}
 }

@@ -15,7 +15,7 @@ import java.io.InputStream;
 public abstract class AnimatedSprite {
 
 	private PointF center = new PointF();
-	protected PointF prevCenter = new PointF();
+	private PointF prevCenter = new PointF();
 	protected PointF velocity = new PointF();
 
 	protected PointF facing = new PointF(1.0f,0.0f);
