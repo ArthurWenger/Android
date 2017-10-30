@@ -134,7 +134,6 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	public void onNewLocationAvailable( Double[] location ) {
 		Log.d("Location", "my location is :" + location[0].toString()+" "+location[1].toString());
 		this.location = location;
-		Log.d("Location2", "my location2 is :" + this.location[0].toString()+" "+this.location[1].toString());
 	}
 
 	@Override
@@ -150,7 +149,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		Log.d("Location", "onRequestPermissionResult callback reached");
 		switch (requestCode) {
 			case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-				// If request is cancelled, the result arrays are empty.
+				// Si la demande de permission est refusée,
 				if (grantResults.length > 0
 						    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
