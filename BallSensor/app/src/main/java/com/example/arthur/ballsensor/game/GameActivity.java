@@ -40,134 +40,113 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		// on demande la position du joueur pour pouvoir inscrire son score dans la base de données par la suite
 		// le premier this est pour le contexte et le deuxieme est pour le callback onNewLocationAvailable
 		SingleShotLocationProvider.requestSingleUpdate(this, this);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		manager = (SensorManager) getSystemService( Service.SENSOR_SERVICE );
-		mAccelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		sensorListener = new MySensorListener();
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//On met l'application en plein écran
+		manager = (SensorManager) getSystemService( Service.SENSOR_SERVICE );//On récupère les capteurs,
+		mAccelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);//Et en particulier l'accéléromètre
+		sensorListener = new MySensorListener();//Et on pose un écouteur dessus.
 
-		initView();
+		initView();//Enfin on lance l'affichage.
 	}
 
 	private void initView() {
-		mazeView = (MazeGameView) findViewById(R.id.mazeView );
-		mazeView.setGameOverListener(this);
+		mazeView = (MazeGameView) findViewById(R.id.mazeView );//On récupère le labyrinthe
+		mazeView.setGameOverListener(this);//Et on pose un écouteur dessus.
 	}
 
 	@Override
 	public void notifyOfGameOver(int finalScore) {
-		Intent gameOverIntent = new Intent(this, GameOverActivity.class);
-		gameOverIntent.putExtra( "score",finalScore );
-		gameOverIntent.putExtra( "location", location );
-		startActivityForResult( gameOverIntent, GAMEOVER_ACTIVITY );
-		overridePendingTransition(R.anim.enter, R.anim.exit);
+		Intent gameOverIntent = new Intent(this, GameOverActivity.class);//On récupère l'activité correspondant au game over.
+		gameOverIntent.putExtra( "score",finalScore );//Et on lui donne comme paramètre le score final
+		gameOverIntent.putExtra( "location", location );//et la position
+		startActivityForResult( gameOverIntent, GAMEOVER_ACTIVITY );//On lance la nouvelle activité
+		overridePendingTransition(R.anim.enter, R.anim.exit);//En passant par une transition définie dans les fichiers enter.xml et exit.xml dans le dossier res
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onResume() {//Quand on va sur l'application
+		super.onResume();//On applique la procédure habituelle
+		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);//On vérifie que les capteurs soient disponibles
 		/* Il n'est pas nécéssaire d'avoir un taux de rafraichissement très élevé pour l'accelerometre.
 		 * En utilisant la sensibilité SENSOR_DELAY_UI on économise la batterie et les ressources du CPU */
 		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
 	}
+
 	@Override
-	public void onPause() {
-		if (accelSupported)
-			manager.unregisterListener(sensorListener, mAccelerometer);
-			super.onPause();
+	public void onPause() {//Quand on met l'application en arrière plan
+		if (accelSupported)//Si on a accès aux capteurs
+			manager.unregisterListener(sensorListener, mAccelerometer);//On les libère.
+		super.onPause();//En tout cas, on applique la procèdure habituelle.
 	}
 
-	private class MySensorListener implements SensorEventListener {
+	private class MySensorListener implements SensorEventListener {//On définit ici l'écouteur sur l'acceléromètre.
 		@Override
-		public void onSensorChanged( SensorEvent event ) {
-			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-				// on met à jour le jeu avec les données de l'accelerometre
-				mazeView.updateAccel( -event.values[ 0 ], event.values[ 1 ] );
-			}
+		public void onSensorChanged( SensorEvent event ) {//Quand un capteur perçoit un changement de l'environnement
+			if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)//Si ce changement n'est pas mesuré par l'accéléromètre
+				return;//On ne fais rien.
+			else//Sinon,
+				mazeView.updateAccel( -event.values[0], event.values[1]);//On demande au labyrinthe de se mettre à jour avec ces nouvelles données.
 		}
 
 		@Override
-		public void onAccuracyChanged( Sensor sensor, int accuracy ) {
+		public void onAccuracyChanged( Sensor sensor, int accuracy ) {//Méthode obligatoire pour implémenter l'écouteur.
+
 		}
 	}
 
 	@Override
-	protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
-		switch ( requestCode ) {
-			case GAMEOVER_ACTIVITY:
-				switch ( resultCode ) {
-					case RESULT_OK:
-						mazeView.newGame();
+	protected void onActivityResult( int requestCode, int resultCode, Intent data ) {//Quand une activité se termine
+		switch ( requestCode ) {//Selon la valeur du code requête (Quelle activité s'est terminée)
+			case GAMEOVER_ACTIVITY://S'il vaut la constante GAMEOVER_ACTIVITY (dans le cas d'un game over, et donc du lancement de l'activité GameOver)
+				switch ( resultCode ) {//Selon la valeur du code résultat
+					case RESULT_OK://S'il vaut la constante RESULT_OK
+						mazeView.newGame();//On lance un nouveau jeu.
 						break;
-					case RESULT_CANCELED:
-						finish();
+					case RESULT_CANCELED://S'il vaut la constante RESULT_CANCELED
+						finish();//On arrête l'activité.
 						break;
-					default: break;
+					default: break;//Sinon, On ne fais rien
 				}
 				break;
-			default: break;
+			default: break;//Si le code requête vaut tout autre valeur, on ne fais rien.
 		}
 	}
 
 	@Override
-	public void onNewLocationAvailable( Double[] location ) {
-		Log.d("Location", "my location is :" + location[0].toString()+" "+location[1].toString());
-		this.location = location;
+	public void onNewLocationAvailable( Double[] location ) {//Quand on appelle cette méthode
+        Log.d("Location", "my location is :" + location[0].toString()+" "+location[1].toString());
+		this.location = location;//On enregistre la position.
 	}
 
 	@Override
-	public void onPermissionNeeded() {
-		Log.d("Location", "requestNeeded callback reached");
-		ActivityCompat.requestPermissions( this,
-				new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION },
-				MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+	public void onPermissionNeeded() {//Quand on appelle cette méthode (Quand on a besoin de permission pour accéder à la position)
+		Log.d("Location", "requestNeeded callback reached");//On enregistre dans le log le tag Location et on affiche en console qu'on a besoin d'une permission
+		ActivityCompat.requestPermissions( this,//On demande la permission,
+				new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION },//d'accéder à la position fine
+				MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);//avec le code ci-contre.
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-		Log.d("Location", "onRequestPermissionResult callback reached");
-		switch (requestCode) {
-			case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-				// Si la demande de permission est refusée,
-				if (grantResults.length > 0
-						    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-					SingleShotLocationProvider.requestSingleUpdate(this, this);
-
-				} else {
-					// permission denied, boo! Disable the
-					// functionality that depends on this permission.
-					Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {//Quand on reçoit (ou pas) des permissions
+		Log.d("Location", "onRequestPermissionResult callback reached");// On enregistre dans le log le tag Location et on affiche en console qu'on a reçu une réponse
+		switch (requestCode) {//Selon le code requête
+			case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {//Si il vaut la valeur ci-contre.
+				// Si la requête est refusée, le résultat est vide, donc
+				if (grantResults.length > 0//si le résultat n'est pas vide
+						    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//et que la permission a été donnée
+					SingleShotLocationProvider.requestSingleUpdate(this, this);//On demande la position courante.
+				} else {//sinon,
+					// La permission a été refusée, donc
+					Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();//On affiche un toast disant que la permission a été refusée.
 				}
 			}
 		}
 	}
 
 	@Override
-	public void onDestroy() {
-		mazeView.stopTimer();
-		super.onDestroy();
+	public void onDestroy() {//En quittant l'activité
+		mazeView.stopTimer();//On arrête le timer du jeu
+		super.onDestroy();//Et on quiteselon la procédure habituelle.
 	}
-
-	/* @Override
-	public boolean onCreateOptionsMenu( Menu menu ) {
-		getMenuInflater().inflate( R.menu.main, menu );
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected( MenuItem item ) {
-		switch ( item.getItemId() ) {
-			case R.id.action_scores:
-				Intent intent = new Intent( this, ScoresActivity.class );
-				startActivity( intent );
-				return true;
-			case R.id.action_quit:
-				finish();
-				System.exit( 0 );
-				return true;
-		}
-		return super.onOptionsItemSelected( item );
-	} */
 
 
 
