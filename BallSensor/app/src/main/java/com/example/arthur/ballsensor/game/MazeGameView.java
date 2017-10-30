@@ -24,8 +24,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-;
-
 public class MazeGameView extends View implements HeroListener {
 
 	private final float gameSize = 30;
@@ -88,10 +86,10 @@ public class MazeGameView extends View implements HeroListener {
 		super.onDraw(canvas);
 		canvas.save();
 		canvas.translate(-cameraPos.x + getWidth()/2.0f, -cameraPos.y + getHeight()/2.0f);
-		assert (walls != null) : "Walls must exist here.";
+		assert (walls != null) : "Les murs doivent exister.";
 		for(LineSegment2D wall : walls) {
 			if(Math2D.pointInRect(wall.a, cameraRect()) || Math2D.pointInRect(wall.b, cameraRect())) {
-				//stretch the walls by half their thickness so the corners are nicer
+				// on redimensionne les murs de la moitié de leur épaisseur pour améliorer l'affichage
 				float x1Offset = 0, y1Offset = 0, x2Offset = 0, y2Offset = 0;
 				if(wall.a.x < wall.b.x) {
 					x1Offset = -wallThickness/2.0f;
