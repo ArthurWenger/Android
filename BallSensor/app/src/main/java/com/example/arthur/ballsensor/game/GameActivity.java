@@ -76,13 +76,13 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
          * CPU resources.
          */
 		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
-		//ballView.resume();
+		//mazeView.resume();
 	}
 	@Override
 	public void onPause() {
 		if (accelSupported)
 			manager.unregisterListener(sensorListener, mAccelerometer);
-			//ballView.pause();
+			//mazeView.pause();
 			super.onPause();
 	}
 

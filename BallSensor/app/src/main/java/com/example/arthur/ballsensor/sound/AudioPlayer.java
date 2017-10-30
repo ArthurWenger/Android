@@ -3,7 +3,6 @@ package com.example.arthur.ballsensor.sound;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.MediaPlayer;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -19,7 +18,7 @@ public class AudioPlayer {
 		if (player != null) {
 			player.release();
 			player = null;
-			Log.d("sound","player released");
+			//Log.d("sound","player released");
 		}
 	}
 
@@ -41,18 +40,18 @@ public class AudioPlayer {
 		player.setOnCompletionListener( new MediaPlayer.OnCompletionListener() {
 			@Override
 			public void onCompletion( MediaPlayer mp ) {
-				Log.d("sound","onCompletion called");
+				//Log.d("sound","onCompletion called");
 				stopPlayer();
 			}
 		} );
-		Log.d("sound","starting player");
+		//Log.d("sound","starting player");
 		player.start();
 	}
 
-	public boolean isPlaying() {
+	/* public boolean isPlaying() {
 		if(player!=null){
 			return player.isPlaying();
 		}
 		return false;
-	}
+	} */
 }

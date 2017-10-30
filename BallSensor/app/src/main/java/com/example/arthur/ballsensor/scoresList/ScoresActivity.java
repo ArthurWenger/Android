@@ -18,29 +18,20 @@ public class ScoresActivity extends AppCompatActivity {
 	private ListView mListView;
 	private TextView mTvNothing;
 	private ScoresArrayAdapter adapter;
-	private ArrayList<Score> tasks;
-	//private final int MAP_ACTIVITY = 2;
 	DBManager mydb;
 
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_scores );
 		mydb = new DBManager(this);
-		// pour supprimer la base:
-		//this.deleteDatabase("ScoresDB.db");
+		// pour supprimer la base de données:
+		// this.deleteDatabase("ScoresDB.db");
 		initView();
 	}
 
 	private void initView(){
 		mTvNothing = (TextView) findViewById( R.id.tvNothing );
 		mListView = (ListView) findViewById( R.id.list );
-		//registerForContextMenu( mListView );
-
-		// a changer pour mettre en place la persistance
-		//tasks = new ArrayList<Score>();
-		//Random rand = new Random(  );
-		/* for ( int i = 1; i <= 5; i++ )
-			tasks.add( new Score( i, "user " + i , 50000-10000*i) ); */
 
 		final ArrayList<Score> scores_array = mydb.getAllScores();
 		if(scores_array.size()==0){

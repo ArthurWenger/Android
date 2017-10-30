@@ -32,12 +32,9 @@ public class MazeGameView extends View implements HeroListener {
 	private int score = 0;
 	private Paint wallPaint;
 	private Paint floorTextPaint;
-	private Paint inputIndicatorPaint;
-	private Paint inputIndicatorPaint2;
 	private Paint uiTextPaint;
 	private Paint uiTextStrokePaint;
 	private Paint coinPaint;
-	private Paint extraPaint;
 	private PointF startLocation = new PointF();
 	private PointF finishLocation = new PointF();
 	private Hero hero;
@@ -50,15 +47,14 @@ public class MazeGameView extends View implements HeroListener {
 	private Set<Enemy> enemies;
 	private float coinRadius = gameSize/2.0f;
 	private float heartRadius = gameSize/1.5f;
-	private PointF initialTapPoint;
-	private PointF currentTapPoint;
 	private Timer updateTimer = new Timer();
 	private UpdateTimerTask updateTimerTask;
 	private PointF cameraPos = new PointF();
 	private PointF cameraVelocity = new PointF();
 	private float cameraMinDistance = 1.001f;
-	private final float maxInput1Length = 100.0f;
 	private GameOverListener gameOverListener;
+	private final int FPS = 30;
+	private final int FramePeriod = 1000/FPS;
 
 	public MazeGameView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -68,14 +64,6 @@ public class MazeGameView extends View implements HeroListener {
 		wallPaint.setStrokeWidth(wallThickness);
 		floorTextPaint = new Paint();
 		floorTextPaint.setTextSize(gameSize*2.0f);
-		inputIndicatorPaint = new Paint();
-		inputIndicatorPaint.setARGB(100, 100, 0, 75);
-		inputIndicatorPaint.setStyle(Paint.Style.STROKE);
-		inputIndicatorPaint.setStrokeWidth(16);
-		inputIndicatorPaint2 = new Paint();
-		inputIndicatorPaint2.setARGB(150, 255, 75, 0);
-		inputIndicatorPaint2.setStyle(Paint.Style.STROKE);
-		inputIndicatorPaint2.setStrokeWidth(16);
 		uiTextPaint = new Paint();
 		uiTextPaint.setTextSize(24);
 		uiTextPaint.setStyle(Paint.Style.FILL);
@@ -89,13 +77,12 @@ public class MazeGameView extends View implements HeroListener {
 		uiTextStrokePaint.setColor(Color.BLACK);
 		coinPaint = new Paint();
 		coinPaint.setARGB(255,180,190,0);
-		extraPaint = new Paint();
-		extraPaint.setColor(Color.BLUE);
 	}
 	//TODO: ajouter une méthode pause quand le jeu est quitté avec un retour en arrière
 
 	/** Protected **/
 
+	/** méthode permettant de dessiner le labyrinthe et tous les objets du jeu **/
 	@Override
 	protected void onDraw(android.graphics.Canvas canvas) {
 		super.onDraw(canvas);
@@ -149,22 +136,13 @@ public class MazeGameView extends View implements HeroListener {
 
 		canvas.restore();
 
-		if(isUserInputtingDirection()) {
-			LineSegment2D inputLineSegment1 = inputLineSegment1();
-			LineSegment2D inputLineSegment2 = inputLineSegment2();
-			if(inputLineSegment2 != null) {
-				canvas.drawLine(inputLineSegment2.a.x, inputLineSegment2.a.y, inputLineSegment2.b.x, inputLineSegment2.b.y, inputIndicatorPaint2);
-			}
-			if(inputLineSegment1 != null) {
-				canvas.drawLine(inputLineSegment1.a.x, inputLineSegment1.a.y, inputLineSegment1.b.x, inputLineSegment1.b.y, inputIndicatorPaint);
-			}
-		}
 		canvas.drawText("Score: "+Integer.toString(score),10,20,uiTextPaint);
 		canvas.drawText("Score: "+Integer.toString(score),10,20,uiTextStrokePaint);
 		canvas.drawText("Lives: "+Integer.toString(hero.getLives()),260,20,uiTextPaint);
 		canvas.drawText("Lives: "+Integer.toString(hero.getLives()),260,20,uiTextStrokePaint);
 	}
 
+	/** si la taille de l'écran change on doit générer un nouveau labyrinthe **/
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
@@ -173,6 +151,7 @@ public class MazeGameView extends View implements HeroListener {
 		}
 	}
 
+	/** méthode permettant de mettre à jour l'acceleration de pacman en fonction de l'accelerometre **/
 	protected void updateAccel( float sX, float sY ) {
 		if(hero!=null) {
 			PointF sensorAccel = new PointF( sX, sY );
@@ -180,21 +159,22 @@ public class MazeGameView extends View implements HeroListener {
 		}
 	}
 
+	/** méthode permettant de lancer une nouvelle partie **/
 	protected void newGame() {
 		score = 0;
 		walls = null;
 		coins = null;
 		enemies = null;
-		initialTapPoint = null;
-		currentTapPoint = null;
 		stopTimer();
 		generateMaze( getWidth(), getHeight() );
 	}
 
+	/** setter pour l'écouteur de l'evenement GameOver **/
 	protected void setGameOverListener(GameOverListener mEventListener) {
 		this.gameOverListener = mEventListener;
 	}
 
+	/** quand le pacman meurt, on le notifie à la classe mère pour qu'elle lance l'activité GameOver **/
 	@Override
 	public void notifyHeroDeath() {
 		stopTimer();
@@ -203,7 +183,67 @@ public class MazeGameView extends View implements HeroListener {
 		}
 	}
 
-	/** Private **/
+	/** méthode permettant de générer aléatoirement le labyrinthe et tous les objets du jeu **/
+	private void generateMaze(float screenWidth, float screenHeight) {
+		float cellSize = gameSize * 2 + wiggleRoom * 2;
+
+		DepthFirstSearchMazeGenerator mazeGenerator = new DepthFirstSearchMazeGenerator();
+		mazeGenerator.generate(screenWidth*3f, screenWidth*3f, cellSize, cellSize, new MazeGeneratorDelegate() { //Deliberately not using screenHeight for a square maze
+			@Override
+			public void mazeGenerationDidFinish(MazeGenerator generator) {
+				startLocation.set(generator.getStartLocation());
+				hero = new Hero(startLocation, gameSize, getContext().getAssets() );
+				cameraPos.set(startLocation);
+				finishLocation.set(generator.getFinishLocation());
+				walls = generator.getWalls();
+				coins = generator.getRandomRoomLocations((int) (Math.random()*10.0+40.0), true);
+				AssetManager assets = getContext().getAssets();
+
+				Set<PointF> heartLocations = generator.getRandomRoomLocations((int) (4.0), true);
+				hearts = new HashSet<Heart>();
+				for(PointF location : heartLocations) {
+					hearts.add(new Heart(location,gameSize,assets));
+				}
+				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
+				enemies = new HashSet<Enemy>();
+				for(PointF location : enemyLocations) {
+					enemies.add(new Enemy(location,gameSize,assets));
+				}
+				updateTimerTask = new UpdateTimerTask();
+				updateTimer.schedule(updateTimerTask, 0, FramePeriod );
+			}
+		});
+		hero.setHeroListener( this );
+		Log.d("Canvas", "Generation du labyrinthe terminé.");
+	}
+
+	/** quand le joueur atteint la case de fin du labyrinthe, on en genere un nouveau aleatoirement **/
+	private void winLevel() {
+		walls = null;
+		coins = null;
+		enemies = null;
+		updateTimerTask.cancel();
+		updateTimer.purge();
+		updateTimerTask = null;
+		generateMaze( getWidth(), getHeight() );
+	}
+
+	/** méthode permettant d'arrêter les animations du jeu: les objets ne sont plus mis à jour **/
+	public void stopTimer(){
+		if(updateTimerTask!=null) {
+			updateTimerTask.cancel();
+			updateTimerTask = null;
+		}
+		updateTimer.purge();
+	}
+
+	private RectF cameraRect() {
+		return new RectF(cameraPos.x-getWidth()/2.0f,cameraPos.y-getHeight()/2.0f,cameraPos.x+getWidth()/2.0f,cameraPos.y+getHeight()/2.0f);
+	}
+
+/***********************************************************************
+ * Classe permettant de mettre à jour les objets du jeu périodiquement *
+ ***********************************************************************/
 
 	private class UpdateTimerTask extends TimerTask {
 
@@ -240,10 +280,9 @@ public class MazeGameView extends View implements HeroListener {
 				}
 			}
 
-			/*if(hero.detectFinishCollision(finishLocation)) {
+			if(hero.detectFinishCollision(finishLocation)) {
 				winLevel();
-			} */
-			//else {
+			} else {
 				for(LineSegment2D wall : walls) {
 					hero.detectAndResolveWallCollision(wall, wallThickness);
 				}
@@ -263,112 +302,14 @@ public class MazeGameView extends View implements HeroListener {
 						PointF cameraDrag = Math2D.scale(Math2D.normalize(cameraVelocity), -Math.min(cameraVelocityLength, cameraDragMagnitude));
 						cameraVelocity = Math2D.add(cameraVelocity, cameraDrag);
 					}
-
 					cameraPos = Math2D.add(cameraPos, cameraVelocity);
 				}
 				else {
 					cameraVelocity.set(0,0);
 					cameraPos.set(hero.getLocation());
 				}
-
 				postInvalidate();
 			}
-		//}
-	}
-
-	private void generateMaze(float screenWidth, float screenHeight) {
-		float cellSize = gameSize * 2 + wiggleRoom * 2;
-
-		DepthFirstSearchMazeGenerator mazeGenerator = new DepthFirstSearchMazeGenerator();
-		mazeGenerator.generate(screenWidth*3f, screenWidth*3f, cellSize, cellSize, new MazeGeneratorDelegate() { //Deliberately not using screenHeight for a square maze
-			@Override
-			public void mazeGenerationDidFinish(MazeGenerator generator) {
-				startLocation.set(generator.getStartLocation());
-				hero = new Hero(startLocation, gameSize, getContext().getAssets() );
-				cameraPos.set(startLocation);
-				finishLocation.set(generator.getFinishLocation());
-				walls = generator.getWalls();
-				coins = generator.getRandomRoomLocations((int) (Math.random()*10.0+40.0), true);
-				AssetManager assets = getContext().getAssets();
-
-				Set<PointF> heartLocations = generator.getRandomRoomLocations((int) (4.0), true);
-				hearts = new HashSet<Heart>();
-				for(PointF location : heartLocations) {
-					hearts.add(new Heart(location,gameSize,assets));
-				}
-				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
-				enemies = new HashSet<Enemy>();
-				for(PointF location : enemyLocations) {
-					enemies.add(new Enemy(location,gameSize,assets));
-				}
-				updateTimerTask = new UpdateTimerTask();
-				updateTimer.schedule(updateTimerTask, 0, 33);
-			}
-		});
-		hero.setHeroListener( this );
-		Log.d("Canvas", "Generation du labyrinthe terminé.");
-	}
-
-	private void winLevel() {
-		walls = null;
-		coins = null;
-		enemies = null;
-		initialTapPoint = null;
-		currentTapPoint = null;
-		updateTimerTask.cancel();
-		updateTimer.purge();
-		updateTimerTask = null;
-		generateMaze( getWidth(), getHeight() );
-	}
-
-	public void stopTimer(){
-		if(updateTimerTask!=null) {
-			updateTimerTask.cancel();
-			updateTimerTask = null;
 		}
-		updateTimer.purge();
-	}
-
-	private RectF cameraRect() {
-		return new RectF(cameraPos.x-getWidth()/2.0f,cameraPos.y-getHeight()/2.0f,cameraPos.x+getWidth()/2.0f,cameraPos.y+getHeight()/2.0f);
-	}
-
-	private boolean isUserInputtingDirection() {
-		return initialTapPoint != null && currentTapPoint != null;
-	}
-
-	private PointF inputVector() {
-		if(isUserInputtingDirection()) {
-			return Math2D.subtract(currentTapPoint, initialTapPoint);
-		}
-		return null;
-	}
-
-	private PointF inputVector1() {
-		PointF vector = inputVector();
-		if(isUserInputtingDirection() && vector.length() > 0.0) {
-			if(vector.length() > maxInput1Length) {
-				vector = Math2D.scale(vector, maxInput1Length/vector.length());
-			}
-			return vector;
-		}
-		return null;
-	}
-
-	private LineSegment2D inputLineSegment1() {
-		PointF inputVector1 = inputVector1();
-		if(inputVector1 != null) {
-			return new LineSegment2D(initialTapPoint.x, initialTapPoint.y, initialTapPoint.x+inputVector1.x, initialTapPoint.y+inputVector1.y);
-		}
-		return null;
-	}
-
-	private LineSegment2D inputLineSegment2() {
-		PointF inputVector = inputVector();
-		if(inputVector != null && inputVector.length() > maxInput1Length) {
-			PointF inputVector1 = inputVector1();
-			return new LineSegment2D(initialTapPoint.x+inputVector1.x, initialTapPoint.y+inputVector1.y, currentTapPoint.x, currentTapPoint.y);
-		}
-		return null;
 	}
 }

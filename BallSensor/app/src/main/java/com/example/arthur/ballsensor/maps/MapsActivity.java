@@ -53,8 +53,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 			mMap.getUiSettings().setZoomControlsEnabled( true );
 			mMap.getUiSettings().setZoomGesturesEnabled( true );
 
-			/*TODO: implementer le clustering de markers s'il y a trop de points au meme endroit
-			  https://developers.google.com/maps/documentation/android-api/marker#customize_the_marker_color*/
 			int centerScoreRank = centerScore.getRank();
 			for(Score score: scores_array){
 					mMap.addMarker( createMarker( score, score.getRank()==centerScoreRank ) );
