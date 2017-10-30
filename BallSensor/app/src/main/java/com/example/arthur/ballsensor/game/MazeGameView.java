@@ -9,7 +9,6 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.arthur.ballsensor.gameover.GameOverListener;
@@ -94,24 +93,6 @@ public class MazeGameView extends View implements HeroListener {
 		extraPaint.setColor(Color.BLUE);
 	}
 	//TODO: ajouter une méthode pause quand le jeu est quitté avec un retour en arrière
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if(event.getActionMasked() == MotionEvent.ACTION_UP) {
-			initialTapPoint = null;
-			currentTapPoint = null;
-		}
-		else {
-			currentTapPoint = new PointF(event.getX(), event.getY());
-
-			if(initialTapPoint == null) {
-				initialTapPoint = new PointF(currentTapPoint.x, currentTapPoint.y);
-			}
-
-			return true; //true means this event was handled
-		}
-		return super.onTouchEvent(event);
-	}
 
 	/** Protected **/
 
