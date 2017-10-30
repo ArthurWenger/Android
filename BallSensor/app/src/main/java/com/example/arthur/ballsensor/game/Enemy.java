@@ -55,18 +55,17 @@ public class Enemy extends AnimatedSprite {
 	}
 
 	// TODO: detect intersection
+	/*
 	private boolean crossRoad(){
 		return true;
 	}
+	*/
 
 	// TODO: compute free direction
+	/*
 	private void availableDirection(){
-		//Rect src = unrotatedGhostRect();
-		// top
-		//src.offset( ghostSpriteWidth,0 );
-		//if(src)
-
 	}
+	*/
 
 	
 	private void setDirection( Hero hero ) {

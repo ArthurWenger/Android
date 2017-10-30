@@ -68,13 +68,11 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		/* Il n'est pas nécéssaire d'avoir un taux de rafraichissement très élevé pour l'accelerometre.
 		 * En utilisant la sensibilité SENSOR_DELAY_UI on économise la batterie et les ressources du CPU */
 		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
-		//mazeView.resume();
 	}
 	@Override
 	public void onPause() {
 		if (accelSupported)
 			manager.unregisterListener(sensorListener, mAccelerometer);
-			//mazeView.pause();
 			super.onPause();
 	}
 
