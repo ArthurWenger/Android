@@ -90,7 +90,6 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		}
 	}
 
-
 	/* @Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
 		getMenuInflater().inflate( R.menu.main, menu );

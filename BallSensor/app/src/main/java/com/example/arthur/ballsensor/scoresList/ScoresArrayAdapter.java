@@ -14,11 +14,8 @@ import java.util.ArrayList;
 
 public class ScoresArrayAdapter extends ArrayAdapter<Score> {
 
-	private final ArrayList<Score> values;
-
 	public ScoresArrayAdapter( Context context, ArrayList<Score> values) {
 		super(context, R.layout.cell_layout, values);
-		this.values = values;
 	}
 
 	public View getView( int position, View convertView, ViewGroup parent)
