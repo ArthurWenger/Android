@@ -10,6 +10,7 @@ import com.example.arthur.ballsensor.scoresList.Score;
 
 import java.util.ArrayList;
 
+/** Classe manipulant les informations de la base de données **/
 public class DBManager extends SQLiteOpenHelper {
 
 	public static final String DATABASE_NAME = "ScoresDB.db";
@@ -25,7 +26,7 @@ public class DBManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
+		/** Si la base de données existe déjà, la requête suivante ne fait rien **/
 		db.execSQL(
 				"create table scores ("+
 						SCORES_COLUMN_ID+" integer primary key autoincrement, " +
@@ -37,11 +38,11 @@ public class DBManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
 		db.execSQL("DROP TABLE IF EXISTS "+SCORES_TABLE_NAME);
 		onCreate(db);
 	}
 
+	/** Insertion d'un score dans la base de données **/
 	public boolean insertScore (int value, double latitude, double longitude) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
@@ -52,6 +53,7 @@ public class DBManager extends SQLiteOpenHelper {
 		return true;
 	}
 
+	/** Récupération de l'ensemble des scores de la base **/
 	public ArrayList<Score> getAllScores() {
 		ArrayList<Score> array_list = new ArrayList<Score>();
 

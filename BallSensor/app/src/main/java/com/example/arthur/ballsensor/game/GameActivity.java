@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -21,7 +19,6 @@ import com.example.arthur.ballsensor.gameover.GameOverActivity;
 import com.example.arthur.ballsensor.gameover.GameOverListener;
 import com.example.arthur.ballsensor.location.LocationListener;
 import com.example.arthur.ballsensor.location.SingleShotLocationProvider;
-import com.example.arthur.ballsensor.scoresList.ScoresActivity;
 
 public class GameActivity extends AppCompatActivity implements GameOverListener, LocationListener {
 
@@ -68,13 +65,8 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	@Override
 	public void onResume() {
 		super.onResume();
-		/*
-         * It is not necessary to get accelerometer events at a very high
-         * rate, by using a slower rate (SENSOR_DELAY_UI), we get an
-         * automatic low-pass filter, which "extracts" the gravity component
-         * of the acceleration. As an added benefit, we use less power and
-         * CPU resources.
-         */
+		/* Il n'est pas nécéssaire d'avoir un taux de rafraichissement très élevé pour l'accelerometre.
+		 * En utilisant la sensibilité SENSOR_DELAY_UI on économise la batterie et les ressources du CPU */
 		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
 		//mazeView.resume();
 	}
@@ -91,27 +83,18 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		public void onSensorChanged( SensorEvent event ) {
 			if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
 				return;
-            /*
-             * record the accelerometer data, the event's timestamp as well as
-             * the current time. The latter is needed so we can calculate the
-             * "present" time during rendering. In this application, we need to
-             * take into account how the screen is rotated with respect to the
-             * sensors (which always return data in a coordinate space aligned
-             * to with the screen in its native orientation).
-             */
-
+			// on met à jour le jeu avec les données de l'accelerometre
 			mazeView.updateAccel( -event.values[0], event.values[1]);
 		}
 
 		@Override
 		public void onAccuracyChanged( Sensor sensor, int accuracy ) {
-
 		}
 	}
 
-	@Override
+
+	/* @Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate( R.menu.main, menu );
 		return true;
 	}
@@ -129,7 +112,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 				return true;
 		}
 		return super.onOptionsItemSelected( item );
-	}
+	} */
 
 	@Override
 	protected void onActivityResult( int requestCode, int resultCode, Intent data ) {

@@ -4,18 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.arthur.ballsensor.database.DBManager;
 import com.example.arthur.ballsensor.R;
+import com.example.arthur.ballsensor.database.DBManager;
 import com.example.arthur.ballsensor.scoresList.ScoresActivity;
 
 public class GameOverActivity extends AppCompatActivity {
 
-	private ImageView mBPlay;
-	private ImageView mBHighscore;
+
 	private TextView mTvScore;
 	private int score;
 	private DBManager mydb;
@@ -40,8 +38,6 @@ public class GameOverActivity extends AppCompatActivity {
 	}
 
 	private void initView() {
-		mBPlay = (ImageView) findViewById( R.id.b_play );
-		mBHighscore = (ImageView) findViewById( R.id.b_highscore );
 		mTvScore = (TextView) findViewById( R.id.tvScore );
 		mTvScore.setText( "Score: "+score );
 	}
@@ -54,10 +50,5 @@ public class GameOverActivity extends AppCompatActivity {
 	public void highscores( View view ) {
 		Intent intent = new Intent( this, ScoresActivity.class );
 		startActivity( intent );
-	}
-
-	public void quit(View view){
-		setResult( RESULT_CANCELED );
-		finish();
 	}
 }
