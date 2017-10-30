@@ -21,21 +21,6 @@ public class ScoresArrayAdapter extends ArrayAdapter<Score> {
 		this.values = values;
 	}
 
-	/*
-	@Override
-	protected void onCreate( @Nullable Bundle savedInstanceState ) {
-		super.onCreate( savedInstanceState );
-
-		String[] systems = getResources().getStringArray(R.array.systems);
-		setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, systems));
-	}
-
-	@Override
-	protected void onListItemClick( ListView l, View v, int position, long id ) {
-		super.onListItemClick( l, v, position, id );
-		Toast.makeText(this, "item " + id + " clicked", Toast.LENGTH_SHORT).show();
-	} */
-
 	public View getView( int position, View convertView, ViewGroup parent)
 	{
 		View cellView = convertView;

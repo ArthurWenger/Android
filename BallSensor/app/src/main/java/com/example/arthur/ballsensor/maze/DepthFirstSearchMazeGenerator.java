@@ -63,7 +63,7 @@ public class DepthFirstSearchMazeGenerator implements MazeGenerator {
 			}
 			
 			if(cellStack.isEmpty()) {
-				//For now, put the finish at the last cell before the cell stack goes empty for the first time.
+				// On place la case de fin du labyrinthe avant que l'empilement des cases ne devienne vide pour la premiere fois
 				if(finishLocation == null) {
 					finishLocation = new PointF(currentCell.x*cellWidth+cellWidth/2+paddingX,currentCell.y*cellHeight+cellHeight/2+paddingY);
 				}
@@ -87,25 +87,24 @@ public class DepthFirstSearchMazeGenerator implements MazeGenerator {
 		}
 
 		walls = new HashSet<LineSegment2D>();
-		//generate walls based on cells
+		// On genere les murs en fonction de la case
 		for(MazeCell cell : visitedCells) {
-			//cellX and cellY refer to the top-left of the cell, in view space
+			// cellX et cellY font reference au coin en haut à gauche de la case dans la vue
 			float cellX = cell.x * cellWidth + paddingX;
 			float cellY = cell.y * cellHeight + paddingY;
-			if(cell.walls[0]) { //north wall
+			if(cell.walls[0]) { // mur nord
 				walls.add(new LineSegment2D(cellX, cellY, cellX+cellWidth, cellY));
 			}
-			if(cell.walls[1]) { //south wall
+			if(cell.walls[1]) { // mur sud
 				walls.add(new LineSegment2D(cellX, cellY+cellHeight, cellX+cellWidth, cellY+cellHeight));				
 			}
-			if(cell.walls[2]) { //east wall
+			if(cell.walls[2]) { // mur est
 				walls.add(new LineSegment2D(cellX+cellWidth, cellY, cellX+cellWidth, cellY+cellHeight));
 
 			}
-			if(cell.walls[3]) { //west wall
+			if(cell.walls[3]) { // mur ouest
 				walls.add(new LineSegment2D(cellX, cellY, cellX, cellY+cellHeight));				
 			}
-			
 			neverReturnedLocations.add(new PointF(cellX + cellWidth/2.0f, cellY + cellHeight/2.0f));
 		}
 		
@@ -131,7 +130,6 @@ public class DepthFirstSearchMazeGenerator implements MazeGenerator {
 
 	@Override
 	public Set<PointF> getRandomRoomLocations(int numLocations, boolean exclusive) {
-		//TODO: Fix floating point error with location comparison
 		Set<PointF> locations = new HashSet<PointF>();
 		if(exclusive && numLocations > neverReturnedLocations.size()) {
 			locations.addAll(neverReturnedLocations);
@@ -151,7 +149,7 @@ public class DepthFirstSearchMazeGenerator implements MazeGenerator {
 
 				if(locations.add(location)) {
 					boolean removed = neverReturnedLocations.remove(location);
-					assert (removed) : "At this point location must be removed from neverReturnedLocations.";
+					assert (removed) : "ici \"location\" doit être supprimé de \"neverReturnedLocations\".";
 					--numLocations;
 				}
 			}
@@ -160,9 +158,9 @@ public class DepthFirstSearchMazeGenerator implements MazeGenerator {
 	}
 
 	private class MazeCell {
-		int x, y; //in grid space
-		boolean[] walls; //n, s, e, w
-		boolean v; //visited
+		int x, y; // dans la grille
+		boolean[] walls; // n, s, e, w
+		boolean v; // visité
 		MazeCell(int x,int y) {
 			this.x=x;
 			this.y=y;
@@ -184,7 +182,8 @@ public class DepthFirstSearchMazeGenerator implements MazeGenerator {
 		ArrayList<MazeCell> neighbors = new ArrayList<MazeCell>();
 		for(int i = currentCell.x-1; i <= currentCell.x+1; ++i) {
 			for(int j = currentCell.y-1; j <= currentCell.y+1; ++j) {
-				//skip diagonals, out-of-bounds indices, and visited (or unvisited) cells
+				// on vérifie que l'indice est dans le tableau et qu'il ne s'agit ni d'une case de la
+				// diagonale et d'une case déjà visitée
 				if((i==currentCell.x || j==currentCell.y) && i>=0 && j>=0 && i<numCellsX && j<numCellsY && mazeCells[i][j].v == visited) {
 					neighbors.add(mazeCells[i][j]);
 				}

@@ -79,10 +79,10 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	private class MySensorListener implements SensorEventListener {
 		@Override
 		public void onSensorChanged( SensorEvent event ) {
-			if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
-				return;
-			// on met à jour le jeu avec les données de l'accelerometre
-			mazeView.updateAccel( -event.values[0], event.values[1]);
+			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+				// on met à jour le jeu avec les données de l'accelerometre
+				mazeView.updateAccel( -event.values[ 0 ], event.values[ 1 ] );
+			}
 		}
 
 		@Override
