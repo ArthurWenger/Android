@@ -32,7 +32,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	private MazeGameView mazeView;
 	Double[] location =null;
 
-	private final int SCORES_ACTIVITY = 1;
+	// private final int SCORES_ACTIVITY = 1;
 	private static final int GAMEOVER_ACTIVITY = 1;
 	private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
 
