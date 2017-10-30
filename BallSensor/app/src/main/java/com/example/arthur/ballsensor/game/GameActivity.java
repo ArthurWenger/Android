@@ -90,27 +90,6 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		}
 	}
 
-	/* @Override
-	public boolean onCreateOptionsMenu( Menu menu ) {
-		getMenuInflater().inflate( R.menu.main, menu );
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected( MenuItem item ) {
-		switch ( item.getItemId() ) {
-			case R.id.action_scores:
-				Intent intent = new Intent( this, ScoresActivity.class );
-				startActivity( intent );
-				return true;
-			case R.id.action_quit:
-				finish();
-				System.exit( 0 );
-				return true;
-		}
-		return super.onOptionsItemSelected( item );
-	} */
-
 	@Override
 	protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
 		switch ( requestCode ) {
@@ -168,6 +147,27 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		mazeView.stopTimer();
 		super.onDestroy();
 	}
+
+	/* @Override
+	public boolean onCreateOptionsMenu( Menu menu ) {
+		getMenuInflater().inflate( R.menu.main, menu );
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item ) {
+		switch ( item.getItemId() ) {
+			case R.id.action_scores:
+				Intent intent = new Intent( this, ScoresActivity.class );
+				startActivity( intent );
+				return true;
+			case R.id.action_quit:
+				finish();
+				System.exit( 0 );
+				return true;
+		}
+		return super.onOptionsItemSelected( item );
+	} */
 
 
 

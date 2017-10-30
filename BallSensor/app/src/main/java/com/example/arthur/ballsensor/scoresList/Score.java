@@ -25,7 +25,6 @@ public class Score implements Serializable {
 		this.rank = rank;
 	}
 
-
 	public int getValue(){ return value; }
 
 	public double getLongitude() {

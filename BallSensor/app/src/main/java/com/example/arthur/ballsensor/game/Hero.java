@@ -21,21 +21,14 @@ public class Hero extends AnimatedSprite {
 	private final int idleAnimationDrawsPerFrame = 14;
 	private final int pacmanSpriteWidth = 72;
 	private final int pacmanSpriteHeight = 72;
-
-	//private final float dragConstant = 0.125f;
 	private final float dragConstant = 0.1f;
 	private final float angularDragConstant = 0.2f;
-
 	private Paint heroPaint = new Paint();
 	private PointF acceleration = new PointF(0f,0f);
-	//private final float accelerationScale = 0.012f;
 	private final float maxAccelerationLength = 1f;
 	private final float maxVelocityLength = 10f;
 	private final float angularAccelerationScale = 0.05f;
 	private final float minSpeed = 0.05f;
-	//private final float minAngularSpeed = 0.005f;
-	//private final float brakeForceMagnitude = 0.1f;
-	//private final float angularBrakeForceMagnitude = 0.006f;
 	private HeroListener heroListener;
 	private AudioPlayer audioPlayer;
 

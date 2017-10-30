@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 		Intent helpIntent = new Intent(this, ScoresActivity.class);
 		startActivity(helpIntent);
 	}
+
 	// Methode pour lancer une partie
 	public void showPlayScreen(View view) {
 		Intent playIntent = new Intent(this, GameActivity.class);
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		//player.pause();
 		backgroundMusic.stopPlayer();
 	}
 
@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 	public void onResume() {
 		Log.i("info", "MainActivity onResume");
 		super.onResume();
-		//player.start();
 		backgroundMusic.startPlayer( "pacman_song.ogg", 1f, true);
 	}
 
