@@ -43,14 +43,13 @@ public class DBManager extends SQLiteOpenHelper {
 	}
 
 	/** Insertion d'un score dans la base de données **/
-	public boolean insertScore (int value, double latitude, double longitude) {
+	public long insertScore (int value, double latitude, double longitude) {
 		SQLiteDatabase db = this.getWritableDatabase();//On récupère une base de données dans laquelle on peut écrire.
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(SCORES_COLUMN_VALUE, value);
 		contentValues.put(SCORES_COLUMN_LATITUDE, latitude);
 		contentValues.put(SCORES_COLUMN_LONGITUDE, longitude);
-		db.insert(SCORES_TABLE_NAME, null, contentValues);
-		return true;
+		return db.insert(SCORES_TABLE_NAME, null, contentValues);
 	}
 
 	/** Récupération de l'ensemble des scores de la base **/
@@ -80,6 +79,27 @@ public class DBManager extends SQLiteOpenHelper {
 		}
 		cursor.close();
 		return array_list;
+	}
+
+	// méthode utile uniquement dans l'activité GameOver
+	// le parametre score n'est pas nécessaire mais permet d'accelerer la requete
+	public int getRank(int id, int score){
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("select "+SCORES_COLUMN_ID+
+				                            " from "+SCORES_TABLE_NAME+
+				                            " where "+SCORES_COLUMN_VALUE+" >= "+score+"" +
+				                            " order by "+SCORES_COLUMN_VALUE+" desc;", null);
+		ArrayList<Integer> array_list = new ArrayList<Integer>();
+		int idIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_ID);
+		cursor.moveToFirst();
+		int rank = cursor.getInt( 0 );
+		while( !cursor.isAfterLast() ){
+			int rowId = cursor.getInt( idIndex );
+			array_list.add(rowId);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		return array_list.indexOf( id )+1;
 	}
 
 	/* public Cursor getData( int id) {

@@ -1,6 +1,7 @@
 package com.example.arthur.ballsensor.scoresList;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,14 @@ import java.util.ArrayList;
 
 public class ScoresArrayAdapter extends ArrayAdapter<Score> {
 
+	private Integer selected =null;
+
 	public ScoresArrayAdapter( Context context, ArrayList<Score> values) {
 		super(context, R.layout.cell_layout, values);
+	}
+
+	public void setSelected(Integer selected){
+		this.selected = selected;
 	}
 
 	public View getView( int position, View convertView, ViewGroup parent)
@@ -24,6 +31,9 @@ public class ScoresArrayAdapter extends ArrayAdapter<Score> {
 		if (cellView == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE);
 			cellView = inflater.inflate(R.layout.cell_layout, parent, false);
+		}
+		if( selected != null && position == selected ){
+			cellView.setBackgroundColor( Color.parseColor( "#B2DFEE" ) ); // lightblue
 		}
 
 		TextView rankView = (TextView)cellView.findViewById(R.id.rank );
