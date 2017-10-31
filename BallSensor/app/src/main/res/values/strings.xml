@@ -1,11 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BallSensor</string>
+    <string name="app_name">Pacman</string>
     <string name="quit">Quit</string>
     <string name="title_activity_scores">Scores</string>
+    <string name="score">Score:</string>
+    <string name="tvRank">Rank:</string>
     <string name="title_activity_maps">Map</string>
     <string name="security_error">Localisation access denied</string>
     <string name="play">Play</string>
-    <string name="title_activity_game_over">GameOver</string>
+    <string name="title_activity_game_over">Game Over</string>
     <string name="highscores">Highscores</string>
     <string name="no_scores_available">No scores available yet</string>
+    <string name="replay">Replay</string>
 </resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pacman</string>
+    <string name="quit">Quitter</string>
+    <string name="title_activity_scores">Scores</string>
+    <string name="tvScore">Score:</string>
+    <string name="tvRank">Rang:</string>
+    <string name="title_activity_maps">Carte</string>
+    <string name="security_error">Accès à la localisation refusée</string>
+    <string name="play">Jouer</string>
+    <string name="title_activity_game_over">Game Over</string>
+    <string name="highscores">Classement</string>
+    <string name="no_scores_available">Aucuns scores disponible pour le moment</string>
+    <string name="replay">Rejouer</string>
+</resources>
