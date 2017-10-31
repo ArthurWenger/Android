@@ -31,7 +31,7 @@ public class LineSegment2D {
 				(int)(other.b.y) == (int)(b.y);
 	}
 
-	/* Distance minimum séparant un cercle et une ligne.
+	/*  Point de la ligne le plus proche d'un cercle de centre c
 	 *  Cette méthode sert à détecter les collisions entre un cercle et un mur du labyrinthe.
 	 *  Pour plus de précisions: http://doswa.com/2009/07/13/circle-segment-intersectioncollision.html */
 	public PointF closestPointToCircle(PointF c, float r) {
@@ -57,7 +57,8 @@ public class LineSegment2D {
 		return closest;			
 	}
 
-	// Prise en compte de l'épaisseur de la ligne dans le calcul de la distance
+	// Méthode permettant de récupérer le décalage entre le centre d'un cercle et le point le proche
+	// de celui-ci sur la ligne. Cette méthode ne renvoie null si le cercle n'est pas en collision avec la ligne
 	public PointF circleIntersectionResolutionOffset(PointF c, float r, float lineThickness) {
 		PointF closest = closestPointToCircle(c, r);
 		PointF dist_v = Math2D.subtract(c, closest);
@@ -70,7 +71,7 @@ public class LineSegment2D {
 		return null;
 	}
 
-	// Detection d'une colision entre une ligne et un cercle
+	// Detection d'une colision entre la ligne et un cercle
 	public boolean intersectsCircle(PointF c, float r) {
 		return circleIntersectionResolutionOffset(c, r, 0) != null;
 	}

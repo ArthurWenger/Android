@@ -145,7 +145,7 @@ public class MazeGameView extends View implements HeroListener {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		if(walls == null) { //only generate maze if one doesn't exist.
+		if(walls == null) { // on genère un labyrinthe seulement s'il existe
 			generateMaze(w,h);
 		}
 	}
@@ -173,7 +173,7 @@ public class MazeGameView extends View implements HeroListener {
 		this.gameOverListener = mEventListener;
 	}
 
-	/** quand le pacman meurt, on le notifie à la classe mère pour qu'elle lance l'activité GameOver **/
+	/** quand pacman meurt, on le signale à la classe mère pour qu'elle lance l'activité GameOver **/
 	@Override
 	public void notifyHeroDeath() {
 		stopTimer();
