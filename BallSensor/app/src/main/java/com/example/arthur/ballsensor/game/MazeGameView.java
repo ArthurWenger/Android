@@ -42,7 +42,7 @@ public class MazeGameView extends View implements HeroListener {
 	private float wiggleRoom = gameSize+wallThickness/2-difficulty;
 	private Set<LineSegment2D> walls;
 	private Set<PointF> coins;
-	private HashSet<Heart> hearts;
+	private HashSet<SimpleSprite> hearts;
 	private Set<Enemy> enemies;
 	private float coinRadius = gameSize/2.0f;
 	private float heartRadius = gameSize/1.5f;
@@ -119,7 +119,7 @@ public class MazeGameView extends View implements HeroListener {
 		}
 
 		synchronized ( hearts ) {
-			for ( Heart heart : hearts ) {
+			for ( SimpleSprite heart : hearts ) {
 				heart.draw(canvas);
 				//canvas.drawCircle( heart.x, heart.y, heartRadius, extraPaint );
 			}
@@ -199,14 +199,14 @@ public class MazeGameView extends View implements HeroListener {
 				AssetManager assets = getContext().getAssets();
 
 				Set<PointF> heartLocations = generator.getRandomRoomLocations((int) (4.0), true);
-				hearts = new HashSet<Heart>();
+				hearts = new HashSet<SimpleSprite>();
 				for(PointF location : heartLocations) {
-					hearts.add(new Heart(location,gameSize,assets));
+					hearts.add(new SimpleSprite(location,gameSize*0.7f, assets, "heart.png"));
 				}
 				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
 				enemies = new HashSet<Enemy>();
 				for(PointF location : enemyLocations) {
-					enemies.add(new Enemy(location,gameSize,assets));
+					enemies.add(new Enemy(location,gameSize*0.8f,assets));
 				}
 				updateTimerTask = new UpdateTimerTask();
 				updateTimer.schedule(updateTimerTask, 0, FramePeriod );
@@ -260,8 +260,8 @@ public class MazeGameView extends View implements HeroListener {
 			}
 
 			synchronized ( hearts ) {
-				for ( Iterator<Heart> heartIterator = hearts.iterator(); heartIterator.hasNext(); ) {
-					Heart heart = heartIterator.next();
+				for ( Iterator<SimpleSprite> heartIterator = hearts.iterator(); heartIterator.hasNext(); ) {
+					SimpleSprite heart = heartIterator.next();
 					if ( hero.detectAndResolveHeartCollision( heart.getCenter(), heartRadius ) ) {
 						heartIterator.remove();
 						break;

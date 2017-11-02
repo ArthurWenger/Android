@@ -12,7 +12,7 @@ import com.example.arthur.ballsensor.sound.AudioPlayer;
 import java.util.ArrayList;
 
 /** Classe modélisant le héro (pacman) dans le jeu **/
-public class Hero extends AnimatedSprite {
+public class Hero extends Sprite {
 
 	private Bitmap pacmanSpriteSheet;
 	private int drawCounter = 0;
@@ -113,7 +113,7 @@ public class Hero extends AnimatedSprite {
 	}
 
 	
-	public void getHit(AnimatedSprite other) {
+	public void getHit(Sprite other) {
 		if(!invulnerable) {
 			playHitSound();
 			lives = Math.max( 0, lives - 1 );

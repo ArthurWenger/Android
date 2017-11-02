@@ -1,8 +1,6 @@
 package com.example.arthur.ballsensor.game;
 
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.graphics.PointF;
 
 import com.example.arthur.ballsensor.geometry.LineSegment2D;
@@ -11,25 +9,11 @@ import com.example.arthur.ballsensor.geometry.Math2D;
 import java.util.Set;
 
 /** Classe modélisant un ennemi (fantome) dans le jeu  **/
-public class Enemy extends AnimatedSprite {
-
-	private final Bitmap ghostSpriteSheet;
-	private final int spriteHalfWidth;
-	private final int spriteHalfHeight;
-	private final Paint ghostPaint = new Paint();
+public class Enemy extends SimpleSprite{
 
 	public Enemy(PointF location, float size, AssetManager assets) {
-		super(location, size*0.8f);
+		super(location, size, assets, "ghost2.png");
 		velocity.set( 2f,0 );
-		ghostSpriteSheet = bitmapFromAssetNamed("ghost2.png", assets);
-		spriteHalfWidth = ghostSpriteSheet.getWidth()/2;
-		spriteHalfHeight = ghostSpriteSheet.getHeight()/2;
-	}
-	
-	public void draw(android.graphics.Canvas canvas) {
-		//canvas.drawCircle(getCenter().x, getCenter().y, radius, new Paint());
-		PointF c = getCenter();
-		canvas.drawBitmap(ghostSpriteSheet, c.x-spriteHalfWidth, c.y-spriteHalfHeight, ghostPaint);
 	}
 	
 	public void update( Set<LineSegment2D> nearbyWalls, float wallThickness, Hero hero) {

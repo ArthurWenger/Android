@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /** Classe abstraite permettant de représenter les objets du jeu **/
-public abstract class AnimatedSprite {
+public abstract class Sprite {
 
 	private PointF center = new PointF();
 	private PointF prevCenter = new PointF();
@@ -24,7 +24,7 @@ public abstract class AnimatedSprite {
 
 	protected float radius = 25;
 
-	public AnimatedSprite( PointF location, float size) {
+	public Sprite( PointF location, float size) {
 		center.set(location);
 		prevCenter.set(location);
 		radius = size;
