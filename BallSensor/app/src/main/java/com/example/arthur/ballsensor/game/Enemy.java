@@ -11,9 +11,9 @@ import java.util.Set;
 /** Classe modélisant un ennemi (fantome) dans le jeu  **/
 public class Enemy extends SimpleSprite{
 
-	public Enemy(PointF location, float size, AssetManager assets) {
+	public Enemy(PointF location, float size, AssetManager assets, float speed) {
 		super(location, size, assets, "ghost2.png");
-		velocity.set( 2f,0 );
+		velocity.set( speed,0 );
 	}
 	
 	public void update( Set<LineSegment2D> nearbyWalls, float wallThickness, Hero hero) {

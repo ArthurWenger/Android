@@ -61,8 +61,10 @@ public class Hero extends Sprite {
 		return false;		
 	}
 
-	public boolean detectFinishCollision(PointF finishLocation) {
-		return Math2D.pointInCircle(finishLocation.x,finishLocation.y, getCenter(), radius);		
+	public boolean detectFinishCollision(SimpleSprite finish) {
+		//return Math2D.pointInCircle(finishLocation.x,finishLocation.y, getCenter(), radius);
+
+		return Math2D.circleIntersectsRect(getCenter(), radius, finish.getRectHitbox());
 	}
 
 	public void draw(android.graphics.Canvas canvas) {

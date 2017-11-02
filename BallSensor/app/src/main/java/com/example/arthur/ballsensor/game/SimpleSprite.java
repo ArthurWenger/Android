@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 public class SimpleSprite extends Sprite{
 	private Bitmap spriteSheet;
@@ -23,6 +24,11 @@ public class SimpleSprite extends Sprite{
 	public void draw( Canvas canvas ) {
 		PointF c = getCenter();
 		canvas.drawBitmap( spriteSheet, c.x-spriteHalfWidth, c.y-spriteHalfHeight, spritePaint );
-		//canvas.drawCircle(getCenter().x, getCenter().y, radius, heartPaint);
+		//canvas.drawCircle(getCenter().x, getCenter().y, radius, spritePaint);
+	}
+
+	public RectF getRectHitbox(){
+		PointF c = getCenter();
+		return new RectF(c.x-spriteHalfWidth, c.y-spriteHalfHeight, c.x+spriteHalfHeight, c.y+spriteHalfWidth);
 	}
 }

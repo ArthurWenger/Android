@@ -44,6 +44,7 @@ public class MazeGameView extends View implements HeroListener {
 	private Set<PointF> coins;
 	private HashSet<SimpleSprite> hearts;
 	private Set<Enemy> enemies;
+	private SimpleSprite finishLine;
 	private float coinRadius = gameSize/2.0f;
 	private float heartRadius = gameSize/1.5f;
 	private Timer updateTimer = new Timer();
@@ -54,6 +55,7 @@ public class MazeGameView extends View implements HeroListener {
 	private GameOverListener gameOverListener;
 	private final int FPS = 30;
 	private final int FramePeriod = 1000/FPS;
+	private float ennemySpeed = 2f;
 
 	public MazeGameView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -131,8 +133,9 @@ public class MazeGameView extends View implements HeroListener {
 		hero.draw(canvas);
 
 		canvas.drawText("S", startLocation.x, startLocation.y, floorTextPaint);
-		canvas.drawText("F", finishLocation.x, finishLocation.y, floorTextPaint);
-
+		//canvas.drawText("F", finishLocation.x, finishLocation.y, floorTextPaint);
+		//SimpleSprite finishLine = new SimpleSprite( finishLocation, gameSize, getContext().getAssets(), "finish.png" );
+		finishLine.draw( canvas );
 		canvas.restore();
 
 		canvas.drawText("Score: "+Integer.toString(score),10,20,uiTextPaint);
@@ -206,8 +209,9 @@ public class MazeGameView extends View implements HeroListener {
 				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
 				enemies = new HashSet<Enemy>();
 				for(PointF location : enemyLocations) {
-					enemies.add(new Enemy(location,gameSize*0.8f,assets));
+					enemies.add(new Enemy(location,gameSize*0.8f,assets, ennemySpeed));
 				}
+				finishLine = new SimpleSprite( finishLocation, gameSize, assets, "finish.png" );
 				updateTimerTask = new UpdateTimerTask();
 				updateTimer.schedule(updateTimerTask, 0, FramePeriod );
 			}
@@ -218,6 +222,8 @@ public class MazeGameView extends View implements HeroListener {
 
 	/** quand le joueur atteint la case de fin du labyrinthe, on en genere un nouveau aleatoirement **/
 	private void winLevel() {
+		score+=20;
+		ennemySpeed++;
 		walls = null;
 		coins = null;
 		enemies = null;
@@ -279,7 +285,7 @@ public class MazeGameView extends View implements HeroListener {
 				}
 			}
 
-			if(hero.detectFinishCollision(finishLocation)) {
+			if(hero.detectFinishCollision( finishLine )) {
 				winLevel();
 			} else {
 				for(LineSegment2D wall : walls) {
