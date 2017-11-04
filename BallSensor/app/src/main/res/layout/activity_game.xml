@@ -8,7 +8,7 @@
     tools:context="com.example.arthur.ballsensor.game.GameActivity"
     android:keepScreenOn="true">
 
-    <com.example.arthur.ballsensor.game.MazeGameView
+    <com.example.arthur.ballsensor.game.GameView
         android:id="@+id/mazeView"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"/>

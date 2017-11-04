@@ -25,7 +25,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /** Vue permettant d'afficher et de coordonner les objets du jeu (labyrinthe / hero / ennemis...) **/
-public class MazeGameView extends View implements HeroListener {
+public class GameView extends View implements HeroListener {
 
 	private final float gameSize = 30;
 	private int score = 0;
@@ -57,7 +57,7 @@ public class MazeGameView extends View implements HeroListener {
 	private final int FramePeriod = 1000/FPS;
 	private float enemySpeed = 3.0f;
 
-	public MazeGameView(Context context, AttributeSet attrs) {
+	public GameView( Context context, AttributeSet attrs) {
 		super(context, attrs);
 
 		wallPaint = new Paint();
@@ -114,6 +114,11 @@ public class MazeGameView extends View implements HeroListener {
 			}
 		}
 
+		canvas.drawText("S", startLocation.x, startLocation.y, floorTextPaint);
+		//canvas.drawText("F", finishLocation.x, finishLocation.y, floorTextPaint);
+		//SimpleSprite finishLine = new SimpleSprite( finishLocation, gameSize, getContext().getAssets(), "finish.png" );
+		finishLine.draw( canvas );
+
 		synchronized ( coins ) {
 			for ( PointF coin : coins ) {
 				canvas.drawCircle( coin.x, coin.y, coinRadius, coinPaint );
@@ -132,10 +137,6 @@ public class MazeGameView extends View implements HeroListener {
 		}
 		hero.draw(canvas);
 
-		canvas.drawText("S", startLocation.x, startLocation.y, floorTextPaint);
-		//canvas.drawText("F", finishLocation.x, finishLocation.y, floorTextPaint);
-		//SimpleSprite finishLine = new SimpleSprite( finishLocation, gameSize, getContext().getAssets(), "finish.png" );
-		finishLine.draw( canvas );
 		canvas.restore();
 
 		canvas.drawText("Score: "+Integer.toString(score),10,20,uiTextPaint);

@@ -29,7 +29,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	private Sensor mAccelerometer;
 	private boolean accelSupported;
 	private MySensorListener sensorListener;
-	private MazeGameView mazeView;
+	private GameView mazeView;
 	Double[] location =null;
 
 	// private final int SCORES_ACTIVITY = 1;
@@ -53,7 +53,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	}
 
 	private void initView() {
-		mazeView = (MazeGameView) findViewById(R.id.mazeView );//On récupère le labyrinthe
+		mazeView = (GameView) findViewById(R.id.mazeView );//On récupère le labyrinthe
 		mazeView.setGameOverListener(this);//Et on pose un écouteur dessus.
 	}
 
