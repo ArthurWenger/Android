@@ -10,8 +10,8 @@ import android.graphics.RectF;
 public class SimpleSprite extends Sprite{
 	private Bitmap spriteSheet;
 	private final Paint spritePaint = new Paint();
-	private final int spriteHalfWidth;
-	private final int spriteHalfHeight;
+	final int spriteHalfWidth;
+	final int spriteHalfHeight;
 
 	public SimpleSprite( PointF location, float size, AssetManager assets, String spriteName ) {
 		super( location, size );

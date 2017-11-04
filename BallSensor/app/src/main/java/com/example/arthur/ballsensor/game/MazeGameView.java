@@ -16,7 +16,7 @@ import com.example.arthur.ballsensor.geometry.LineSegment2D;
 import com.example.arthur.ballsensor.geometry.Math2D;
 import com.example.arthur.ballsensor.maze.DepthFirstSearchMazeGenerator;
 import com.example.arthur.ballsensor.maze.MazeGenerator;
-import com.example.arthur.ballsensor.maze.MazeGeneratorDelegate;
+import com.example.arthur.ballsensor.maze.MazeGeneratorListener;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -55,7 +55,7 @@ public class MazeGameView extends View implements HeroListener {
 	private GameOverListener gameOverListener;
 	private final int FPS = 30;
 	private final int FramePeriod = 1000/FPS;
-	private float ennemySpeed = 2f;
+	private float enemySpeed = 3.0f;
 
 	public MazeGameView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -190,7 +190,7 @@ public class MazeGameView extends View implements HeroListener {
 		float cellSize = gameSize * 2 + wiggleRoom * 2;
 
 		DepthFirstSearchMazeGenerator mazeGenerator = new DepthFirstSearchMazeGenerator();
-		mazeGenerator.generate(screenWidth*3f, screenWidth*3f, cellSize, cellSize, new MazeGeneratorDelegate() { //Deliberately not using screenHeight for a square maze
+		mazeGenerator.generate(screenWidth*3f, screenWidth*3f, cellSize, cellSize, new MazeGeneratorListener() { //Deliberately not using screenHeight for a square maze
 			@Override
 			public void mazeGenerationDidFinish(MazeGenerator generator) {
 				startLocation.set(generator.getStartLocation());
@@ -209,11 +209,10 @@ public class MazeGameView extends View implements HeroListener {
 				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
 				enemies = new HashSet<Enemy>();
 				for(PointF location : enemyLocations) {
-					enemies.add(new Enemy(location,gameSize*0.8f,assets, ennemySpeed));
+					enemies.add(new Enemy(location,gameSize*0.8f,assets, enemySpeed ));
 				}
 				finishLine = new SimpleSprite( finishLocation, gameSize, assets, "finish.png" );
-				updateTimerTask = new UpdateTimerTask();
-				updateTimer.schedule(updateTimerTask, 0, FramePeriod );
+				startTimer();
 			}
 		});
 		hero.setHeroListener( this );
@@ -223,7 +222,7 @@ public class MazeGameView extends View implements HeroListener {
 	/** quand le joueur atteint la case de fin du labyrinthe, on en genere un nouveau aleatoirement **/
 	private void winLevel() {
 		score+=20;
-		ennemySpeed++;
+		enemySpeed++;
 		walls = null;
 		coins = null;
 		enemies = null;
@@ -240,6 +239,13 @@ public class MazeGameView extends View implements HeroListener {
 			updateTimerTask = null;
 		}
 		updateTimer.purge();
+	}
+
+	public void startTimer(){
+		if(updateTimerTask==null) {
+			updateTimerTask = new UpdateTimerTask();
+			updateTimer.schedule( updateTimerTask, 0, FramePeriod );
+		}
 	}
 
 	private RectF cameraRect() {

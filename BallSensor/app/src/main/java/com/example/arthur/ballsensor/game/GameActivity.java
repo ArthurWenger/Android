@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ import com.example.arthur.ballsensor.gameover.GameOverActivity;
 import com.example.arthur.ballsensor.gameover.GameOverListener;
 import com.example.arthur.ballsensor.location.LocationListener;
 import com.example.arthur.ballsensor.location.SingleShotLocationProvider;
+import com.example.arthur.ballsensor.scoresList.ScoresActivity;
 
 public class GameActivity extends AppCompatActivity implements GameOverListener, LocationListener {
 
@@ -31,6 +34,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 
 	// private final int SCORES_ACTIVITY = 1;
 	private static final int GAMEOVER_ACTIVITY = 1;
+	private static final int SCORES_ACTIVITY = 2;
 	private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
 
 	@Override
@@ -107,6 +111,9 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 					default: break;//Sinon, On ne fais rien
 				}
 				break;
+			case SCORES_ACTIVITY:
+				mazeView.startTimer();
+				break;
 			default: break;//Si le code requête vaut tout autre valeur, on ne fais rien.
 		}
 	}
@@ -148,6 +155,30 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		super.onDestroy();//Et on quiteselon la procédure habituelle.
 	}
 
+
+	@Override
+	public boolean onCreateOptionsMenu( Menu menu ) {
+		getMenuInflater().inflate( R.menu.game, menu );
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item ) {
+		switch ( item.getItemId() ) {
+			case R.id.action_scores:
+				mazeView.stopTimer();
+				Intent scoresIntent = new Intent( this, ScoresActivity.class );
+				startActivityForResult( scoresIntent, SCORES_ACTIVITY );
+				return true;
+			case R.id.action_new_game:
+				mazeView.newGame();
+				return true;
+			case R.id.action_menu:
+				finish();
+				return true;
+		}
+		return super.onOptionsItemSelected( item );
+	}
 
 
 }
