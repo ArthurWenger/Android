@@ -13,4 +13,5 @@
     <string name="no_scores_available">Aucuns scores disponible pour le moment</string>
     <string name="replay">Rejouer</string>
     <string name="new_game">Nouvelle partie</string>
+    <string name="home">Acceuil</string>
 </resources>

@@ -13,4 +13,5 @@
     <string name="no_scores_available">No scores available yet</string>
     <string name="replay">Replay</string>
     <string name="new_game">New game</string>
+    <string name="home">Home</string>
 </resources>
