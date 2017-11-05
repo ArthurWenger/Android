@@ -21,7 +21,7 @@ import com.example.arthur.ballsensor.gameover.GameOverActivity;
 import com.example.arthur.ballsensor.gameover.GameOverListener;
 import com.example.arthur.ballsensor.location.LocationListener;
 import com.example.arthur.ballsensor.location.SingleShotLocationProvider;
-import com.example.arthur.ballsensor.scoresList.ScoresActivity;
+import com.example.arthur.ballsensor.scores.ScoresActivity;
 
 public class GameActivity extends AppCompatActivity implements GameOverListener, LocationListener {
 

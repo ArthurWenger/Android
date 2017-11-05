@@ -19,7 +19,7 @@
             android:value="@string/google_maps_key"/>
 
         <activity
-            android:name=".menu.MainActivity"
+            android:name=".mainmenu.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".scoresList.ScoresActivity"
+            android:name=".scores.ScoresActivity"
             android:label="@string/title_activity_scores"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

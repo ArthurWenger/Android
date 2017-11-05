@@ -41,7 +41,7 @@ public class Hero extends Sprite {
 	public Hero(final PointF location, final float size, final AssetManager assets) {
 		super(location, size);
 		audioPlayer = new AudioPlayer( assets );
-		pacmanSpriteSheet = bitmapFromAssetNamed( "pacman.png", assets);
+		pacmanSpriteSheet = bitmapFromAssetNamed( "sprites/pacman.png", assets);
 	}
 
 	public boolean detectCoinCollision(PointF coinCenter, float coinRadius) {
@@ -186,16 +186,16 @@ public class Hero extends Sprite {
 	}
 
 	private void playDeathSound(){
-		audioPlayer.startPlayer("pacman_death.ogg", 1f, false);
+		audioPlayer.startPlayer( "sounds/pacman_death.ogg", 1f, false);
 	}
 	private void playHitSound(){
-		audioPlayer.startPlayer("pacman_hit.ogg", 1f, false);
+		audioPlayer.startPlayer( "sounds/pacman_hit.ogg", 1f, false);
 	}
 	private void playChompSound(){
-		audioPlayer.startPlayer("pacman_chomp.ogg", 0.5f, false);
+		audioPlayer.startPlayer( "sounds/pacman_chomp.ogg", 0.5f, false);
 	}
 	private void playHeartSound(){
-		audioPlayer.startPlayer("pacman_coin.ogg", 3f, false);
+		audioPlayer.startPlayer( "sounds/pacman_coin.ogg", 3f, false);
 	}
 
 }

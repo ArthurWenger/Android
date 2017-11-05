@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.example.arthur.ballsensor.R;
 import com.example.arthur.ballsensor.database.DBManager;
-import com.example.arthur.ballsensor.scoresList.ScoresActivity;
+import com.example.arthur.ballsensor.scores.ScoresActivity;
 
 /** Activité permettant d'afficher un game over à l'écran.
  *  Le score du joueur est ajouté à la base de donnée dès l'affichage de l'activité. **/

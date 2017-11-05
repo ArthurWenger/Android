@@ -116,7 +116,6 @@ public class GameView extends View implements HeroListener {
 
 		canvas.drawText("S", startLocation.x, startLocation.y, floorTextPaint);
 		//canvas.drawText("F", finishLocation.x, finishLocation.y, floorTextPaint);
-		//SimpleSprite finishLine = new SimpleSprite( finishLocation, gameSize, getContext().getAssets(), "finish.png" );
 		finishLine.draw( canvas );
 
 		synchronized ( coins ) {
@@ -205,14 +204,14 @@ public class GameView extends View implements HeroListener {
 				Set<PointF> heartLocations = generator.getRandomRoomLocations((int) (4.0), true);
 				hearts = new HashSet<SimpleSprite>();
 				for(PointF location : heartLocations) {
-					hearts.add(new SimpleSprite(location,gameSize*0.7f, assets, "heart.png"));
+					hearts.add(new SimpleSprite(location,gameSize*0.7f, assets, "sprites/heart.png" ));
 				}
 				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
 				enemies = new HashSet<Enemy>();
 				for(PointF location : enemyLocations) {
 					enemies.add(new Enemy(location,gameSize*0.8f,assets, enemySpeed ));
 				}
-				finishLine = new SimpleSprite( finishLocation, gameSize, assets, "finish.png" );
+				finishLine = new SimpleSprite( finishLocation, gameSize, assets, "sprites/finish.png" );
 				startTimer();
 			}
 		});

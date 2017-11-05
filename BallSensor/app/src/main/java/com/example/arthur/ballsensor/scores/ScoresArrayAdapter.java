@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.scoresList;
+package com.example.arthur.ballsensor.scores;
 
 import android.content.Context;
 import android.graphics.Color;

@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.arthur.ballsensor.scoresList.Score;
+import com.example.arthur.ballsensor.scores.Score;
 
 import java.util.ArrayList;
 

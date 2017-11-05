@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.example.arthur.ballsensor.R;
-import com.example.arthur.ballsensor.scoresList.Score;
+import com.example.arthur.ballsensor.scores.Score;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

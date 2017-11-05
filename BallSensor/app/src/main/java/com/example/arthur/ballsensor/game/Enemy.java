@@ -12,7 +12,7 @@ import java.util.Set;
 public class Enemy extends SimpleSprite{
 
 	public Enemy(PointF location, float size, AssetManager assets, float speed) {
-		super(location, size, assets, "ghost.png" );
+		super(location, size, assets, "sprites/ghost.png" );
 		velocity.set( speed,0 );
 	}
 
