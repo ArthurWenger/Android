@@ -16,7 +16,7 @@ import com.example.arthur.ballsensor.geometry.LineSegment2D;
 import com.example.arthur.ballsensor.geometry.Math2D;
 import com.example.arthur.ballsensor.maze.DepthFirstSearchMazeGenerator;
 import com.example.arthur.ballsensor.maze.MazeGenerator;
-import com.example.arthur.ballsensor.maze.MazeGeneratorDelegate;
+import com.example.arthur.ballsensor.maze.MazeGeneratorListener;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**Clase permettant de gérer la partie graphique de tous les éléments du jeu**/
-public class MazeGameView extends View implements HeroListener {
+public class GameView extends View implements HeroListener {
 
 	private final float gameSize = 30;
 	private int score = 0;
@@ -42,8 +42,9 @@ public class MazeGameView extends View implements HeroListener {
 	private float wiggleRoom = gameSize+wallThickness/2-difficulty;
 	private Set<LineSegment2D> walls;
 	private Set<PointF> coins;
-	private HashSet<Heart> hearts;
+	private HashSet<SimpleSprite> hearts;
 	private Set<Enemy> enemies;
+	private SimpleSprite finishLine;
 	private float coinRadius = gameSize/2.0f;
 	private float heartRadius = gameSize/1.5f;
 	private Timer updateTimer = new Timer();
@@ -54,9 +55,10 @@ public class MazeGameView extends View implements HeroListener {
 	private GameOverListener gameOverListener;
 	private final int FPS = 30;
 	private final int FramePeriod = 1000/FPS;
+	private float enemySpeed = 3.0f;
 
 	/**Constructeur**/
-	public MazeGameView(Context context, AttributeSet attrs) {
+	public GameView( Context context, AttributeSet attrs) {
 		super(context, attrs);
 
 		wallPaint = new Paint();
@@ -78,7 +80,8 @@ public class MazeGameView extends View implements HeroListener {
 		coinPaint = new Paint();
 		coinPaint.setARGB(255,180,190,0);
 	}
-	//TODO: ajouter une méthode pause quand le jeu est quitté avec un retour en arrière
+
+	/** Protected **/
 
 	/** méthode permettant de dessiner le labyrinthe et tous les objets du jeu **/
 	@Override
@@ -89,7 +92,7 @@ public class MazeGameView extends View implements HeroListener {
 		assert (walls != null) : "Les murs doivent exister.";
 		for(LineSegment2D wall : walls) {
 			if(Math2D.pointInRect(wall.a, cameraRect()) || Math2D.pointInRect(wall.b, cameraRect())) {
-				// on redimensionne les murs de la moitié de leur épaisseur pour améliorer l'affichage
+				// on affiche les murs en prenant en compte leur épaisseur
 				float x1Offset = 0, y1Offset = 0, x2Offset = 0, y2Offset = 0;
 				if(wall.a.x < wall.b.x) {
 					x1Offset = -wallThickness/2.0f;
@@ -111,6 +114,9 @@ public class MazeGameView extends View implements HeroListener {
 			}
 		}
 
+		canvas.drawText("S", startLocation.x, startLocation.y, floorTextPaint);
+		finishLine.draw( canvas );
+
 		synchronized ( coins ) {
 			for ( PointF coin : coins ) {
 				canvas.drawCircle( coin.x, coin.y, coinRadius, coinPaint );
@@ -118,7 +124,7 @@ public class MazeGameView extends View implements HeroListener {
 		}
 
 		synchronized ( hearts ) {
-			for ( Heart heart : hearts ) {
+			for ( SimpleSprite heart : hearts ) {
 				heart.draw(canvas);
 				//canvas.drawCircle( heart.x, heart.y, heartRadius, extraPaint );
 			}
@@ -128,9 +134,6 @@ public class MazeGameView extends View implements HeroListener {
 			enemy.draw(canvas);
 		}
 		hero.draw(canvas);
-
-		canvas.drawText("S", startLocation.x, startLocation.y, floorTextPaint);
-		canvas.drawText("F", finishLocation.x, finishLocation.y, floorTextPaint);
 
 		canvas.restore();
 
@@ -144,7 +147,7 @@ public class MazeGameView extends View implements HeroListener {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		if(walls == null) { //only generate maze if one doesn't exist.
+		if(walls == null) { // on genère un labyrinthe seulement s'il existe
 			generateMaze(w,h);
 		}
 	}
@@ -172,7 +175,7 @@ public class MazeGameView extends View implements HeroListener {
 		this.gameOverListener = mEventListener;
 	}
 
-	/** quand le pacman meurt, on le notifie à la classe mère pour qu'elle lance l'activité GameOver **/
+	/** quand pacman meurt, on le signale à la classe mère pour qu'elle lance l'activité GameOver **/
 	@Override
 	public void notifyHeroDeath() {
 		stopTimer();
@@ -186,7 +189,7 @@ public class MazeGameView extends View implements HeroListener {
 		float cellSize = gameSize * 2 + wiggleRoom * 2;
 
 		DepthFirstSearchMazeGenerator mazeGenerator = new DepthFirstSearchMazeGenerator();
-		mazeGenerator.generate(screenWidth*3f, screenWidth*3f, cellSize, cellSize, new MazeGeneratorDelegate() { //Deliberately not using screenHeight for a square maze
+		mazeGenerator.generate(screenWidth*3f, screenWidth*3f, cellSize, cellSize, new MazeGeneratorListener() { //Deliberately not using screenHeight for a square maze
 			@Override
 			public void mazeGenerationDidFinish(MazeGenerator generator) {
 				startLocation.set(generator.getStartLocation());
@@ -198,25 +201,27 @@ public class MazeGameView extends View implements HeroListener {
 				AssetManager assets = getContext().getAssets();
 
 				Set<PointF> heartLocations = generator.getRandomRoomLocations((int) (4.0), true);
-				hearts = new HashSet<Heart>();
+				hearts = new HashSet<SimpleSprite>();
 				for(PointF location : heartLocations) {
-					hearts.add(new Heart(location,gameSize,assets));
+					hearts.add(new SimpleSprite(location,gameSize*0.7f, assets, "sprites/heart.png" ));
 				}
 				Set<PointF> enemyLocations = generator.getRandomRoomLocations((int) (Math.random()*4.0+6.0), false);
 				enemies = new HashSet<Enemy>();
 				for(PointF location : enemyLocations) {
-					enemies.add(new Enemy(location,gameSize,assets));
+					enemies.add(new Enemy(location,gameSize*0.8f,assets, enemySpeed ));
 				}
-				updateTimerTask = new UpdateTimerTask();
-				updateTimer.schedule(updateTimerTask, 0, FramePeriod );
+				finishLine = new SimpleSprite( finishLocation, gameSize, assets, "sprites/finish.png" );
+				startTimer();
 			}
 		});
 		hero.setHeroListener( this );
-		Log.d("Canvas", "Generation du labyrinthe terminé.");
+		Log.d("Canvas", "Generation du labyrinthe terminée.");
 	}
 
 	/** quand le joueur atteint la case de fin du labyrinthe, on en genere un nouveau aleatoirement **/
 	private void winLevel() {
+		score+=20;
+		enemySpeed++;
 		walls = null;
 		coins = null;
 		enemies = null;
@@ -233,6 +238,13 @@ public class MazeGameView extends View implements HeroListener {
 			updateTimerTask = null;
 		}
 		updateTimer.purge();
+	}
+
+	public void startTimer(){
+		if(updateTimerTask==null) {
+			updateTimerTask = new UpdateTimerTask();
+			updateTimer.schedule( updateTimerTask, 0, FramePeriod );
+		}
 	}
 
 	private RectF cameraRect() {
@@ -259,8 +271,8 @@ public class MazeGameView extends View implements HeroListener {
 			}
 
 			synchronized ( hearts ) {
-				for ( Iterator<Heart> heartIterator = hearts.iterator(); heartIterator.hasNext(); ) {
-					Heart heart = heartIterator.next();
+				for ( Iterator<SimpleSprite> heartIterator = hearts.iterator(); heartIterator.hasNext(); ) {
+					SimpleSprite heart = heartIterator.next();
 					if ( hero.detectAndResolveHeartCollision( heart.getCenter(), heartRadius ) ) {
 						heartIterator.remove();
 						break;
@@ -278,7 +290,7 @@ public class MazeGameView extends View implements HeroListener {
 				}
 			}
 
-			if(hero.detectFinishCollision(finishLocation)) {
+			if(hero.detectFinishCollision( finishLine )) {
 				winLevel();
 			} else {
 				for(LineSegment2D wall : walls) {

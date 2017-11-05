@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.scoresList;
+package com.example.arthur.ballsensor.scores;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,9 +19,14 @@ public class ScoresActivity extends AppCompatActivity {
 	private TextView mTvNothing;
 	private ScoresArrayAdapter adapter;
 	DBManager mydb;
+	private Integer highlight = null;
 
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
+		Bundle extras = getIntent().getExtras();
+		if(extras!=null && extras.containsKey( "highlight" ) ) {
+				highlight = extras.getInt( "highlight" );
+		}
 		setContentView( R.layout.activity_scores );
 		mydb = new DBManager(this);
 		// pour supprimer la base de données:
@@ -38,6 +43,7 @@ public class ScoresActivity extends AppCompatActivity {
 			mTvNothing.setVisibility(TextView.VISIBLE);
 		} else {
 			adapter = new ScoresArrayAdapter( this, scores_array );
+			adapter.setSelected( highlight );
 			mListView.setAdapter( adapter );
 			mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
 				@Override

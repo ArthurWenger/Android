@@ -1,14 +1,13 @@
-package com.example.arthur.ballsensor.menu;
+package com.example.arthur.ballsensor.mainmenu;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.example.arthur.ballsensor.R;
 import com.example.arthur.ballsensor.game.GameActivity;
-import com.example.arthur.ballsensor.scoresList.ScoresActivity;
+import com.example.arthur.ballsensor.scores.ScoresActivity;
 import com.example.arthur.ballsensor.sound.AudioPlayer;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,8 +17,8 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {//Au démarrage de l'application
 		super.onCreate(savedInstanceState);//On applique la méthode usuelle
 		setContentView( R.layout.activity_main );//On récupère la disposition des vues
-		backgroundMusic = new AudioPlayer( this.getAssets() );//On lance la musique de fond...
-		backgroundMusic.startPlayer( "pacman_song.ogg", 1f, true);//...
+		backgroundMusic = new AudioPlayer( this.getAssets() );
+		backgroundMusic.startPlayer( "sounds/pacman_song.ogg", 1f, true);//On lance la musique de fond
 	}
 
 	// Methode pour afficher la liste des scores
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public void onResume() {//Quand on met l'activité en premier plan
 		super.onResume();//On utilise la procédure habituelle
-		backgroundMusic.startPlayer( "pacman_song.ogg", 1f, true);//Et on relance la musique.
+		backgroundMusic.startPlayer( "sounds/pacman_song.ogg", 1f, true);//Et on relance la musique.
 	}
 
 }

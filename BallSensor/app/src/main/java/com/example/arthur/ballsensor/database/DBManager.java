@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.arthur.ballsensor.scoresList.Score;
+import com.example.arthur.ballsensor.scores.Score;
 
 import java.util.ArrayList;
 
@@ -43,14 +43,14 @@ public class DBManager extends SQLiteOpenHelper {
 	}
 
 	/** Insertion d'un score dans la base de données **/
-	public boolean insertScore (int value, double latitude, double longitude) {
+	public long insertScore (int value, double latitude, double longitude) {
 		SQLiteDatabase db = this.getWritableDatabase();//On récupère une base de données dans laquelle on peut écrire.
 		ContentValues contentValues = new ContentValues();//On créé une variable conteneur,
 		contentValues.put(SCORES_COLUMN_VALUE, value);//dans laquelle on range le score
 		contentValues.put(SCORES_COLUMN_LATITUDE, latitude);//Puis la lattitude
 		contentValues.put(SCORES_COLUMN_LONGITUDE, longitude);//Et la longitude.
-		db.insert(SCORES_TABLE_NAME, null, contentValues);//Enfin, on insere le conteneur dans la base de données.
-		return true;//Et on renvoie vrai pour dire que tout s'est bien passé.
+        return db.insert(SCORES_TABLE_NAME, null, contentValues);//Enfin, on insere le conteneur dans la base de données.
+        //Et on renvoie vrai pour dire que tout s'est bien passé.
 	}
 
 	/** Récupération de l'ensemble des scores de la base **/
@@ -77,5 +77,26 @@ public class DBManager extends SQLiteOpenHelper {
 		}//Une fois tous les scores enregistrés
 		cursor.close();//On ferme la table envoyée par la base
 		return array_list;//Et on renvoie le tableau.
+	}
+
+	// méthode utile uniquement dans l'activité GameOver
+	// le parametre score n'est pas nécessaire mais permet d'accelerer la requete
+	public int getRank(int id, int score){
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("select "+SCORES_COLUMN_ID+
+				                            " from "+SCORES_TABLE_NAME+
+				                            " where "+SCORES_COLUMN_VALUE+" >= "+score+"" +
+				                            " order by "+SCORES_COLUMN_VALUE+" desc;", null);
+		ArrayList<Integer> array_list = new ArrayList<Integer>();
+		int idIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_ID);
+		cursor.moveToFirst();
+		int rank = cursor.getInt( 0 );
+		while( !cursor.isAfterLast() ){
+			int rowId = cursor.getInt( idIndex );
+			array_list.add(rowId);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		return array_list.indexOf( id )+1;
 	}
 }

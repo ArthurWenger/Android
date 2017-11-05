@@ -10,34 +10,17 @@ import com.example.arthur.ballsensor.geometry.Math2D;
 
 import java.util.Set;
 
-/**Classe permettant de représenter les Ennemis**/
-public class Enemy extends AnimatedSprite {
+/** Classe modélisant un ennemi (fantome) dans le jeu  **/
+public class Enemy extends SimpleSprite{
 
-	private final Bitmap ghostSpriteSheet;
-	private final int spriteHalfWidth;
-	private final int spriteHalfHeight;
-	private final Paint ghostPaint = new Paint();
-
-	/**Constructeur**/
-	public Enemy(PointF location, float size, AssetManager assets) {
-		super(location, size*0.8f);//On appelle le constructeur de AnimatedSprite
-		velocity.set( 2f,0 );//On fixe la vitesse
-		ghostSpriteSheet = bitmapFromAssetNamed("ghost2.png", assets);//On récupère l'image correspondant à un ennemi
-		spriteHalfWidth = ghostSpriteSheet.getWidth()/2;//On récupère la moitié de la largeur de la hitbox de l'ennemi
-		spriteHalfHeight = ghostSpriteSheet.getHeight()/2;//On récupère la moitié de la hauteur de la hitbox de l'ennemi
+	public Enemy(PointF location, float size, AssetManager assets, float speed) {
+		super(location, size, assets, "sprites/ghost.png" );//On appelle le constructeur de AnimatedSprite
+		velocity.set( speed,0 );//On fixe la vitesse
 	}
-
-	/**Méthode draw, permettant de dessiner l'ennemi à l'écran**/
-	@Override
-	public void draw(android.graphics.Canvas canvas) {
-		PointF c = getCenter();//On récupère la position du centre de l'ennemi
-		canvas.drawBitmap(ghostSpriteSheet, c.x-spriteHalfWidth, c.y-spriteHalfHeight, ghostPaint);//Et on le dessine à l'écran.
-	}
-
 	/**Méthode permettant de mettre à jour la direction dans laquelle se déplace l'ennemi**/
 	public void update( Set<LineSegment2D> nearbyWalls, float wallThickness, Hero hero) {
 		setCenter( Math2D.add(getCenter(),velocity));//On déplace l'ennemi à sa nouvelle position
-		for (LineSegment2D wall : nearbyWalls) {//Pour tous les murs
+		 for (LineSegment2D wall : nearbyWalls) {//Pour tous les murs
 			if(detectAndResolveWallCollision(wall, wallThickness)) {//Si un mur entre en collision avec l'ennemi
 				setDirection(hero);//L'ennemi se déplace dans la direction du héro.
 			}
@@ -55,17 +38,68 @@ public class Enemy extends AnimatedSprite {
 		return false;//Sinon, on renvoie faux.
 	}
 
-	/**Méthode permettant de diriger l'ennemi dans la direction du héro**/
+    /**Méthode permettant de diriger l'ennemi dans la direction du héro**/
 	private void setDirection( Hero hero ) {//On récupère le héro en paramètre.
+		float dirVelocity = (velocity.x==0)? velocity.y : velocity.x;//On récupère la vitesse verticale si la vitesse horizontale est nulle et inversement.
+		dirVelocity = Math.abs( dirVelocity );//Puis on prend la valeur absolue de cette valeur.
 		PointF distVector = Math2D.subtract( hero.getCenter(), getCenter() );//On récupère la distance cartésienne entre l'ennemi et le héro.
 		float absX = Math.abs( distVector.x );//On récupère cette valeur sur l'axe horizontal
 		float absY = Math.abs( distVector.y );//puis vertical.
 		if(absX >= absY){//Si la distance horizontale est supérieure à la distance verticale
-			velocity.x = (distVector.x>0)? 2f : -2f;//l'ennemi va se déplacer vers le héro horizontalement.
+			velocity.x = (distVector.x>0)? dirVelocity : -dirVelocity;//l'ennemi va se déplacer vers le héro horizontalement.
 			velocity.y = 0;
 		} else{//Sinon
 			velocity.x = 0;
-			velocity.y = (distVector.y>0)? 2f : -2f;//l'ennemi va se déplacer vers le héro verticalement.
+			velocity.y = (distVector.y>0)? dirVelocity : -dirVelocity;//l'ennemi va se déplacer vers le héro verticalement.
 		}
 	}
+
+	// TODO: ameliorer le deplacement des ennemis
+
+	/* private void setDirection2( Hero hero, ArrayList<PointF> directions ) {
+		float dirVelocity = (velocity.x==0)? velocity.y : velocity.x;
+		//Log.d("Directions", directions.toString());
+		PointF max = directions.get( 0 );
+
+		for(int i =1;i<directions.size();i++){
+			PointF distVector = Math2D.subtract( hero.getCenter(), directions.get(i) );
+			if(distVector.length()<max.length()){
+				max = directions.get( i );
+			}
+		}
+		max = Math2D.subtract( max, getCenter() );
+		float absX = Math.abs( max.x );
+		float absY = Math.abs( max.y );
+		if(absX >= absY){
+			velocity.x = (max.x>0)? dirVelocity : -dirVelocity;
+			velocity.y = 0;
+		} else{
+			velocity.x = 0;
+			velocity.y = (max.y>0)? dirVelocity : -dirVelocity;
+		}
+	} */
+
+	/* private ArrayList<PointF> availableDirections(Set<LineSegment2D> nearbyWalls, float wallThickness){
+		PointF c = getCenter();
+
+		PointF north = new PointF(c.x, c.y-2*radius);
+		PointF south = new PointF(c.x, c.y+2*radius);
+		PointF west = new PointF(c.x-2*radius, c.y);
+		PointF east = new PointF(c.x+2*radius, c.y);
+
+		ArrayList<PointF> directions = new ArrayList<PointF>( Arrays.asList(north, south, east, west ));
+
+		for ( Iterator<LineSegment2D> wallIterator = nearbyWalls.iterator();  wallIterator.hasNext() && directions.size()>1; ) {
+			LineSegment2D wall = wallIterator.next();
+			for ( Iterator<PointF> dirIterator = directions.iterator(); dirIterator.hasNext(); ) {
+				if(wall.intersectsCircle( dirIterator.next(), radius )){
+					dirIterator.remove();
+				}
+			}
+		}
+		// for(int i =0; i<directions.size();i++){
+		//	directions.set( i, Math2D.subtract( directions.get(i), c ));
+		// }
+		return directions;
+	} */
 }

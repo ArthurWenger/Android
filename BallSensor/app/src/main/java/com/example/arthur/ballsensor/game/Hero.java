@@ -11,10 +11,10 @@ import com.example.arthur.ballsensor.sound.AudioPlayer;
 
 import java.util.ArrayList;
 
-/**Classe permettant de représenter le Héro**/
-public class Hero extends AnimatedSprite {
+/** Classe modélisant le héro (pacman) dans le jeu **/
+public class Hero extends Sprite {
 
-	Bitmap pacmanSpriteSheet;
+	private Bitmap pacmanSpriteSheet;
 	private int drawCounter = 0;
 	private final int moveAnimationNumFrames = 7;
 	private final int idleAnimationNumFrames = 2;
@@ -42,7 +42,7 @@ public class Hero extends AnimatedSprite {
 	public Hero(final PointF location, final float size, final AssetManager assets) {
 		super(location, size);//On appelle le constructeur de AnimatedSprite.
 		audioPlayer = new AudioPlayer( assets );//On récupère le lecteur audio.
-		pacmanSpriteSheet = bitmapFromAssetNamed( "pacman.png", assets);//On récupère l'image du héro.
+		pacmanSpriteSheet = bitmapFromAssetNamed( "sprites/pacman.png", assets);//On récupère l'image du héro.
 	}
 
 	/**Méthode permettant de détecter et résoudre les collision avec les pièces**/
@@ -64,9 +64,9 @@ public class Hero extends AnimatedSprite {
 		return false;//Sinon, on renvoie faux.
 	}
 
-	/**Méthode permettant de détecter la collision avec la fin du niveau**/
-	public boolean detectFinishCollision(PointF finishLocation) {
-		return Math2D.pointInCircle(finishLocation.x,finishLocation.y, getCenter(), radius);//renvoie true si il y a collision avec la fin du niveau, false sinon.
+    /**Méthode permettant de détecter la collision avec la fin du niveau**/
+	public boolean detectFinishCollision(SimpleSprite finish) {
+		return Math2D.circleIntersectsRect(getCenter(), radius, finish.getRectHitbox());//renvoie true si il y a collision avec la fin du niveau, false sinon.
 	}
 
 	/**Méthode draw, permettant de dessiner le héro à l'écran**/
@@ -115,7 +115,7 @@ public class Hero extends AnimatedSprite {
 	}
 
 	/**Méthode permettant de détecter et gérer un coup**/
-	public void getHit(AnimatedSprite other) {
+	public void getHit(Sprite other) {
 		if(!invulnerable) {//Si le héro n'est pas invulnérable
 			playHitSound();//On joue le son d'un coup.
 			lives = Math.max( 0, lives - 1 );//on retire une vie
@@ -183,16 +183,16 @@ public class Hero extends AnimatedSprite {
 
 	/**Méthodes permettant de jouer les sons appropriés à la mort du héro, à la prise d'un coup, à la capture d'une pièce, et à la capture d'un coeur**/
 	private void playDeathSound(){
-		audioPlayer.startPlayer("pacman_death.ogg", 1f, false);
+		audioPlayer.startPlayer( "sounds/pacman_death.ogg", 1f, false);
 	}
 	private void playHitSound(){
-		audioPlayer.startPlayer("pacman_hit.ogg", 1f, false);
+		audioPlayer.startPlayer( "sounds/pacman_hit.ogg", 1f, false);
 	}
 	private void playChompSound(){
-		audioPlayer.startPlayer("pacman_chomp.ogg", 0.5f, false);
+		audioPlayer.startPlayer( "sounds/pacman_chomp.ogg", 0.5f, false);
 	}
 	private void playHeartSound(){
-		audioPlayer.startPlayer("pacman_coin.ogg", 3f, false);
+		audioPlayer.startPlayer( "sounds/pacman_coin.ogg", 3f, false);
 	}
 
 }

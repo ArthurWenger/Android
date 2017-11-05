@@ -12,8 +12,8 @@ import com.example.arthur.ballsensor.geometry.Math2D;
 import java.io.IOException;
 import java.io.InputStream;
 
-/** Classe abstraite permettant de représenter les objets du jeu  **/
-public abstract class AnimatedSprite {
+/** Classe abstraite permettant de représenter les objets du jeu **/
+public abstract class Sprite {
 
 	private PointF center = new PointF();
 	private PointF prevCenter = new PointF();
@@ -25,7 +25,7 @@ public abstract class AnimatedSprite {
 	protected float radius = 25;
 
 	/**Constructeur**/
-	public AnimatedSprite( PointF location, float size) {
+	public Sprite( PointF location, float size) {
 		center.set(location);//On définit ici le centre de l'objet
 		prevCenter.set(location);//et ici son ancient centre, identique au centre courant car l'objet est nouveau
 		radius = size;//et on récupère sa taille.

@@ -1,5 +1,5 @@
 package com.example.arthur.ballsensor.maze;
 
-public interface MazeGeneratorDelegate {
+public interface MazeGeneratorListener {
 	public void mazeGenerationDidFinish( MazeGenerator generator );
 }

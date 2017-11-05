@@ -1,4 +1,4 @@
-package com.example.arthur.ballsensor.scoresList;
+package com.example.arthur.ballsensor.scores;
 
 import java.io.Serializable;
 
