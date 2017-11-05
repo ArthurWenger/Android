@@ -10,6 +10,7 @@ import com.example.arthur.ballsensor.geometry.Math2D;
 
 import java.util.Set;
 
+/**Classe permettant de représenter les Ennemis**/
 public class Enemy extends AnimatedSprite {
 
 	private final Bitmap ghostSpriteSheet;
@@ -17,69 +18,54 @@ public class Enemy extends AnimatedSprite {
 	private final int spriteHalfHeight;
 	private final Paint ghostPaint = new Paint();
 
+	/**Constructeur**/
 	public Enemy(PointF location, float size, AssetManager assets) {
-		super(location, size*0.8f);
-		velocity.set( 2f,0 );
-		ghostSpriteSheet = bitmapFromAssetNamed("ghost2.png", assets);
-		spriteHalfWidth = ghostSpriteSheet.getWidth()/2;
-		spriteHalfHeight = ghostSpriteSheet.getHeight()/2;
+		super(location, size*0.8f);//On appelle le constructeur de AnimatedSprite
+		velocity.set( 2f,0 );//On fixe la vitesse
+		ghostSpriteSheet = bitmapFromAssetNamed("ghost2.png", assets);//On récupère l'image correspondant à un ennemi
+		spriteHalfWidth = ghostSpriteSheet.getWidth()/2;//On récupère la moitié de la largeur de la hitbox de l'ennemi
+		spriteHalfHeight = ghostSpriteSheet.getHeight()/2;//On récupère la moitié de la hauteur de la hitbox de l'ennemi
 	}
-	
+
+	/**Méthode draw, permettant de dessiner l'ennemi à l'écran**/
+	@Override
 	public void draw(android.graphics.Canvas canvas) {
-		//canvas.drawCircle(getCenter().x, getCenter().y, radius, new Paint());
-		PointF c = getCenter();
-		canvas.drawBitmap(ghostSpriteSheet, c.x-spriteHalfWidth, c.y-spriteHalfHeight, ghostPaint);
+		PointF c = getCenter();//On récupère la position du centre de l'ennemi
+		canvas.drawBitmap(ghostSpriteSheet, c.x-spriteHalfWidth, c.y-spriteHalfHeight, ghostPaint);//Et on le dessine à l'écran.
 	}
-	
+
+	/**Méthode permettant de mettre à jour la direction dans laquelle se déplace l'ennemi**/
 	public void update( Set<LineSegment2D> nearbyWalls, float wallThickness, Hero hero) {
-		setCenter( Math2D.add(getCenter(),velocity));
-		for (LineSegment2D wall : nearbyWalls) {
-			if(detectAndResolveWallCollision(wall, wallThickness)) {
-				setDirection(hero);
+		setCenter( Math2D.add(getCenter(),velocity));//On déplace l'ennemi à sa nouvelle position
+		for (LineSegment2D wall : nearbyWalls) {//Pour tous les murs
+			if(detectAndResolveWallCollision(wall, wallThickness)) {//Si un mur entre en collision avec l'ennemi
+				setDirection(hero);//L'ennemi se déplace dans la direction du héro.
 			}
 		}
 	}
-	
-	public boolean detectAndResolveCollisionWithHero(Hero hero) {
-		//RotatedRect vulnerableRect = hero.vulnerableRect();
-		PointF hC = hero.getCenter();
-		float hRadius = hero.getRadius();
-		if(Math2D.circleIntersection( hC, hRadius, getCenter(), radius )) {
-			hero.getHit( this );
-			return true;
+
+	/**Méthode permettant de détecter et résoudre les collision avec le joueur**/
+	public boolean detectAndResolveCollisionWithHero(Hero hero) {//On récupère le héro en paramètre
+		PointF hC = hero.getCenter();//On récupère la position du héro
+		float hRadius = hero.getRadius();//et sa taille
+		if(Math2D.circleIntersection( hC, hRadius, getCenter(), radius )) {//Si le héro est dans la hitbox de l'ennemi
+			hero.getHit( this );//Le héro prend un coup
+			return true;//et on revoie vrai pour l'indiquer.
 		}
-		/* if(vulnerableRect.intersectsCircle(getCenter(),radius)) {
-			hero.getHit(this);
-		} */
-		return false; 
+		return false;//Sinon, on renvoie faux.
 	}
 
-	// TODO: detect intersection
-	/*
-	private boolean crossRoad(){
-		return true;
-	}
-	*/
-
-	// TODO: compute free direction
-	/*
-	private void availableDirection(){
-	}
-	*/
-
-	
-	private void setDirection( Hero hero ) {
-		PointF distVector = Math2D.subtract( hero.getCenter(), getCenter() );
-		float absX = Math.abs( distVector.x );
-		float absY = Math.abs( distVector.y );
-		if(absX >= absY){
-			velocity.x = (distVector.x>0)? 2f : -2f;
+	/**Méthode permettant de diriger l'ennemi dans la direction du héro**/
+	private void setDirection( Hero hero ) {//On récupère le héro en paramètre.
+		PointF distVector = Math2D.subtract( hero.getCenter(), getCenter() );//On récupère la distance cartésienne entre l'ennemi et le héro.
+		float absX = Math.abs( distVector.x );//On récupère cette valeur sur l'axe horizontal
+		float absY = Math.abs( distVector.y );//puis vertical.
+		if(absX >= absY){//Si la distance horizontale est supérieure à la distance verticale
+			velocity.x = (distVector.x>0)? 2f : -2f;//l'ennemi va se déplacer vers le héro horizontalement.
 			velocity.y = 0;
-		} else{
+		} else{//Sinon
 			velocity.x = 0;
-			velocity.y = (distVector.y>0)? 2f : -2f;
+			velocity.y = (distVector.y>0)? 2f : -2f;//l'ennemi va se déplacer vers le héro verticalement.
 		}
-		//velocity.set(2.0f,0f);
-		//velocity = Math2D.rotate(velocity,(float)(Math.random()*2.0*Math.PI));
 	}
 }

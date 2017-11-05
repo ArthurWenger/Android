@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**Clase permettant de gérer la partie graphique de tous les éléments du jeu**/
 public class MazeGameView extends View implements HeroListener {
 
 	private final float gameSize = 30;
@@ -54,6 +55,7 @@ public class MazeGameView extends View implements HeroListener {
 	private final int FPS = 30;
 	private final int FramePeriod = 1000/FPS;
 
+	/**Constructeur**/
 	public MazeGameView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
@@ -77,8 +79,6 @@ public class MazeGameView extends View implements HeroListener {
 		coinPaint.setARGB(255,180,190,0);
 	}
 	//TODO: ajouter une méthode pause quand le jeu est quitté avec un retour en arrière
-
-	/** Protected **/
 
 	/** méthode permettant de dessiner le labyrinthe et tous les objets du jeu **/
 	@Override
@@ -140,7 +140,7 @@ public class MazeGameView extends View implements HeroListener {
 		canvas.drawText("Lives: "+Integer.toString(hero.getLives()),260,20,uiTextStrokePaint);
 	}
 
-	/** si la taille de l'écran change on doit générer un nouveau labyrinthe **/
+	/**Méthode permettant de générer un nouveau labyrinthe si la taille de l'écran change**/
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
