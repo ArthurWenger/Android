@@ -79,7 +79,6 @@ public class GameView extends View implements HeroListener {
 		coinPaint = new Paint();
 		coinPaint.setARGB(255,180,190,0);
 	}
-	//TODO: ajouter une méthode pause quand le jeu est quitté avec un retour en arrière
 
 	/** Protected **/
 
@@ -92,7 +91,7 @@ public class GameView extends View implements HeroListener {
 		assert (walls != null) : "Les murs doivent exister.";
 		for(LineSegment2D wall : walls) {
 			if(Math2D.pointInRect(wall.a, cameraRect()) || Math2D.pointInRect(wall.b, cameraRect())) {
-				// on redimensionne les murs de la moitié de leur épaisseur pour améliorer l'affichage
+				// on affiche les murs en prenant en compte leur épaisseur
 				float x1Offset = 0, y1Offset = 0, x2Offset = 0, y2Offset = 0;
 				if(wall.a.x < wall.b.x) {
 					x1Offset = -wallThickness/2.0f;
@@ -216,7 +215,7 @@ public class GameView extends View implements HeroListener {
 			}
 		});
 		hero.setHeroListener( this );
-		Log.d("Canvas", "Generation du labyrinthe terminé.");
+		Log.d("Canvas", "Generation du labyrinthe terminée.");
 	}
 
 	/** quand le joueur atteint la case de fin du labyrinthe, on en genere un nouveau aleatoirement **/

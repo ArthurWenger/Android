@@ -32,7 +32,6 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	private GameView mazeView;
 	Double[] location =null;
 
-	// private final int SCORES_ACTIVITY = 1;
 	private static final int GAMEOVER_ACTIVITY = 1;
 	private static final int SCORES_ACTIVITY = 2;
 	private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
@@ -126,7 +125,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 
 	@Override
 	public void onPermissionNeeded() {//Quand on appelle cette méthode (Quand on a besoin de permission pour accéder à la position)
-		Log.d("Location", "requestNeeded callback reached");//On enregistre dans le log le tag Location et on affiche en console qu'on a besoin d'une permission
+		Log.d("Location", "onPermissionNeeded callback reached");//On enregistre dans le log le tag Location et on affiche en console qu'on a besoin d'une permission
 		ActivityCompat.requestPermissions( this,//On demande la permission,
 				new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION },//d'accéder à la position fine
 				MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);//avec le code ci-contre.
@@ -179,6 +178,4 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		}
 		return super.onOptionsItemSelected( item );
 	}
-
-
 }
