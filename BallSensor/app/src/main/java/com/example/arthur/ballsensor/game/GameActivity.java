@@ -43,7 +43,8 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 		// on demande la position du joueur pour pouvoir inscrire son score dans la base de données par la suite
 		// le premier this est pour le contexte et le deuxieme est pour le callback onNewLocationAvailable
 		SingleShotLocationProvider.requestSingleUpdate(this, this);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//On met l'application en plein écran
+		//On met l'application en plein écran
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		manager = (SensorManager) getSystemService( Service.SENSOR_SERVICE );//On récupère les capteurs,
 		mAccelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);//Et en particulier l'accéléromètre
 		sensorListener = new MySensorListener();//Et on pose un écouteur dessus.

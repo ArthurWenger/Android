@@ -27,16 +27,19 @@ public class GameOverActivity extends AppCompatActivity {
 		super.onCreate( savedInstanceState );//On utilise la méthode usuelle
 
 		mydb = new DBManager(this);//On récupère la base de données des scores
-		Bundle extras = getIntent().getExtras();//On récupère les paramètres donnés dans l'intent (à la demande de création de l'activité)
+		Bundle extras = getIntent().getExtras();//On récupère les paramètres donnés dans l'intent
+		// (à la demande de création de l'activité)
 		assert extras != null;//On vérifie leur existence
 		score = extras.getInt( "score" );//On récupère le nouveau score
 		Double[] location = (Double[]) extras.get( "location" );//Puis la nouvelle position
 		if( location == null){//Si on n'a pas la nouvelle position
 			Toast.makeText( this, "Impossible de localiser l'appareil,\n" +
-					                      "votre score ne sera pas ajouté à la base",Toast.LENGTH_LONG ).show();//On affiche le Toast ci-contre
+					                      "votre score ne sera pas ajouté à la base",Toast.LENGTH_LONG ).show();
+			//On affiche le Toast ci-dessus
 		} else {//Sinon,
-			int id = (int) mydb.insertScore( score, location[ 0 ], location[ 1 ] );//On ajoute le nouveau score et la nouvelle position à la base de données.
-			rank = mydb.getRank( id, score );
+			int id = (int) mydb.insertScore( score, location[ 0 ], location[ 1 ] );//On ajoute le nouveau score
+			// et la nouvelle position à la base de données.
+			rank = mydb.getRank( id, score );//et on récupère le rang.
 		}
 
 		setContentView( R.layout.activity_game_over );//On met en place les éléments de l'affichage
