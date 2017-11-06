@@ -10,18 +10,20 @@ public class AudioPlayer {
 	private MediaPlayer player = null;
 	private AssetManager assets;
 
+	/**Constructeur**/
 	public AudioPlayer( AssetManager assets ) {
 		this.assets = assets;
 	}
 
+	/**Méthode permettant de libérer la ressource lecteur de son**/
 	public void stopPlayer() {
 		if (player != null) {
 			player.release();
 			player = null;
-			//Log.d("sound","player released");
 		}
 	}
 
+	/**Méthode permettant de lancer un nouveau lecteur de son.**/
 	public void startPlayer(String filename, float volume, boolean loop) {
 		stopPlayer();
 
@@ -40,18 +42,10 @@ public class AudioPlayer {
 		player.setOnCompletionListener( new MediaPlayer.OnCompletionListener() {
 			@Override
 			public void onCompletion( MediaPlayer mp ) {
-				//Log.d("sound","onCompletion called");
 				stopPlayer();
 			}
 		} );
-		//Log.d("sound","starting player");
 		player.start();
 	}
 
-	/* public boolean isPlaying() {
-		if(player!=null){
-			return player.isPlaying();
-		}
-		return false;
-	} */
 }
