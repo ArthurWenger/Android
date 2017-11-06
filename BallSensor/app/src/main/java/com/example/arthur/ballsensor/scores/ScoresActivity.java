@@ -21,38 +21,39 @@ public class ScoresActivity extends AppCompatActivity {
 	DBManager mydb;
 	private Integer highlight = null;
 
+	/**Au lancement de l'acivité**/
 	protected void onCreate( Bundle savedInstanceState ) {
-		super.onCreate( savedInstanceState );
-		Bundle extras = getIntent().getExtras();
-		if(extras!=null && extras.containsKey( "highlight" ) ) {
-				highlight = extras.getInt( "highlight" );
+		super.onCreate( savedInstanceState );//On utilise la méthode habituelle.
+		Bundle extras = getIntent().getExtras();//On récupère les arguments de l'intent
+		if(extras!=null && extras.containsKey( "highlight" ) ) {//Si parmis ces argument, il y a une clef "highlight"
+				highlight = extras.getInt( "highlight" );//On récupère sa valeur
 		}
-		setContentView( R.layout.activity_scores );
-		mydb = new DBManager(this);
+		setContentView( R.layout.activity_scores );//On met en place l'affichage
+		mydb = new DBManager(this);//On récupère la base de données
 		// pour supprimer la base de données:
 		// this.deleteDatabase("ScoresDB.db");
-		initView();
+		initView();//Et on lance l'affichage.
 	}
 
 	private void initView(){
-		mTvNothing = (TextView) findViewById( R.id.tvNothing );
-		mListView = (ListView) findViewById( R.id.list );
+		mTvNothing = (TextView) findViewById( R.id.tvNothing );//On récupère la zone de texte
+		mListView = (ListView) findViewById( R.id.list );//Et la liste
 
-		final ArrayList<Score> scores_array = mydb.getAllScores();
-		if(scores_array.size()==0){
-			mTvNothing.setVisibility(TextView.VISIBLE);
-		} else {
-			adapter = new ScoresArrayAdapter( this, scores_array );
-			adapter.setSelected( highlight );
-			mListView.setAdapter( adapter );
-			mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+		final ArrayList<Score> scores_array = mydb.getAllScores();//On récupère la liste des scores
+		if(scores_array.size()==0){//Si la liste est vide
+			mTvNothing.setVisibility(TextView.VISIBLE);//On affiche la zone de texte telle quelle.
+		} else {//Sinon
+			adapter = new ScoresArrayAdapter( this, scores_array );//On créé un adaptateur de liste
+			adapter.setSelected( highlight );//on sélectionne le score donné en paramètre d'intent
+			mListView.setAdapter( adapter );//On ajoute l'adapteur à la liste dans les vues
+			mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {//On créé un écouteur sur la liste
 				@Override
 				public void onItemClick( AdapterView<?> adapter, View view, int position, long id ) {
-					Score score = (Score) adapter.getItemAtPosition( position );
-					Intent intent = new Intent( getBaseContext(), MapsActivity.class );
-					intent.putExtra( "centerScore", score );
-					intent.putExtra( "scores_array", scores_array );
-					startActivity( intent );
+					Score score = (Score) adapter.getItemAtPosition( position );//On récupère l'objet score sur lequel on a cliqué
+					Intent intent = new Intent( getBaseContext(), MapsActivity.class );//On créé un nouvel intent pour la carte
+					intent.putExtra( "centerScore", score );//on y ajoute le score sélectionné
+					intent.putExtra( "scores_array", scores_array );//et la liste des scores
+					startActivity( intent );//Et on lance l'activité
 				}
 			} );
 		}
