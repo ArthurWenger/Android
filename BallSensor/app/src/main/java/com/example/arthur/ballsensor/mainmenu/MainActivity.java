@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {//Au démarrage de l'application
 		super.onCreate(savedInstanceState);//On applique la méthode usuelle
 		setContentView( R.layout.activity_main );//On récupère la disposition des vues
-		backgroundMusic = new AudioPlayer( this.getAssets() );
+		backgroundMusic = new AudioPlayer( this.getAssets() );//On récupère le lecteur de musique
 		backgroundMusic.startPlayer( "sounds/pacman_song.ogg", 1f, true);//On lance la musique de fond
 	}
 

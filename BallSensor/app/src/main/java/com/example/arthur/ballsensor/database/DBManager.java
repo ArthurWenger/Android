@@ -45,40 +45,38 @@ public class DBManager extends SQLiteOpenHelper {
 	/** Insertion d'un score dans la base de données **/
 	public long insertScore (int value, double latitude, double longitude) {
 		SQLiteDatabase db = this.getWritableDatabase();//On récupère une base de données dans laquelle on peut écrire.
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(SCORES_COLUMN_VALUE, value);
-		contentValues.put(SCORES_COLUMN_LATITUDE, latitude);
-		contentValues.put(SCORES_COLUMN_LONGITUDE, longitude);
-		return db.insert(SCORES_TABLE_NAME, null, contentValues);
+		ContentValues contentValues = new ContentValues();//On créé une variable conteneur,
+		contentValues.put(SCORES_COLUMN_VALUE, value);//dans laquelle on range le score
+		contentValues.put(SCORES_COLUMN_LATITUDE, latitude);//Puis la lattitude
+		contentValues.put(SCORES_COLUMN_LONGITUDE, longitude);//Et la longitude.
+        return db.insert(SCORES_TABLE_NAME, null, contentValues);//Enfin, on insere le conteneur dans la base de données.
+        //Et on renvoie vrai pour dire que tout s'est bien passé.
 	}
 
 	/** Récupération de l'ensemble des scores de la base **/
 	public ArrayList<Score> getAllScores() {
-		ArrayList<Score> array_list = new ArrayList<Score>();
-
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor =  db.rawQuery( "select * from "+SCORES_TABLE_NAME +
-				                              " order by "+SCORES_COLUMN_VALUE+
-				                              " desc", null );
+		ArrayList<Score> array_list = new ArrayList<Score>();//On créé tout d'abord un tableau de scores
+		SQLiteDatabase db = this.getReadableDatabase();//Puis on récupère une base de données dans laquelle on peut écrire
+		Cursor cursor =  db.rawQuery( "select * from "+SCORES_TABLE_NAME +//A laquelle on demande toutes les entrées
+				                              " order by "+SCORES_COLUMN_VALUE+//Ordonnées par leur score
+				                              " desc", null );//de manière décroissante
 		// au cas ou la table changerait on recupere les index des attributs
-		// int idIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_ID);
 		int valueIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_VALUE);
 		int latIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_LATITUDE);
 		int lngIndex = cursor.getColumnIndexOrThrow(SCORES_COLUMN_LONGITUDE);
 
-		cursor.moveToFirst();
-		while( !cursor.isAfterLast() ){
-			//int id = cursor.getInt( idIndex );
-			int rank = cursor.getPosition()+1;
-			int value = cursor.getInt( valueIndex );
-			double lat = cursor.getDouble( latIndex );
-			double lng = cursor.getDouble( lngIndex );
-			Score row = new Score(rank, value, lat, lng);
-			array_list.add(row);
-			cursor.moveToNext();
-		}
-		cursor.close();
-		return array_list;
+		cursor.moveToFirst();//Puis on met le curseur de la table envoyée par la base à la première valeur
+		while( !cursor.isAfterLast() ){//Et tant que le curseur n'a pas dépassé la dernière valeur
+			int rank = cursor.getPosition()+1;//on incrémente le rang de 1
+			int value = cursor.getInt( valueIndex );//on récupère les index de la valeur,
+			double lat = cursor.getDouble( latIndex );//de la lattitude,
+			double lng = cursor.getDouble( lngIndex );//et de la longitude,
+			Score row = new Score(rank, value, lat, lng);//et on range le tout dans un nouvel objet Score
+			array_list.add(row);//Que l'on ajoute au tableau.
+			cursor.moveToNext();//Et on pousse le curseur à la prochaine ligne.
+		}//Une fois tous les scores enregistrés
+		cursor.close();//On ferme la table envoyée par la base
+		return array_list;//Et on renvoie le tableau.
 	}
 
 	// méthode utile uniquement dans l'activité GameOver
@@ -101,34 +99,4 @@ public class DBManager extends SQLiteOpenHelper {
 		cursor.close();
 		return array_list.indexOf( id )+1;
 	}
-
-	/* public Cursor getData( int id) {
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor res =  db.rawQuery( "select * from "+ SCORES_TABLE_NAME +" where id="+id, null );
-		return res;
-	}
-
-	public int numberOfRows(){
-		SQLiteDatabase db = this.getReadableDatabase();
-		int numRows = (int) DatabaseUtils.queryNumEntries(db, SCORES_TABLE_NAME );
-		return numRows;
-	}
-
-	public boolean updateScore (int id, int value, double lat, double lng) {
-		SQLiteDatabase db = this.getWritableDatabase();
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(SCORES_COLUMN_ID, id);
-		contentValues.put(SCORES_COLUMN_VALUE, value);
-		contentValues.put(SCORES_COLUMN_LATITUDE, lat);
-		contentValues.put(SCORES_COLUMN_LONGITUDE, lng);
-		db.update(SCORES_TABLE_NAME, contentValues, "id = ? ", new String[] { Integer.toString(id) } );
-		return true;
-	}
-
-	public Integer deleteScore (Integer id) {
-		SQLiteDatabase db = this.getWritableDatabase();
-		return db.delete(SCORES_TABLE_NAME,
-				"id = ? ",
-				new String[] { Integer.toString(id) });
-	} */
 }

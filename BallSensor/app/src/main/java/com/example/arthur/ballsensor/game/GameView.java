@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/** Vue permettant d'afficher et de coordonner les objets du jeu (labyrinthe / hero / ennemis...) **/
+/**Clase permettant de gérer la partie graphique de tous les éléments du jeu**/
 public class GameView extends View implements HeroListener {
 
 	private final float gameSize = 30;
@@ -57,6 +57,7 @@ public class GameView extends View implements HeroListener {
 	private final int FramePeriod = 1000/FPS;
 	private float enemySpeed = 3.0f;
 
+	/**Constructeur**/
 	public GameView( Context context, AttributeSet attrs) {
 		super(context, attrs);
 
@@ -114,7 +115,6 @@ public class GameView extends View implements HeroListener {
 		}
 
 		canvas.drawText("S", startLocation.x, startLocation.y, floorTextPaint);
-		//canvas.drawText("F", finishLocation.x, finishLocation.y, floorTextPaint);
 		finishLine.draw( canvas );
 
 		synchronized ( coins ) {
@@ -143,7 +143,7 @@ public class GameView extends View implements HeroListener {
 		canvas.drawText("Lives: "+Integer.toString(hero.getLives()),260,20,uiTextStrokePaint);
 	}
 
-	/** si la taille de l'écran change on doit générer un nouveau labyrinthe **/
+	/**Méthode permettant de générer un nouveau labyrinthe si la taille de l'écran change**/
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);

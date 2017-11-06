@@ -38,134 +38,136 @@ public class Hero extends Sprite {
 
 	private ArrayList<PointF> temporaryAccelerations = new ArrayList<PointF>();
 
+	/**Constructeur**/
 	public Hero(final PointF location, final float size, final AssetManager assets) {
-		super(location, size);
-		audioPlayer = new AudioPlayer( assets );
-		pacmanSpriteSheet = bitmapFromAssetNamed( "sprites/pacman.png", assets);
+		super(location, size);//On appelle le constructeur de AnimatedSprite.
+		audioPlayer = new AudioPlayer( assets );//On récupère le lecteur audio.
+		pacmanSpriteSheet = bitmapFromAssetNamed( "sprites/pacman.png", assets);//On récupère l'image du héro.
 	}
 
+	/**Méthode permettant de détecter et résoudre les collision avec les pièces**/
 	public boolean detectCoinCollision(PointF coinCenter, float coinRadius) {
-		if(Math2D.circleIntersection(getCenter(), radius, coinCenter, coinRadius)){
-			playChompSound();
-			return true;
+		if(Math2D.circleIntersection(getCenter(), radius, coinCenter, coinRadius)){//S'il y a collision avec une pièce
+			playChompSound();//On joue le son de l'acquisition d'une pièce
+			return true;//Et on renvoie vrai pour le signaler.
 		}
-		return false;
+		return false;//Sinon, on renvoie faux.
 	}
 
+	/**Méthode permettant de détecter et résoudre les collision avec un coeur**/
 	public boolean detectAndResolveHeartCollision( PointF heartCenter, float heartRadius) {
-		if(Math2D.circleIntersection(getCenter(), radius, heartCenter, heartRadius)) {
-			playHeartSound();
-			lives = Math.min( 5, lives+1);
-			return true;
+		if(Math2D.circleIntersection(getCenter(), radius, heartCenter, heartRadius)) {//S'il y a collision avec un coeur
+			playHeartSound();//On joue le son de l'acquisition d'un coeur
+			lives = Math.min( 5, lives+1);//On ajoute une vie au héro
+			return true;//et on renvoie vrai pour le signaler.
 		}
-		return false;		
+		return false;//Sinon, on renvoie faux.
 	}
 
+    /**Méthode permettant de détecter la collision avec la fin du niveau**/
 	public boolean detectFinishCollision(SimpleSprite finish) {
-		//return Math2D.pointInCircle(finishLocation.x,finishLocation.y, getCenter(), radius);
-
-		return Math2D.circleIntersectsRect(getCenter(), radius, finish.getRectHitbox());
+		return Math2D.circleIntersectsRect(getCenter(), radius, finish.getRectHitbox());//renvoie true si il y a collision avec la fin du niveau, false sinon.
 	}
 
+	/**Méthode draw, permettant de dessiner le héro à l'écran**/
 	public void draw(android.graphics.Canvas canvas) {
-		PointF currentCenter = getCenter();
-		canvas.save();
-		canvas.rotate(rotationInDegrees(), currentCenter.x, currentCenter.y);
+		PointF currentCenter = getCenter();//On récupère la position courante du héro
+		canvas.save();//On enregistre l'état actuel de l'écran
+		canvas.rotate(rotationInDegrees(), currentCenter.x, currentCenter.y);//On fait tourner le contenu selon l'angle obtenu en appelant rotationInDegrees()
 		int animationFrameIndex;
-		if ( Math.abs( velocity.x ) > minSpeed || Math.abs( velocity.y ) > minSpeed ) {
-			animationFrameIndex = ( drawCounter / moveAnimationDrawsPerFrame ) % moveAnimationNumFrames;
-		} else {
-			animationFrameIndex = ( drawCounter / idleAnimationDrawsPerFrame ) % idleAnimationNumFrames;
+		if ( Math.abs( velocity.x ) > minSpeed || Math.abs( velocity.y ) > minSpeed ) {//Si la vitesse horizontale ou verticale est supérieure à la vitesse minimale
+			animationFrameIndex = ( drawCounter / moveAnimationDrawsPerFrame ) % moveAnimationNumFrames;//On met à jour la valeur de l'index pour représenter un mouvement
+		} else {//Sinon
+			animationFrameIndex = ( drawCounter / idleAnimationDrawsPerFrame ) % idleAnimationNumFrames;//On met à jour la valeur de l'index pour indiquer que le héro rest sur place.
 		}
-
+		/**Ici, on récupère l'angle de rotation du dessin, de telle sorte que la "bouche" du héro soit toujours dans la direction dans laquelle il se déplace**/
 		int srcLeft = pacmanSpriteWidth * animationFrameIndex;
 		Rect src = new Rect( srcLeft, 0, srcLeft + pacmanSpriteWidth, pacmanSpriteHeight );
 		Rect test = unrotatedHeroRect();
-		if(!invulnerable || drawCounter%8 <=4) {
-			canvas.drawBitmap( pacmanSpriteSheet, src, test, heroPaint );
+		if(!invulnerable || drawCounter%8 <=4) {//Si le héro n'est pas invulnérable ou on n'a pas déjà trop demandé de redessin
+			canvas.drawBitmap( pacmanSpriteSheet, src, test, heroPaint );//On dessine le héro sur le canvas
 		}
-		canvas.restore();
-		++drawCounter;
+		canvas.restore();//on met à jour le canvas
+		++drawCounter;//Et on incrémente le conteur de dessin.
 	}
 
+	/**Méthode permettant de rendre le héro invulnérable**/
 	private void startInvulnerableState(){
-		new Thread(new Runnable()
+		new Thread(new Runnable()//On créé un nouveau Thread, définit comme suit:
 		{
 			@Override
-			public void run()
+			public void run()//Quand le thread fonctionne:
 			{
-				invulnerable = true;
-				try {
-					Thread.sleep(3000);
-				} catch ( InterruptedException e ) {
-					e.printStackTrace();
+				invulnerable = true;//on met la variable invulnerable à true
+				try {//On éssaye
+					Thread.sleep(3000);//de faire dormir le thread pendant 3 secondes,
+				} catch ( InterruptedException e ) {//Si ça ne marche pas
+					e.printStackTrace();//On reçoit l'erreur en ligne de commande
 				}
-				invulnerable = false;
+				invulnerable = false;//Et on met invulnerable à false.
 			}
-		}).start();
+		}).start();//Et on lance le thread
 	}
 
-	/* public RotatedRect vulnerableRect() {
-		RectF unrotatedHeroRectF = new RectF(unrotatedHeroRect());
-		return new RotatedRect(unrotatedHeroRectF, new PointF(unrotatedHeroRectF.centerX(),unrotatedHeroRectF.centerY()), (rotationInDegrees()) * ((float)Math.PI/180.0f));
-	} */
-
+	/**Méthode permettant de mettre l'écouteur sur le héro**/
 	public void setHeroListener(final HeroListener callback){
 		this.heroListener = callback;
 	}
 
-	
+	/**Méthode permettant de détecter et gérer un coup**/
 	public void getHit(Sprite other) {
-		if(!invulnerable) {
-			playHitSound();
-			lives = Math.max( 0, lives - 1 );
-			if(lives>0){
-				invulnerable = true;
-				startInvulnerableState();
-				if ( !other.getCenter().equals( this.getCenter() ) ) {
-					temporaryAccelerations.add( Math2D.scale( Math2D.normalize( Math2D.subtract( getCenter(), other.getCenter() ) ), speed() + 2.2f ) );
+		if(!invulnerable) {//Si le héro n'est pas invulnérable
+			playHitSound();//On joue le son d'un coup.
+			lives = Math.max( 0, lives - 1 );//on retire une vie
+			if(lives>0){//S'il reste encore des vies
+				invulnerable = true;//on met invulnerable à true
+				startInvulnerableState();//Et on met le héro en état invulnérable
+				if ( !other.getCenter().equals( this.getCenter() ) ) {//Si le sprite qui a donné un coup au héro n'est pas au même endroit que le héro
+					temporaryAccelerations.add( Math2D.scale( Math2D.normalize( Math2D.subtract( getCenter(), other.getCenter() ) ), speed() + 2.2f ) );//On accélère temporairement le héro.
 				}
-			} else if (heroListener !=null){
-				playDeathSound();
-				heroListener.notifyHeroDeath();
+			} else if (heroListener !=null){//Sinon, si il existe un écouteur sur le héro
+				playDeathSound();//On joue la musique de mort du héro
+				heroListener.notifyHeroDeath();//Et on l'écouteur notifie de la mort du héro.
 			}
 		}
 	}
 
+	/**Méthode permettant de récupérer le nombre de vies restantes**/
 	public int getLives(){
 		return lives;
 	}
-	
+
+	/**Méthode permettant de récupérer la taille de la hitbox avant rotation du héro**/
 	private Rect unrotatedHeroRect() {
-		PointF center = getCenter();
-		return new Rect((int)(center.x-radius),(int)(center.y-radius), (int)(center.x+radius), (int)(center.y+radius));
+		PointF center = getCenter();//On récupère la position du héro
+		return new Rect((int)(center.x-radius),(int)(center.y-radius), (int)(center.x+radius), (int)(center.y+radius));//Et on renvoie un rectangle centré sur celle-ci de taille appropriée.
 	}
 
-	public void updateAccel( PointF acceleration ) {
-		float accelerationLength = acceleration.length();
-		if(accelerationLength > maxAccelerationLength) {
-			acceleration = Math2D.scale(acceleration,maxAccelerationLength/accelerationLength);
+	/**Méthode permettant de mettre à jour l'accélération du héro**/
+	public void updateAccel( PointF acceleration ) {//On récupère en paramètre le nouveau point d'accélération
+		float accelerationLength = acceleration.length();//On récupère la valeur de la nouvelle accélération
+		if(accelerationLength > maxAccelerationLength) {//Si cette valeur est supérieure à la valeur maximale d'accélération
+			acceleration = Math2D.scale(acceleration,maxAccelerationLength/accelerationLength);//On la remet à l'échelle
 		}
-		this.acceleration = acceleration;
+		this.acceleration = acceleration;//Et on met à jour la valeur courante de l'accélération
 	}
 
+	/**Méthode permettant de mettre à jour la vitesse du héro**/
 	public void update() {
-		float velocityLength = velocity.length();
-		if(velocityLength > maxVelocityLength){
-			velocity = Math2D.scale(velocity, maxVelocityLength/velocityLength);
-		} /* else if(velocityLength > speed()) {
-			velocity = Math2D.scale(velocity, speed()/velocity.length());
-		} */
-
-		if(velocity.length() > 0 ) {
-			float angleBetweenInputAndFacing = Math2D.angle(velocity,facing);
-			float angularAcceleration = -angleBetweenInputAndFacing * angularAccelerationScale;
-			angularVelocity += angularAcceleration;
+		float velocityLength = velocity.length();//On récupère la vitesse du héro
+		if(velocityLength > maxVelocityLength){//Si cette vitesse est supérieure à la vitesse maximale
+			velocity = Math2D.scale(velocity, maxVelocityLength/velocityLength);//On la remet à l'échelle.
 		}
 
-		if(Math.abs(angularVelocity) > 0f) {
-			float angularDrag = -angularVelocity*angularDragConstant;
-			angularVelocity += angularDrag;
+		if(velocity.length() > 0 ) {//Si la vitesse est positive
+			float angleBetweenInputAndFacing = Math2D.angle(velocity,facing);//on récupère l'angle entre la vitesse courante et la direction vers laquelle est tourné le héro
+			float angularAcceleration = -angleBetweenInputAndFacing * angularAccelerationScale;//On calcule l'accélération angulaire
+			angularVelocity += angularAcceleration;//Et l'ajoute à la vitesse angulaire.
+		}
+
+		if(Math.abs(angularVelocity) > 0f) {//Si la valeur absolue de la vitesse angulaire est supérieure à 0
+			float angularDrag = -angularVelocity*angularDragConstant;//On calcule la traînée angulaire
+			angularVelocity += angularDrag;//Et on l'enlève à la vitesse angulaire.
 		}
 
 		facing = Math2D.rotate(facing, angularVelocity);
@@ -184,6 +186,7 @@ public class Hero extends Sprite {
 		setCenter(Math2D.add(getCenter(),velocity));
 	}
 
+	/**Méthodes permettant de jouer les sons appropriés à la mort du héro, à la prise d'un coup, à la capture d'une pièce, et à la capture d'un coeur**/
 	private void playDeathSound(){
 		audioPlayer.startPlayer( "sounds/pacman_death.ogg", 1f, false);
 	}
