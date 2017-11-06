@@ -1,4 +1,4 @@
-# Android
+# Projet Android
 
 Création d'une version modifiée du jeu Pacman sur Android.
 
