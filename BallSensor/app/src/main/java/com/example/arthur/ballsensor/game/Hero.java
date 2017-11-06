@@ -71,16 +71,16 @@ public class Hero extends Sprite {
 		PointF currentCenter = getCenter();
 		canvas.save();
 		canvas.rotate(rotationInDegrees(), currentCenter.x, currentCenter.y);
-			int animationFrameIndex;
-			if ( Math.abs( velocity.x ) > minSpeed || Math.abs( velocity.y ) > minSpeed ) {
-				animationFrameIndex = ( drawCounter / moveAnimationDrawsPerFrame ) % moveAnimationNumFrames;
-			} else {
-				animationFrameIndex = ( drawCounter / idleAnimationDrawsPerFrame ) % idleAnimationNumFrames;
-			}
+		int animationFrameIndex;
+		if ( Math.abs( velocity.x ) > minSpeed || Math.abs( velocity.y ) > minSpeed ) {
+			animationFrameIndex = ( drawCounter / moveAnimationDrawsPerFrame ) % moveAnimationNumFrames;
+		} else {
+			animationFrameIndex = ( drawCounter / idleAnimationDrawsPerFrame ) % idleAnimationNumFrames;
+		}
 
-			int srcLeft = pacmanSpriteWidth * animationFrameIndex;
-			Rect src = new Rect( srcLeft, 0, srcLeft + pacmanSpriteWidth, pacmanSpriteHeight );
-			Rect test = unrotatedHeroRect();
+		int srcLeft = pacmanSpriteWidth * animationFrameIndex;
+		Rect src = new Rect( srcLeft, 0, srcLeft + pacmanSpriteWidth, pacmanSpriteHeight );
+		Rect test = unrotatedHeroRect();
 		if(!invulnerable || drawCounter%8 <=4) {
 			canvas.drawBitmap( pacmanSpriteSheet, src, test, heroPaint );
 		}
@@ -169,7 +169,6 @@ public class Hero extends Sprite {
 		}
 
 		facing = Math2D.rotate(facing, angularVelocity);
-
 		velocity = Math2D.add(velocity, acceleration);
 
 		/*for(PointF accel : temporaryAccelerations) {
@@ -178,8 +177,8 @@ public class Hero extends Sprite {
 		temporaryAccelerations.removeAll(temporaryAccelerations);*/
 
 		if(speed() > 0.0f) {
-			float dragMagnitude = speed()*dragConstant;
-			PointF drag = Math2D.scale(velocity,-dragMagnitude/speed());
+			// float dragMagnitude = speed()*dragConstant;
+			PointF drag = Math2D.scale(velocity,-dragConstant);
 			velocity = Math2D.add(velocity, drag);
 		}
 		setCenter(Math2D.add(getCenter(),velocity));
@@ -192,10 +191,10 @@ public class Hero extends Sprite {
 		audioPlayer.startPlayer( "sounds/pacman_hit.ogg", 1f, false);
 	}
 	private void playChompSound(){
-		audioPlayer.startPlayer( "sounds/pacman_chomp.ogg", 0.5f, false);
+		audioPlayer.startPlayer( "sounds/pacman_chomp_coin.ogg", 0.5f, false);
 	}
 	private void playHeartSound(){
-		audioPlayer.startPlayer( "sounds/pacman_coin.ogg", 3f, false);
+		audioPlayer.startPlayer( "sounds/pacman_chomp_heart.ogg", 3f, false);
 	}
 
 }
