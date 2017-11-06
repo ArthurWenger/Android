@@ -35,6 +35,7 @@ public class ScoresActivity extends AppCompatActivity {
 		initView();//Et on lance l'affichage.
 	}
 
+	/**Méthode de lancement de l'affichage**/
 	private void initView(){
 		mTvNothing = (TextView) findViewById( R.id.tvNothing );//On récupère la zone de texte
 		mListView = (ListView) findViewById( R.id.list );//Et la liste
