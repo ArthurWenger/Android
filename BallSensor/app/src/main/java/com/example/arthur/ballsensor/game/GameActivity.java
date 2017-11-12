@@ -69,10 +69,9 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	@Override
 	public void onResume() {//Quand on va sur l'application
 		super.onResume();//On applique la procédure habituelle
-		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);//On vérifie que les capteurs soient disponibles
 		/* Il n'est pas nécéssaire d'avoir un taux de rafraichissement très élevé pour l'accelerometre.
 		 * En utilisant la sensibilité SENSOR_DELAY_UI on économise la batterie et les ressources du CPU */
-		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+		accelSupported = manager.registerListener(sensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);//On vérifie que les capteurs soient disponibles
 	}
 
 	@Override
@@ -85,9 +84,7 @@ public class GameActivity extends AppCompatActivity implements GameOverListener,
 	private class MySensorListener implements SensorEventListener {//On définit ici l'écouteur sur l'acceléromètre.
 		@Override
 		public void onSensorChanged( SensorEvent event ) {//Quand un capteur perçoit un changement de l'environnement
-			if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)//Si ce changement n'est pas mesuré par l'accéléromètre
-				return;//On ne fais rien.
-			else//Sinon,
+			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)//Si ce changement est mesuré par l'accéléromètre
 				mazeView.updateAccel( -event.values[0], event.values[1]);//On demande au labyrinthe de se mettre à jour avec ces nouvelles données.
 		}
 
