@@ -74,16 +74,16 @@ public class Hero extends Sprite {
 		PointF currentCenter = getCenter();//On récupère la position courante du héro
 		canvas.save();//On enregistre l'état actuel de l'écran
 		canvas.rotate(rotationInDegrees(), currentCenter.x, currentCenter.y);//On fait tourner le contenu selon l'angle obtenu en appelant rotationInDegrees()
-			int animationFrameIndex;
-			if ( Math.abs( velocity.x ) > minSpeed || Math.abs( velocity.y ) > minSpeed ) {//Si la vitesse horizontale ou verticale est supérieure à la vitesse minimale
-				animationFrameIndex = ( drawCounter / moveAnimationDrawsPerFrame ) % moveAnimationNumFrames;//On met à jour la valeur de l'index pour représenter un mouvement
-			} else {//Sinon
-				animationFrameIndex = ( drawCounter / idleAnimationDrawsPerFrame ) % idleAnimationNumFrames;//On met à jour la valeur de l'index pour indiquer que le héro rest sur place.
-			}
+		int animationFrameIndex;
+		if ( Math.abs( velocity.x ) > minSpeed || Math.abs( velocity.y ) > minSpeed ) {//Si la vitesse horizontale ou verticale est supérieure à la vitesse minimale
+			animationFrameIndex = ( drawCounter / moveAnimationDrawsPerFrame ) % moveAnimationNumFrames;//On met à jour la valeur de l'index pour représenter un mouvement
+		} else {//Sinon
+			animationFrameIndex = ( drawCounter / idleAnimationDrawsPerFrame ) % idleAnimationNumFrames;//On met à jour la valeur de l'index pour indiquer que le héro rest sur place.
+		}
 		/**Ici, on récupère l'angle de rotation du dessin, de telle sorte que la "bouche" du héro soit toujours dans la direction dans laquelle il se déplace**/
-			int srcLeft = pacmanSpriteWidth * animationFrameIndex;
-			Rect src = new Rect( srcLeft, 0, srcLeft + pacmanSpriteWidth, pacmanSpriteHeight );
-			Rect test = unrotatedHeroRect();
+		int srcLeft = pacmanSpriteWidth * animationFrameIndex;
+		Rect src = new Rect( srcLeft, 0, srcLeft + pacmanSpriteWidth, pacmanSpriteHeight );
+		Rect test = unrotatedHeroRect();
 		if(!invulnerable || drawCounter%8 <=4) {//Si le héro n'est pas invulnérable ou on n'a pas déjà trop demandé de redessin
 			canvas.drawBitmap( pacmanSpriteSheet, src, test, heroPaint );//On dessine le héro sur le canvas
 		}
@@ -170,15 +170,20 @@ public class Hero extends Sprite {
 			angularVelocity += angularDrag;//Et on l'enlève à la vitesse angulaire.
 		}
 
-		facing = Math2D.rotate(facing, angularVelocity);//On met à jour la direction vers laquelle est tourné le héro
-		velocity = Math2D.add(velocity, acceleration);//On ajoute l'accélération à la vitesse.
+		facing = Math2D.rotate(facing, angularVelocity);
+		velocity = Math2D.add(velocity, acceleration);
 
-		if(speed() > 0.0f) {//Si la vitesse de déplacement du héro est supérieure à 0
-			float dragMagnitude = speed()*dragConstant;//On calcule la magnitude de trainée
-			PointF drag = Math2D.scale(velocity,-dragMagnitude/speed());//Puis le point qui représente la traînée elle-même
-			velocity = Math2D.add(velocity, drag);//On met à jour la vitesse du héro
+		/*for(PointF accel : temporaryAccelerations) {
+			velocity = Math2D.add(velocity, accel);
 		}
-		setCenter(Math2D.add(getCenter(),velocity));//Et on déplace le héro.
+		temporaryAccelerations.removeAll(temporaryAccelerations);*/
+
+		if(speed() > 0.0f) {
+			// float dragMagnitude = speed()*dragConstant;
+			PointF drag = Math2D.scale(velocity,-dragConstant);
+			velocity = Math2D.add(velocity, drag);
+		}
+		setCenter(Math2D.add(getCenter(),velocity));
 	}
 
 	/**Méthodes permettant de jouer les sons appropriés à la mort du héro, à la prise d'un coup, à la capture d'une pièce, et à la capture d'un coeur**/
@@ -189,10 +194,10 @@ public class Hero extends Sprite {
 		audioPlayer.startPlayer( "sounds/pacman_hit.ogg", 1f, false);
 	}
 	private void playChompSound(){
-		audioPlayer.startPlayer( "sounds/pacman_chomp.ogg", 0.5f, false);
+		audioPlayer.startPlayer( "sounds/pacman_chomp_coin.ogg", 0.5f, false);
 	}
 	private void playHeartSound(){
-		audioPlayer.startPlayer( "sounds/pacman_coin.ogg", 3f, false);
+		audioPlayer.startPlayer( "sounds/pacman_chomp_heart.ogg", 3f, false);
 	}
 
 }
