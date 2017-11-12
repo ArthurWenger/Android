@@ -79,13 +79,34 @@ GameActivity est l'activité correpondant au jeu lui-même.
 \begin{center}
   \includegraphics[scale=0.5]{GameActivity_onCreate.png}
 \end{center}
-Elle contient des méthodes permettant de 
+Elle contient des méthodes permettant de gérer les différents évennements (début de partie, fin de partie, mise en pause, reprise) et l'accéléromètre ainsi que les demandes d'authorisations pour l'accès aux capteurs.
+Elle contient également des méthodes de gestion pour le menu d'options. Elle se sert des classes contenues dans le dossier game.
+
+\subsection{GameOverActivity}
+\label{subsection:2_3}
+GameOverActivity est l'activité lancée à la fin d'une partie.
+\`A sa création, le score réalisé dans la partie qui vient d'être perdue est ajouté à la base de données des scores, si on a réussi à localiser l'appareil au début de la partie.
+\begin{center}
+  \includegraphics[scale=0.5]{GameOverActivity_onCreate.png}
+\end{center}
+Elle contient des méthodes qui gèrent l'affichages et les deux boutons. Elle se sert fortement de la classe DBManager.
 
 \subsection{ScoresActivity}
-\label{subsection:2_3}
+\label{subsection:2_4}
+ScoresActivity est l'activité correspondant à l'affichage des scores.
+\`A sa création on récupère la base de données contenant les scores.
+\begin{center}
+  \includegraphics[scale=0.5]{ScoresActivity_onCreate.png}
+\end{center}
+Elle ne contient qu'une seule autre méthode, qui permet d'afficher les différents scores, et de lancer MapsActivity si on sélectionne l'un d'entre eux. Elle se sert fortement de la classe DBManager.
 
 \subsection{MapsActivityActivity}
-\label{subsection:2_4}
+\label{subsection:2_5}
+\`A sa création, on se prépare à récupérer une carte.
+\begin{center}
+  \includegraphics[scale=0.5]{MapsActivity_onCreate.png}
+\end{center}
+Elle contient deux autres méthode permettant de gérer la carte une fois que celle-ci est disponble et de créer l'indicteur correspondant au score sélectionné pour le lancement de l'activité.
 
 %%% La bibliographie:
 %\bibliographystyle{plain}
@@ -124,9 +145,3 @@ Elle contient des méthodes permettant de
 % ailleurs dans le document (voir \label{...} plus haut).
 %Contrairement à la section~\ref{section:hello},
 %moi je dis: \textit{Coucou!}
-
-%\subsection{Une sous-section}
-%Voici une belle image:
-%\begin{center}
-%  \includegraphics[scale=0.5]{exo3_1_1.png}
-%\end{center}
