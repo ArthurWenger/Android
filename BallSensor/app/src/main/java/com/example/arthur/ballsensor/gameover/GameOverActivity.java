@@ -22,6 +22,7 @@ public class GameOverActivity extends AppCompatActivity {
 	private int rank = 1;
 	private int score;
 
+	/**Constructeur*/
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {//Au lancement de l'activité
 		super.onCreate( savedInstanceState );//On utilise la méthode usuelle
@@ -43,23 +44,26 @@ public class GameOverActivity extends AppCompatActivity {
 		}
 
 		setContentView( R.layout.activity_game_over );//On met en place les éléments de l'affichage
-		initView();//et on lance la méthode ci-contre
+		initView();//et on lance la méthode qui gère affichage.
 	}
 
+	/**Méthode qui gère l'affichage*/
 	private void initView() {
 		mTvScore = (TextView) findViewById( R.id.tvScore );//On récupère l'élément tvScore dans l'affichage
 		String txtScore = getString( R.string.score)+" "+score;
 		mTvScore.setText( txtScore );//Et on fixe son texte à la valeur du score
 		mTvRank = (TextView) findViewById( R.id.tvRank );//On récupère l'élément tvScore dans l'affichage
 		String txtRank = getString( R.string.tvRank)+" "+rank;
-		mTvRank.setText( txtRank );//Et on fixe son texte à la valeur du score
+		mTvRank.setText( txtRank );//Et on fixe son texte à la valeur de son rang.
 	}
 
+	/**Méthode de fin de l'activité*/
 	public void play( View view ) {
 		setResult( RESULT_OK );//On met le code résultat à RESULT_OK
 		finish();//Et on termine l'activité
 	}
 
+	/**Méthode de renvoi vers l'affichage scores*/
 	public void highscores( View view ) {
 		Intent intent = new Intent( this, ScoresActivity.class );//On créé une nouvelle activité pour afficher les scores
 		intent.putExtra( "highlight", rank-1);

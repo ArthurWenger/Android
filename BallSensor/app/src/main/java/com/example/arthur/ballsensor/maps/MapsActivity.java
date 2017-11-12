@@ -22,34 +22,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	private Score centerScore;
 
 	@Override
-	protected void onCreate( Bundle savedInstanceState ) {
-		super.onCreate( savedInstanceState );
-		setContentView( R.layout.activity_maps );
-		Bundle extras = this.getIntent().getExtras();
-		assert extras != null;
-		centerScore = (Score) extras.get( "centerScore" );
-		scores_array = (ArrayList<Score>) extras.get( "scores_array" );
+	protected void onCreate( Bundle savedInstanceState ) {//Au lancement de l'activité
+		super.onCreate( savedInstanceState );//On utilise la méthode usuelle
+		setContentView( R.layout.activity_maps );//On récupère les éléments de l'affichage
+		Bundle extras = this.getIntent().getExtras();//On récupère les paramètres de lancement
+		assert extras != null;//On vérifie que ceux-ci ne soient pas vides
+		centerScore = (Score) extras.get( "centerScore" );//On les enregistrent
+		scores_array = (ArrayList<Score>) extras.get( "scores_array" );//dans des variables locales
 
-		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
+		// On récupère la carte quand elle est prète.
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 				                                                      .findFragmentById( R.id.map );
 		mapFragment.getMapAsync( this );
 	}
 
-	/**
-	 * Manipulates the map once available.
-	 * This callback is triggered when the map is ready to be used.
-	 * This is where we can add markers or lines, add listeners or move the camera. In this case,
-	 * we just add a marker near Sydney, Australia.
-	 * If Google Play services is not installed on the device, the user will be prompted to install
-	 * it inside the SupportMapFragment. This method will only be triggered once the user has
-	 * installed Google Play services and returned to the app.
-	 */
+
+	/**Méthode éxécutée quand la carte est prète*/
 	@Override
 	public void onMapReady( GoogleMap googleMap ) {
 		try {
 			mMap = googleMap;
-			//mMap.setMapType( GoogleMap.MAP_TYPE_HYBRID );
 			mMap.getUiSettings().setZoomControlsEnabled( true );
 			mMap.getUiSettings().setZoomGesturesEnabled( true );
 
@@ -69,6 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		}
 	}
 
+	/**Méthode pour créer des indicateurs de position*/
 	private MarkerOptions createMarker(Score score, boolean center){
 		double sLat = score.getLatitude();
 		double sLng = score.getLongitude();
