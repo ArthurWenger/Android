@@ -1,0 +1,17 @@
+\frametitle<1->{Les sons}
+    \begin{itemize}%parler de la libération des ressources
+    \item <1->{Utilisation de la classe MediaPlayer}% parler du wrapper AudioPlayer
+    \item <2->{Lecture d'un fichier du dossier \enquote{Assets}}% parler d'assets vs res/raw
+      \begin{lstlisting}[language=java]
+        player = new MediaPlayer();
+        player.setVolume(volume, volume);
+        player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+        player.setLooping(loop);
+        player.prepare();
+        player.setOnCompletionListener( new MediaPlayer.OnCompletionListener() {
+          public void onCompletion( MediaPlayer mp ) {
+            stopPlayer();
+          }});
+      \end{lstlisting} %parler de startPlayer / stopPlayer
+    \item <2->{Gestion de la libération des ressources} % parler de onPause / on Resume / onDestroy
+   \end{itemize}
