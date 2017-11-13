@@ -51,9 +51,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 			}
 
 			LatLng centerLatLng = new LatLng( centerScore.getLatitude(), centerScore.getLongitude() );
-			mMap.addMarker(new MarkerOptions()
-					               .position(centerLatLng)
-					               .icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 			mMap.animateCamera( CameraUpdateFactory.newLatLngZoom( centerLatLng, 11 ) );
 
 		} catch(SecurityException e){

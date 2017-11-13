@@ -26,7 +26,7 @@ public class DBManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {//Au lancement de l'activité, on récupère une base de données
-		/** Si la base de données existe déjà, la requête suivante ne fait rien. Sinon, elle créé la table approprié **/
+		/** Si la base de données existe déjà, la requête suivante ne fait rien. Sinon, elle créé la table appropriée **/
 		db.execSQL(
 				"create table scores ("+
 						SCORES_COLUMN_ID+" integer primary key autoincrement, " +
