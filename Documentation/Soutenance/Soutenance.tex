@@ -15,7 +15,7 @@
 \graphicspath{{Images/}}
 \newcolumntype{.}{D{.}{.}{-1}}
 \newcolumntype{d}[1]{D{.}{.}{#1}}
-\usetheme{Malmoe}
+\usetheme{Warsaw}
 
 \setbeamertemplate{frametitle}[default][center]
 \beamerdefaultoverlayspecification{<+->}
@@ -183,20 +183,23 @@
 
 \begin{frame}[fragile]
   \frametitle<1->{\center{Les scores}}
-    \begin{itemize}
-    \item <1->{Le nombre de pièces accumulées détermine le score}
-    \begin{center}
-      \includegraphics[height=30mm]{game_over.png}
-    \end{center}
-    \item <2->{Une classe spécifique pour modéliser les scores:}
-    \begin{lstlisting}[language=java]
-      public class Score implements Serializable {
-      private int rank, value;
-      private double lat, lng; ...
-    \end{lstlisting}
-    \item <3->{Une activité pour l'affichage d'une liste de scores}
-    \item <2->{Gestion de la persistance avec une base de données SQLite}
-    \end{itemize}
+    \begin{column}
+      \begin{itemize}
+        \item <1->{Le nombre de pièces accumulées détermine le score}
+        \item <2->{Une classe spécifique pour modéliser les scores:}
+        \begin{lstlisting}[language=java]
+          public class Score implements Serializable {
+          private int rank, value;
+          private double lat, lng; ...
+        \end{lstlisting}
+      \end{itemize}
+    \end{column}
+    \begin{column}
+      \begin{itemize}
+        \item <3->{Une activité pour l'affichage d'une liste de scores}
+        \item <2->{Gestion de la persistance avec une base de données SQLite}
+      \end{itemize}
+    \end{column}
 \end{frame}
 
 \begin{frame}[fragile]
